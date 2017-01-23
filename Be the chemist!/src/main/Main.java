@@ -1,5 +1,5 @@
 package main;
-
+//test commit
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -144,27 +144,39 @@ public class Main extends VRApplication {
                     
                 }else if(name.equals("forward")){
                     
-                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(2).mult(1f)));
+                    playerLogic.move(name,0.1f);
+                    
+                    System.out.println("Moved forward by 0.1 meters");
                     
                 }else if(name.equals("backward")){
                     
-                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(2).mult(-1f)));
+                    playerLogic.move(name,0.1f);
+                    
+                    System.out.println("Moved backward by 0.1 meters");
                     
                 }else if(name.equals("right")){
                     
-                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(0).mult(-1f)));
+                    playerLogic.move(name,0.1f);  
+                    
+                    System.out.println("Moved right by 0.1 meters");
                     
                 }else if(name.equals("left")){
                     
-                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(0).mult(1f)));
+                    playerLogic.move(name,0.1f);
+                    
+                    System.out.println("Moved left by 0.1 meters");
                     
                 }else if(name.equals("up")){
                     
-                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(1).mult(1f)));
+                    playerLogic.move(name,0.1f);
+                    
+                    System.out.println("Moved up by 0.1 meters");
                     
                 }else if(name.equals("down")){
                     
-                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(1).mult(-1f)));
+                    playerLogic.move(name,0.1f);
+                    
+                    System.out.println("Moved down by 0.1 meters");
                     
                 }
                 

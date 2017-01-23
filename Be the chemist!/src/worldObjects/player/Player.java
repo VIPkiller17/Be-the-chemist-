@@ -70,4 +70,10 @@ public class Player {
         
     }
     
+    public Vector3f getAreaPosition(){
+        
+        return observer.getLocalTranslation();
+        
+    }
+    
 }

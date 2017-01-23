@@ -128,7 +128,7 @@ public class Main extends VRApplication {
         getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
         getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));
         getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
-        getInputManager().addMapping("down", new KeyTrigger(KeyInput.KEY_RCONTROL));
+        getInputManager().addMapping("down", new KeyTrigger(KeyInput.KEY_LCONTROL));
 
         ActionListener acl = new ActionListener() {
             
@@ -146,37 +146,25 @@ public class Main extends VRApplication {
                     
                     playerLogic.move(name,0.1f);
                     
-                    System.out.println("Moved forward by 0.1 meters");
-                    
                 }else if(name.equals("backward")){
                     
                     playerLogic.move(name,0.1f);
                     
-                    System.out.println("Moved backward by 0.1 meters");
-                    
                 }else if(name.equals("right")){
                     
-                    playerLogic.move(name,0.1f);  
-                    
-                    System.out.println("Moved right by 0.1 meters");
+                    playerLogic.move(name,0.1f);
                     
                 }else if(name.equals("left")){
                     
                     playerLogic.move(name,0.1f);
                     
-                    System.out.println("Moved left by 0.1 meters");
-                    
                 }else if(name.equals("up")){
                     
                     playerLogic.move(name,0.1f);
                     
-                    System.out.println("Moved up by 0.1 meters");
-                    
                 }else if(name.equals("down")){
                     
                     playerLogic.move(name,0.1f);
-                    
-                    System.out.println("Moved down by 0.1 meters");
                     
                 }
                 

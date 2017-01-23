@@ -80,11 +80,11 @@ public class Player {
         
         if(direction.equals("forward")){
         
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,distanceMeters)));
-        
-        }else if(direction.equals("backwards")){
-            
             playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,-distanceMeters)));
+        
+        }else if(direction.equals("backward")){
+            
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,distanceMeters)));
 
         }else if(direction.equals("right")){
             
@@ -102,6 +102,10 @@ public class Player {
             
             playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,-distanceMeters,0f)));
 
+        }else{
+            
+            System.out.println("Direction code \""+direction+"\" invalid.");
+            
         }
         
     }

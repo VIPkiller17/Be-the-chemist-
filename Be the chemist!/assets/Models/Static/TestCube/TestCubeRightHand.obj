@@ -1,0 +1,127 @@
+# Alias OBJ Model File
+# Exported from SketchUp, (c) 2000-2012 Trimble Navigation Limited
+# File units = meters
+
+mtllib TestCubeRightHand.mtl
+
+g Mesh1 Model
+
+usemtl FrontColor
+v 0 0 -0
+vt 0 0
+vn 0 -1 -0
+v -0.89 0 0.76
+vt 35.0394 -29.9213
+v -0.89 0 -0
+vt 35.0394 0
+f 1/1/1 2/2/1 3/3/1
+
+v 0 0 0.76
+vt 0 -29.9213
+f 2/2/1 1/1/1 4/4/1
+
+usemtl BackColor
+vn -0 1 0
+f 3/3/2 2/2/2 1/1/2
+
+usemtl FrontColor
+vt 29.9213 0
+vn -1 0 -0
+v -0.89 0.86 -0
+vt 0 33.8583
+f 2/5/3 5/6/3 3/1/3
+
+v -0.89 0.86 0.76
+vt 29.9213 33.8583
+f 5/6/3 2/5/3 6/7/3
+
+usemtl BackColor
+vn 1 -0 0
+f 6/7/4 2/5/4 5/6/4
+
+usemtl FrontColor
+vt -35.0394 0
+vn 0 0 1
+v 0 0.86 0.76
+vt -35.0394 33.8583
+f 2/8/5 7/6/5 6/9/5
+
+f 7/6/5 2/8/5 4/1/5
+
+usemtl BackColor
+vn -0 -0 -1
+f 4/1/6 2/8/6 7/6/6
+
+f 4/4/2 1/1/2 2/2/2
+
+usemtl FrontColor
+vn 1 0 -0
+vt -29.9213 33.8583
+vt -29.9213 0
+f 1/1/7 7/10/7 4/11/7
+
+v 0 0.86 -0
+f 7/10/7 1/1/7 8/6/7
+
+usemtl BackColor
+vn -1 -0 0
+f 4/11/8 7/10/8 1/1/8
+
+f 8/6/8 1/1/8 7/10/8
+
+usemtl FrontColor
+vn 0 0 -1
+vt 35.0394 33.8583
+f 1/1/9 5/12/9 8/6/9
+
+f 5/12/9 1/1/9 3/3/9
+
+usemtl BackColor
+vn -0 -0 1
+f 3/3/10 1/1/10 5/12/10
+
+f 8/6/10 5/12/10 1/1/10
+
+usemtl FrontColor
+vn 0 1 -0
+f 5/8/11 7/4/11 8/1/11
+
+vt -35.0394 -29.9213
+f 7/4/11 5/8/11 6/13/11
+
+usemtl BackColor
+vn -0 -1 0
+f 6/13/12 5/8/12 7/4/12
+
+f 8/1/12 7/4/12 5/8/12
+
+f 6/9/6 7/6/6 2/8/6
+
+f 3/1/4 5/6/4 2/5/4
+
+g Mesh2 Model
+
+l 4 1
+
+l 2 4
+
+l 3 2
+
+l 1 3
+
+l 1 8
+
+l 8 5
+
+l 7 8
+
+l 6 7
+
+l 5 6
+
+l 3 5
+
+l 2 6
+
+l 4 7
+

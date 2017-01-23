@@ -123,6 +123,12 @@ public class Main extends VRApplication {
         
         //Quit here is used as exmaple if the need arises for more non-Vive inputs
         getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
+        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
+        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
+        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
+        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));
+        getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
+        getInputManager().addMapping("down", new KeyTrigger(KeyInput.KEY_RCONTROL));
 
         ActionListener acl = new ActionListener() {
             
@@ -136,6 +142,30 @@ public class Main extends VRApplication {
                     
                     //observer.move(VRApplication.getFinalObserverRotation().getRotationColumn(0).mult(1f));
                     
+                }else if(name.equals("forward")){
+                    
+                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(2).mult(1f)));
+                    
+                }else if(name.equals("backward")){
+                    
+                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(2).mult(-1f)));
+                    
+                }else if(name.equals("right")){
+                    
+                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(0).mult(-1f)));
+                    
+                }else if(name.equals("left")){
+                    
+                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(0).mult(1f)));
+                    
+                }else if(name.equals("up")){
+                    
+                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(1).mult(1f)));
+                    
+                }else if(name.equals("down")){
+                    
+                    playerLogic.teleportArea(playerLogic.getAreaPosition().add(VRApplication.getVRHardware().getOrientation().getRotationColumn(1).mult(-1f)));
+                    
                 }
                 
             }
@@ -143,6 +173,12 @@ public class Main extends VRApplication {
         };
 
         getInputManager().addListener(acl, "quit");
+        getInputManager().addListener(acl, "forward");
+        getInputManager().addListener(acl, "backward");
+        getInputManager().addListener(acl, "right");
+        getInputManager().addListener(acl, "left");
+        getInputManager().addListener(acl, "up");
+        getInputManager().addListener(acl, "down");
         
     }
 

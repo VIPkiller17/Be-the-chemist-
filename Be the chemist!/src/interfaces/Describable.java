@@ -11,7 +11,7 @@ import com.jme3.scene.Spatial;
  * @author VIPkiller17
  */
 public interface Describable {
-    //test
+    //testt
     String getDescription();
     
     Spatial getSpatial();

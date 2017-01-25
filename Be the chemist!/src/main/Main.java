@@ -25,12 +25,8 @@ import worldObjects.player.Player;
 import worldObjects.staticWorld.testing.TestFloor;
 import worldObjects.staticWorld.testing.TestRoom;
 
-/**
- * test
- * @author normenhansen
- */
 public class Main extends VRApplication {
-    //TEST
+    
     //Other/Logic
     private static VRAPI VRHardware=new OpenVR();
     

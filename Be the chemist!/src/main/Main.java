@@ -30,7 +30,7 @@ import worldObjects.staticWorld.testing.TestRoom;
  * @author normenhansen
  */
 public class Main extends VRApplication {
-    
+    //TEST
     //Other/Logic
     private static VRAPI VRHardware=new OpenVR();
     

@@ -1,27 +1,27 @@
 Models guideline
-All models are to be done in .obj format, scaled correctly to the metric measurement system, logically positioned on the origin; a bottle’s bottom’s center would be at the origin. All are to be low-poly; a round bottle would be an octagon. All are to be simply textured, no details, faces are to be single colored to give a cartoony and yet realistic feel to them. Every model that could possibly be held my hand must have a highlight model, slightly bigger then the original model and of a completely translucid orange color. When the player hover their hands over a grabbable object, the highlight model will appear to indicate that it ca be grabbed.
+All models are to be done in .obj format, scaled correctly to the metric measurement system, logically positioned on the origin; a bottleâ€™s bottomâ€™s center would be at the origin. All are to be low-poly; a round bottle would be an octagon. All are to be simply textured, no details, faces are to be single colored to give a cartoony and yet realistic feel to them. Every model that could possibly be held my hand must have a highlight model, slightly bigger then the original model and of a completely translucid orange color. When the player hover their hands over a grabbable object, the highlight model will appear to indicate that it ca be grabbed.
 Hands:
-Hands are to be centered (the most geometrical center, doesn’t really matter, they will be positioned after testing) on the origin. No animations needed. Make an opened and closed model for each hand.
+Hands are to be centered (the most geometrical center, doesnâ€™t really matter, they will be positioned after testing) on the origin. No animations needed. Make an opened and closed model for each hand.
 Containers:
-Transparent containers must come with a model that is placed within the container’s to show that it has something inside it. A bottle would have a liquid model. If both models are placed on the origin, the liquid is correctly placed inside the bottle. Also if the bottle can have a cork, make 2 black corks, again placed correctly on the bottle if placed at the origin. One cork will have a hole in it to accommodate a tube.
+Transparent containers must come with a model that is placed within the containerâ€™s to show that it has something inside it. A bottle would have a liquid model. If both models are placed on the origin, the liquid is correctly placed inside the bottle. Also if the bottle can have a cork, make 2 black corks, again placed correctly on the bottle if placed at the origin. One cork will have a hole in it to accommodate a tube.
 -	Beaker
 -	Narrow Mouth Reagent Bottles
 -	Measuring cylinder
--	Evaporating dish
--	Crystallizing dish
+-	Evaporating dish 
+-	Crystallizing dish (not a priority)
 -	Erlenmeyer
--	Filtering flask
+-	Filtering flask (not a priority)
 -	Flat bottom flask
 -	Volumetric flask
 -	Funnel
 -	Serological Pipette
 -	Plastic wash bottle
 -	Test tube
--	Dropper; the dropper should be made into two models, one in which the rubber part seems as being pressed and the other as if it isn’t.
+-	Dropper; the dropper should be made into two models, one in which the rubber part seems as being pressed and the other as if it isnâ€™t.
 Refer to this image to have an idea of a liquid model for each container: https://plus.google.com/photos/100102136737035852528/albums/6127317707851300769/6127317710860476786?sqi=101996609942925099701&sqsi=e5442905-3d04-46a7-9539-cec6faf0d1ee
 
 Other:
 Other models might have an action model or special models to go with them, those will be specified.
 -	Test tube rack; there must be a highlight model for each hole, to show the player where the test tube will be placed when they release the test tube. Bottom center is origin.
 -	Stir rod; make one of the tip as origin.
--	Fume hood (with a chimney); the chimney of the fume hood must go straight up, make it go something like 5 meters up. The fume hood door’s moving part must be a different model. The fume hood door’s moving part’s handle must be a different model with a highlight model. When all is placed at the origin, everything is placed correctly. Bottom center is origin.
+-	Fume hood (with a chimney); the chimney of the fume hood must go straight up, make it go something like 5 meters up. The fume hood doorâ€™s moving part must be a different model. The fume hood doorâ€™s moving partâ€™s handle must be a different model with a highlight model. When all is placed at the origin, everything is placed correctly. Bottom center is origin.

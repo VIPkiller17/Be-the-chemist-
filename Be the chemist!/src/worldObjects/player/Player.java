@@ -13,11 +13,7 @@ import com.jme3.scene.Spatial;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.input.VRAPI;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class Player {
     
     private AssetManager assetManager;

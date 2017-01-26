@@ -6,11 +6,7 @@ package worldObjects.player;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.shape.Line;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class Laser extends Line{
     
     private Vector3f start,end;

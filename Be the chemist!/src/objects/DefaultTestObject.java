@@ -17,11 +17,7 @@ import com.jme3.scene.shape.Box;
 import interfaces.Describable;
 import java.io.IOException;
 import java.util.ArrayList;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class DefaultTestObject implements Describable,Savable{
     
     private Spatial spatial;

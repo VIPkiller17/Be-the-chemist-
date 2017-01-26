@@ -25,11 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import jmevr.input.VRAPI;
 import worldObjects.displays.DescDisplay;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class Hand implements Describable,Savable{
     
     public static VRAPI VRHardware;

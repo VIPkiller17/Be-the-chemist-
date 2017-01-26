@@ -1,5 +1,5 @@
 package main;
-//test commit
+
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -24,11 +24,7 @@ import worldObjects.player.Hand;
 import worldObjects.player.Player;
 import worldObjects.staticWorld.testing.TestFloor;
 import worldObjects.staticWorld.testing.TestRoom;
-
-/**
- * test
- * @author normenhansen
- */
+//by Tommy
 public class Main extends VRApplication {
     
     //Other/Logic

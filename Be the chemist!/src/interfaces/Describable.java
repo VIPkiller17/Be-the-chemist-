@@ -5,11 +5,7 @@
 package interfaces;
 
 import com.jme3.scene.Spatial;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public interface Describable {
     
     String getDescription();

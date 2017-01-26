@@ -3,24 +3,20 @@ package main;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
+import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
-import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
-import jmevr.input.VRInputAPI;
 import objects.CustomTestObject;
-import objects.DefaultTestObject;
-import worldObjects.player.Hand;
 import worldObjects.player.Player;
 import worldObjects.staticWorld.testing.TestFloor;
 import worldObjects.staticWorld.testing.TestRoom;
@@ -124,7 +120,8 @@ public class Main extends VRApplication {
         getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
         getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));
         getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
-        getInputManager().addMapping("down", new KeyTrigger(KeyInput.KEY_LCONTROL));
+        getInputManager().addMapping("downControl", new KeyTrigger(KeyInput.KEY_LCONTROL));
+        getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));
 
         ActionListener acl = new ActionListener() {
             
@@ -138,7 +135,17 @@ public class Main extends VRApplication {
                     
                     //observer.move(VRApplication.getFinalObserverRotation().getRotationColumn(0).mult(1f));
                     
-                }else if(name.equals("forward")){
+                }
+                
+            }
+            
+        };
+        
+        AnalogListener anl = new AnalogListener() {
+            
+            public void onAnalog(String name, float value, float tpf) {
+                
+                if(name.equals("forward")){
                     
                     playerLogic.move(name,0.1f);
                     
@@ -158,7 +165,7 @@ public class Main extends VRApplication {
                     
                     playerLogic.move(name,0.1f);
                     
-                }else if(name.equals("down")){
+                }else if(name.equals("downControl")||name.equals("downShift")){
                     
                     playerLogic.move(name,0.1f);
                     
@@ -169,12 +176,13 @@ public class Main extends VRApplication {
         };
 
         getInputManager().addListener(acl, "quit");
-        getInputManager().addListener(acl, "forward");
-        getInputManager().addListener(acl, "backward");
-        getInputManager().addListener(acl, "right");
-        getInputManager().addListener(acl, "left");
-        getInputManager().addListener(acl, "up");
-        getInputManager().addListener(acl, "down");
+        getInputManager().addListener(anl, "forward");
+        getInputManager().addListener(anl, "backward");
+        getInputManager().addListener(anl, "right");
+        getInputManager().addListener(anl, "left");
+        getInputManager().addListener(anl, "up");
+        getInputManager().addListener(anl, "downControl");
+        getInputManager().addListener(anl, "downShift");
         
     }
 

@@ -76,25 +76,25 @@ public class Player {
         
         if(direction.equals("forward")){
         
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,-distanceMeters)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,distanceMeters)));
         
         }else if(direction.equals("backward")){
             
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,distanceMeters)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,-distanceMeters)));
 
         }else if(direction.equals("right")){
             
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(distanceMeters,0f,0f)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(-distanceMeters,0f,0f)));
 
         }else if(direction.equals("left")){
             
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(-distanceMeters,0f,0f)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(distanceMeters,0f,0f)));
 
         }else if(direction.equals("up")){
             
             playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,distanceMeters,0f)));
 
-        }else if(direction.equals("down")){
+        }else if(direction.equals("downControl")||direction.equals("downShift")){
             
             playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,-distanceMeters,0f)));
 

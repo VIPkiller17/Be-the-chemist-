@@ -13,11 +13,7 @@ import control.DescriptionControl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import jmevr.input.VRAPI;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class DescDisplay {
     
     public static Spatial observer;

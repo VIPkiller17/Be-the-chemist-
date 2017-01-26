@@ -25,11 +25,7 @@ import worldObjects.displays.DescDisplay;
 import worldObjects.player.Hand;
 import worldObjects.player.Player;
 import worldObjects.staticWorld.testing.TestFloor;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class HandControl extends AbstractControl{
     
     private static VRAPI VRHardware;

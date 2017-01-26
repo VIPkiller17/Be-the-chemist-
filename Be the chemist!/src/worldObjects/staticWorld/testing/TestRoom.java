@@ -12,11 +12,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class TestRoom implements Savable{
     
     private AssetManager assetManager;

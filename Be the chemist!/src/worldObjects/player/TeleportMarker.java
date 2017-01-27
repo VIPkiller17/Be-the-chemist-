@@ -16,11 +16,13 @@ import com.jme3.scene.Spatial;
 public class TeleportMarker {
     
     private AssetManager assetManager;
-    private String modelPath="Models/Player/TeleportMarker.obj";
-    private Spatial spatial=assetManager.loadModel(modelPath);
+    private String modelPath;
+    private Spatial spatial;
     
     public TeleportMarker(Vector3f location, AssetManager assetManager, Node rootNode) {
         
+        modelPath="Models/Logic/TeleportMarker.j3o";
+        spatial=assetManager.loadModel(modelPath);
         spatial.setLocalTranslation(location);
         this.assetManager=assetManager;
         rootNode.attachChild(spatial);

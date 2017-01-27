@@ -46,6 +46,8 @@ public class Hand implements Describable,Savable{
     
     private DescDisplay descriptionDisplay;
     
+    private TeleportMarker teleportMarker;
+    
     private HandControl handControl;
     
     private Object object;
@@ -97,6 +99,7 @@ public class Hand implements Describable,Savable{
         spatial.addControl(handControl);
         
         descriptionDisplay=new DescDisplay(assetManager,rootNode,VRHardware,side,"",observer);
+        teleportMarker=new TeleportMarker(new Vector3f(0,0,0), assetManager, rootNode);
         rootNode.attachChild(descriptionDisplay.getDescriptionNode());
         
         //attach the hand node, with child hand, to the rootNode
@@ -228,6 +231,12 @@ public class Hand implements Describable,Savable{
         
         this.staticHold=staticHold;
         
+    }
+    
+    public void setTeleportMarkerLocation(Vector3f location) {
+        
+        teleportMarker.setSpatialLocation(location);
+     
     }
     
     //convention

@@ -537,6 +537,9 @@ public class HandControl extends AbstractControl{
 
             //make laser green
             hand.setLaserMaterialColor("Color", ColorRGBA.Green);
+            
+            //Set location tp hexagon
+            hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
 
             teleportationPrimed=true;
 

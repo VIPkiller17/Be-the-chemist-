@@ -99,8 +99,9 @@ public class Hand implements Describable,Savable{
         spatial.addControl(handControl);
         
         descriptionDisplay=new DescDisplay(assetManager,rootNode,VRHardware,side,"",observer);
-        teleportMarker=new TeleportMarker(new Vector3f(0,0,0), assetManager, rootNode);
         rootNode.attachChild(descriptionDisplay.getDescriptionNode());
+        
+        teleportMarker=new TeleportMarker(new Vector3f(0,-1,0), assetManager, rootNode);
         
         //attach the hand node, with child hand, to the rootNode
         playerNode.attachChild(handNode);

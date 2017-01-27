@@ -21,7 +21,7 @@ public class TeleportMarker {
     
     public TeleportMarker(Vector3f location, AssetManager assetManager, Node rootNode) {
         
-        modelPath="Models/Logic/TeleportMarker.j3o";
+        modelPath="Models/Logic/TeleportMarker/TeleportMarker.j3o";
         spatial=assetManager.loadModel(modelPath);
         spatial.setLocalTranslation(location);
         this.assetManager=assetManager;

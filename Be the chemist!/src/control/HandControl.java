@@ -539,7 +539,7 @@ public class HandControl extends AbstractControl{
             hand.setLaserMaterialColor("Color", ColorRGBA.Green);
             
             //Set location tp hexagon
-            hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+            hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint().add(0,0.001f,0));
 
             teleportationPrimed=true;
 
@@ -547,6 +547,8 @@ public class HandControl extends AbstractControl{
 
             //otherwise make it red
             hand.setLaserMaterialColor("Color", ColorRGBA.Red);
+            
+            hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
 
             teleportationPrimed=false;
 
@@ -560,6 +562,8 @@ public class HandControl extends AbstractControl{
 
             //if not already out of sight, move laser out of sight
             hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+            
+            hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
 
             //set laserMovedOut to true once the laser has been moved out
             teleLaserMovedOut=true;

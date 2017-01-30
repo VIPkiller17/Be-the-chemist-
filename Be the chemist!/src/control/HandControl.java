@@ -62,6 +62,7 @@ public class HandControl extends AbstractControl{
     
     public HandControl(Node newRootNode,AssetManager assetManager,ArrayList<Describable> newDescribables,CollisionResults newCollisionResults,Hand hand,Spatial newObserver,Player player){
         
+        //init variables
         this.hand=hand;
         this.player=player;
         observer=newObserver;
@@ -73,13 +74,10 @@ public class HandControl extends AbstractControl{
         
         collisionToExclude=handSide==0 ? "RightHand" : "LeftHand";
         
-        testLaser=new Line(new Vector3f(0f,0.5f,0f),new Vector3f(0f,0.5f,0.1f));
-        testLaserGeom=new Geometry("HandLaser",testLaser);
-        testLaserMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        testLaserGeom.setMaterial(testLaserMat);
-        testLaserGeom.setCullHint(Spatial.CullHint.Never);
-        //rootNode.attachChild(testLaserGeom);
-        
+        //collision point is used t put the laser's end at the correct location
+        //this was added because the laser would not point at the correct location after a teleportation
+        //this still requires testing, as it has not been added to the teleportation laser
+        //but only to the description laser
         collisionPoint = new Box(0.01f,0.01f,0.01f); 
         collisionPointGeom = new Geometry("TestCollisionPoint", collisionPoint); 
         collisionPointMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");

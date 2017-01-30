@@ -56,6 +56,7 @@ public class Hand implements Describable,Savable{
     
     public Hand(AssetManager assetManager,Node rootNode,VRAPI newVRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,int side,Spatial newObserver,Node playerNode,Player player){
         
+        //if right hand, create the handNode
         if(side==0)
             
             handNode=new Node();
@@ -68,12 +69,14 @@ public class Hand implements Describable,Savable{
         observer=newObserver;
         VRHardware=newVRHardware;
         
+        //create the ray
         ray=new Ray();
         
         //create hand model, scale it, rotate it and move it then attach it to the hand node
         spatial = side==0 ? assetManager.loadModel("Models/Player/RightHand/RightHand.j3o") : assetManager.loadModel("Models/Player/LeftHand/LeftHand.j3o");
         //spatial.scale(0.1f,0.1f,0.1f);
         
+        //setup the hand spatial
         spatial.setLocalTranslation(0f,0.01f,0f);
         spatial.setName(side==0 ? "RightHand" : "LeftHand");
         spatial.setCullHint(Spatial.CullHint.Never);
@@ -95,12 +98,15 @@ public class Hand implements Describable,Savable{
         //add the hand object to the describables list in Main
         describables.add(this);
         
+        //create and add the hand control to the hand spatial
         this.handControl=new HandControl(rootNode,assetManager,describables,collisionResults,this,observer,player);
         spatial.addControl(handControl);
         
+        //create descriptionDisplay and add its control
         descriptionDisplay=new DescDisplay(assetManager,rootNode,VRHardware,side,"",observer);
         rootNode.attachChild(descriptionDisplay.getDescriptionNode());
         
+        //create the teleport marker
         teleportMarker=new TeleportMarker(new Vector3f(0,-1,0), assetManager, rootNode);
         
         //attach the hand node, with child hand, to the rootNode
@@ -109,6 +115,7 @@ public class Hand implements Describable,Savable{
     }
     
     //description
+    @Override
     public String getDescription(){
         
         //return description of a hand
@@ -129,6 +136,7 @@ public class Hand implements Describable,Savable{
     }
     
     //physical object of hand
+    @Override
     public Spatial getSpatial(){
         
         //return the spatial of the hand 

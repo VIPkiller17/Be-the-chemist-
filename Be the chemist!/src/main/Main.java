@@ -63,6 +63,9 @@ public class Main extends VRApplication {
         //Enables the mirror window, displays the game on the computer also
         app.preconfigureVRApp(PRECONFIG_PARAMETER.ENABLE_MIRROR_WINDOW,true);
         
+        //Makes it so that the game pauses on loss of focus
+        app.setPauseOnLostFocus(true);
+        
         //starts the game
         app.start();
     }
@@ -113,7 +116,7 @@ public class Main extends VRApplication {
     //vt add
     private void initInputs() {
         
-        //Quit here is used as exmaple if the need arises for more non-Vive inputs
+        //non-VR inputs for testing without VR
         getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
         getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
         getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
@@ -123,6 +126,7 @@ public class Main extends VRApplication {
         getInputManager().addMapping("downControl", new KeyTrigger(KeyInput.KEY_LCONTROL));
         getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));
 
+        //inputs' action listener
         ActionListener acl = new ActionListener() {
             
             public void onAction(String name, boolean keyPressed, float tpf) {
@@ -141,6 +145,7 @@ public class Main extends VRApplication {
             
         };
         
+        //inputs' analog listener
         AnalogListener anl = new AnalogListener() {
             
             public void onAnalog(String name, float value, float tpf) {
@@ -175,6 +180,7 @@ public class Main extends VRApplication {
             
         };
 
+        //adding the listener for each mapping to inputManager
         getInputManager().addListener(acl, "quit");
         getInputManager().addListener(anl, "forward");
         getInputManager().addListener(anl, "backward");
@@ -192,30 +198,41 @@ public class Main extends VRApplication {
         //TPF COUNTERS START
         
         //every second check if a controller is detected and create it
+        //if one of the hands isn't created
         if(!rightHandCreated||!leftHandCreated){
         
+            //add to the TPF counter
             controllerConnectionTPF+=tpf;
             
+            //if its been a second since last check
             if(controllerConnectionTPF>=1){
                 
+                //update the number of controllers connected
                 VRHardware.getVRinput()._updateConnectedControllers();
 
+                //if there is at least one controller and right hand has not been created yet
                 if(VRHardware.getVRinput().getTrackedControllerCount()>0&&!rightHandCreated){
 
+                    //create right hand
                     playerLogic.createHand(0);
                     
+                    //set right hand created to true
                     rightHandCreated=true;
 
                 }
                 
+                //if there aer at least 2 controllers but left hand has not been created yet
                 if(VRHardware.getVRinput().getTrackedControllerCount()>1&&!leftHandCreated){
 
+                    //create left hand
                     playerLogic.createHand(1);
                     
+                    //set left hand created to true
                     leftHandCreated=true;
 
                 }
                 
+                //reset the counter
                 controllerConnectionTPF=0;
 
             }

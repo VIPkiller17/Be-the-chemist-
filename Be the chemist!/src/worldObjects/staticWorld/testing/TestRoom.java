@@ -26,6 +26,7 @@ public class TestRoom implements Savable{
         this.rootNode=rootNode;
         
         spatial = assetManager.loadModel("Models/Static/TestRoom2/TestRoom2.j3o");
+        spatial.setName("Room");
         spatial.scale(1f,1f,1f);
         spatial.rotate(0.0f, 0.0f, 0.0f);
         spatial.setLocalTranslation(0f,0f,0f);

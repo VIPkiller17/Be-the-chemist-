@@ -50,7 +50,6 @@ public class HandControl extends AbstractControl{
     private boolean laserMovedOut,laserPointingAtDescribable;
     private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;
     
-    private Line testLaser;
     private Geometry testLaserGeom;
     private Material testLaserMat;
     
@@ -95,8 +94,6 @@ public class HandControl extends AbstractControl{
             
             //Put the ray to correct position and direction
             hand.setRayCoords(hand.getWorldTranslation(),new Vector3f(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(2)));
-            
-            testLaser.updatePoints(hand.getRay().getOrigin(),hand.getRay().getDirection().mult(1000));
 
             //Update location of Geom
             hand.setLocation(VRHardware.getVRinput().getPosition(handSide));

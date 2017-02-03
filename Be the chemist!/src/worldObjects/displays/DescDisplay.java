@@ -61,10 +61,6 @@ public class DescDisplay {
         //process the raw text
         processText();
         
-        //TEMPORARY, set the location of the node to the specified vector3f
-        //this will usually be on the controller calling the description
-        centeredNode.setLocalTranslation(0,1,0);
-        
         //make a test cube marking the center of the node, its rotation axis
         /*
         Material mat = new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");

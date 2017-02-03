@@ -92,7 +92,6 @@ public class Hand implements Describable,Savable{
         laserGeom.setCullHint(Spatial.CullHint.Never);
         laserMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
         laserGeom.setMaterial(laserMat);
-        laserGeom.setCullHint(Spatial.CullHint.Never);
         rootNode.attachChild(laserGeom);
         
         //add the hand object to the describables list in Main

@@ -34,8 +34,7 @@ public class Player {
         this.VRHardware=VRHardware;
         this.collisionResults=collisionResults;
         this.describables=describables;
-        this.observer=observer;
-        
+        this.observer=observer;       
         playerNode=new Node();
         
         playerNode.attachChild(observer);

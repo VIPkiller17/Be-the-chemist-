@@ -24,7 +24,7 @@ import jmevr.input.VRAPI;
 import worldObjects.displays.DescDisplay;
 import worldObjects.player.Hand;
 import worldObjects.player.Player;
-import worldObjects.staticWorld.testing.TestFloor;
+import worldObjects.staticWorld.testing.Floor;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -509,13 +509,13 @@ public class HandControl extends AbstractControl{
 
         //System.out.println("\tFinding collision spatial's corresponding object..");
 
-        if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof TestFloor){
+        if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof Floor){
 
             //System.out.println("\tCorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
 
             teleLaserPointingValidSurface=true;
 
-        }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof TestFloor)){
+        }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof Floor)){
 
             //System.out.println("\tCorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
 

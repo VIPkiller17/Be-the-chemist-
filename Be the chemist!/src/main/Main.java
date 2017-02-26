@@ -18,8 +18,8 @@ import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
 import objects.CustomTestObject;
 import worldObjects.player.Player;
-import worldObjects.staticWorld.testing.TestFloor;
-import worldObjects.staticWorld.testing.TestRoom;
+import worldObjects.staticWorld.testing.Floor;
+import worldObjects.staticWorld.testing.Room;
 //by Tommy
 public class Main extends VRApplication {
     
@@ -42,8 +42,8 @@ public class Main extends VRApplication {
     private float controllerConnectionTPF;
     
     //World
-    private TestRoom testRoom;
-    private TestFloor testFloor;
+    private Room testRoom;
+    private Floor testFloor;
     
     //Objects
     private CustomTestObject collisionPrism0,collisionPrism1,collisionPrism2,collisionPlain0,collisionPlain1,collisionPlain2;
@@ -85,18 +85,18 @@ public class Main extends VRApplication {
         playerLogic=new Player(getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
         //TEST WORLD INIT START
-        testRoom=new TestRoom(getAssetManager(),rootNode);
+        testRoom=new Room(getAssetManager(),rootNode);
         
-        testFloor=new TestFloor(getAssetManager(),rootNode);
+        testFloor=new Floor(getAssetManager(),rootNode);
         //TEST WORLD INIT END
         
         //OBJECTS INIT START
-        collisionPrism0=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPrism.j3o");
-        collisionPrism1=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0f,"Models/Testing/Collisions/ColPrismRightHand.j3o");
-        collisionPrism2=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0.6f,"Models/Testing/Collisions/ColPrismLeftHand.j3o");
-        collisionPlain0=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPlain.j3o");
-        collisionPlain1=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0f,"Models/Testing/Collisions/ColPlainRightHand.j3o");
-        collisionPlain2=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0.6f,"Models/Testing/Collisions/ColPlainLeftHand.j3o");
+        //collisionPrism0=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPrism.j3o");
+        //collisionPrism1=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0f,"Models/Testing/Collisions/ColPrismRightHand.j3o");
+        //collisionPrism2=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0.6f,"Models/Testing/Collisions/ColPrismLeftHand.j3o");
+        //collisionPlain0=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPlain.j3o");
+        //collisionPlain1=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0f,"Models/Testing/Collisions/ColPlainRightHand.j3o");
+        //collisionPlain2=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0.6f,"Models/Testing/Collisions/ColPlainLeftHand.j3o");
         //OBJECTS INIT END
         
         //LIGHT INIT START

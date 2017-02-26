@@ -13,19 +13,19 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
 //by Tommy
-public class TestRoom implements Savable{
+public class Room implements Savable{
     
     private AssetManager assetManager;
     private Node rootNode;
     
     private Spatial spatial;
     
-    public TestRoom(AssetManager assetManager,Node rootNode){
+    public Room(AssetManager assetManager,Node rootNode){
         
         this.assetManager=assetManager;
         this.rootNode=rootNode;
         
-        spatial = assetManager.loadModel("Models/Static/TestRoom2/TestRoom2.j3o");
+        spatial = assetManager.loadModel("Models/Static/Room/Room_Final.j3o");
         spatial.setName("Room");
         spatial.scale(1f,1f,1f);
         spatial.rotate(0.0f, 0.0f, 0.0f);

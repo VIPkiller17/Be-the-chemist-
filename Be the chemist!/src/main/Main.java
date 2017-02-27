@@ -16,7 +16,6 @@ import java.util.ArrayList;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
-import objects.CustomTestObject;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
@@ -46,7 +45,6 @@ public class Main extends VRApplication {
     private Floor testFloor;
     
     //Objects
-    private CustomTestObject collisionPrism0,collisionPrism1,collisionPrism2,collisionPlain0,collisionPlain1,collisionPlain2;
     
     private ArrayList<Describable> describables=new ArrayList<Describable>();
 

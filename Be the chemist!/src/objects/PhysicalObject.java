@@ -27,7 +27,7 @@ public abstract class PhysicalObject implements Savable, Describable{
     private Vector3f position;
     private Node node;
     
-    PhysicalObject(String modelPath,Vector3f position){
+    public PhysicalObject(String modelPath,Vector3f position){
         
         this.modelPath=modelPath;
         this.position=position;

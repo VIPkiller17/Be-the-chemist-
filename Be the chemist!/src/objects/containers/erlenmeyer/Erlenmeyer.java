@@ -8,6 +8,6 @@ package objects.containers.erlenmeyer;
  *
  * @author VIPkiller17
  */
-public class Erlenmeyer {
+public class Erlenmeyer{
     
 }

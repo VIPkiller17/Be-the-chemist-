@@ -21,10 +21,10 @@ import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
-import worldObjects.displays.DescDisplay;
-import worldObjects.player.Hand;
-import worldObjects.player.Player;
-import worldObjects.staticWorld.testing.TestFloor;
+import objects.world.DescDisplay;
+import objects.player.Hand;
+import objects.player.Player;
+import objects.world.Floor;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -50,7 +50,6 @@ public class HandControl extends AbstractControl{
     private boolean laserMovedOut,laserPointingAtDescribable;
     private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;
     
-    private Line testLaser;
     private Geometry testLaserGeom;
     private Material testLaserMat;
     
@@ -62,6 +61,7 @@ public class HandControl extends AbstractControl{
     
     public HandControl(Node newRootNode,AssetManager assetManager,ArrayList<Describable> newDescribables,CollisionResults newCollisionResults,Hand hand,Spatial newObserver,Player player){
         
+        //init variables
         this.hand=hand;
         this.player=player;
         observer=newObserver;
@@ -73,13 +73,10 @@ public class HandControl extends AbstractControl{
         
         collisionToExclude=handSide==0 ? "RightHand" : "LeftHand";
         
-        testLaser=new Line(new Vector3f(0f,0.5f,0f),new Vector3f(0f,0.5f,0.1f));
-        testLaserGeom=new Geometry("HandLaser",testLaser);
-        testLaserMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        testLaserGeom.setMaterial(testLaserMat);
-        testLaserGeom.setCullHint(Spatial.CullHint.Never);
-        //rootNode.attachChild(testLaserGeom);
-        
+        //collision point is used t put the laser's end at the correct location
+        //this was added because the laser would not point at the correct location after a teleportation
+        //this still requires testing, as it has not been added to the teleportation laser
+        //but only to the description laser
         collisionPoint = new Box(0.01f,0.01f,0.01f); 
         collisionPointGeom = new Geometry("TestCollisionPoint", collisionPoint); 
         collisionPointMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -95,11 +92,27 @@ public class HandControl extends AbstractControl{
         //Update hand
         if(VRHardware.getVRinput().getRawControllerState(handSide)!=null){
             
+            System.out.println("Updating ray position...");
             //Put the ray to correct position and direction
             hand.setRayCoords(hand.getWorldTranslation(),new Vector3f(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(2)));
-            
-            testLaser.updatePoints(hand.getRay().getOrigin(),hand.getRay().getDirection().mult(1000));
 
+            System.out.println("Clearing collisions list...");
+            //check if the collisions array actually has anything in it
+            if(collisionResults.size()>0)
+
+                //if it does clear it because there could be left-overs from last loop
+                collisionResults.clear();
+
+            System.out.println("Processing collisions between ray and world...");
+            //find the collisions between the ray and other geoms
+            rootNode.collideWith(hand.getRay(),collisionResults);
+            
+            System.out.println("This frame's collisions list:");
+            
+            for(int i=0;i<collisionResults.size();i++)
+                
+                System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
+            
             //Update location of Geom
             hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
 
@@ -119,33 +132,8 @@ public class HandControl extends AbstractControl{
 
                 }else{
 
-                    //System.out.println("STARTING LASER LOOP");
-
-                    //check if the collisions array actually has anything in it
-                    if(collisionResults.size()>0)
-
-                        //if it does clear it because there could be left-overs from last loop
-                        collisionResults.clear();
-
-                    //find the collisions between the ray and other geoms
-                    rootNode.collideWith(hand.getRay(),collisionResults);
-
-                    //Finds the correct collision in the collision list
-                    //System.out.println("COLLISIONS PROCESSING START");
-                    
-                    //display list of collisions
-                    //System.out.println("\tCollisions:");
-                    //for(int i=0;i<collisionResults.size();i++){
-
-                        //System.out.println("\t\tCollision result geom name: "+collisionResults.getCollision(i).getGeometry().getName()+", its parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" and the name of the geometry cested to a spatial: "+((Spatial)(collisionResults.getCollision(i).getGeometry())).getName());
-
-                    //}
-                    
-                    //System.out.println("\tFinding correct collision:");
-
+                    //finding the correct collision in the list
                     for(int i=0;i<collisionResults.size();i++){
-                        
-                        //System.out.println("\t\tChecking if collision geom of collision "+i+" has the correctCollision userData");
                         
                         //Check if the collision geom is the correct collision
                         //if Not, check if its parent is the correct collision
@@ -427,28 +415,6 @@ public class HandControl extends AbstractControl{
     }
     
     private void processTeleportation(){
-
-        //check if the collisions array actually has anything in it
-        if(collisionResults.size()>0)
-
-            //if it does clear it because there could be left-overs from last loop
-            collisionResults.clear();
-
-        //find the collisions between the ray and other geoms
-        rootNode.collideWith(hand.getRay(),collisionResults);
-
-        //Finds the correct collision in the collision list
-        //System.out.println("COLLISIONS PROCESSING START");
-
-        //display list of collisions
-        //System.out.println("\tCollisions:");
-        //for(int i=0;i<collisionResults.size();i++){
-
-            //System.out.println("\t\tCollision result geom name: "+collisionResults.getCollision(i).getGeometry().getName()+", its parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" and the name of the geometry cested to a spatial: "+((Spatial)(collisionResults.getCollision(i).getGeometry())).getName());
-
-        //}
-
-        //System.out.println("\tFinding correct collision:");
         
         for(int i=0;i<collisionResults.size();i++){
                         
@@ -514,13 +480,13 @@ public class HandControl extends AbstractControl{
 
         //System.out.println("\tFinding collision spatial's corresponding object..");
 
-        if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof TestFloor){
+        if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof Floor){
 
             //System.out.println("\tCorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
 
             teleLaserPointingValidSurface=true;
 
-        }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof TestFloor)){
+        }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof Floor)){
 
             //System.out.println("\tCorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
 
@@ -539,7 +505,7 @@ public class HandControl extends AbstractControl{
             hand.setLaserMaterialColor("Color", ColorRGBA.Green);
             
             //Set location tp hexagon
-            hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+            hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint().add(0,0.001f,0));
 
             teleportationPrimed=true;
 
@@ -547,6 +513,8 @@ public class HandControl extends AbstractControl{
 
             //otherwise make it red
             hand.setLaserMaterialColor("Color", ColorRGBA.Red);
+            
+            hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
 
             teleportationPrimed=false;
 
@@ -560,6 +528,8 @@ public class HandControl extends AbstractControl{
 
             //if not already out of sight, move laser out of sight
             hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+            
+            hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
 
             //set laserMovedOut to true once the laser has been moved out
             teleLaserMovedOut=true;

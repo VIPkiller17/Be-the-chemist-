@@ -2,9 +2,12 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package interfaces;
-public interface Describable {
-    
-    abstract String getDescription();
+package objects.solution;
 
+/**
+ *
+ * @author VIPkiller17
+ */
+public class SolutionControl {
+    
 }

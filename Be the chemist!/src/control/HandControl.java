@@ -21,10 +21,10 @@ import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
-import worldObjects.displays.DescDisplay;
-import worldObjects.player.Hand;
-import worldObjects.player.Player;
-import worldObjects.staticWorld.testing.Floor;
+import objects.world.DescDisplay;
+import objects.player.Hand;
+import objects.player.Player;
+import objects.world.Floor;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -92,9 +92,27 @@ public class HandControl extends AbstractControl{
         //Update hand
         if(VRHardware.getVRinput().getRawControllerState(handSide)!=null){
             
+            System.out.println("Updating ray position...");
             //Put the ray to correct position and direction
             hand.setRayCoords(hand.getWorldTranslation(),new Vector3f(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(2)));
 
+            System.out.println("Clearing collisions list...");
+            //check if the collisions array actually has anything in it
+            if(collisionResults.size()>0)
+
+                //if it does clear it because there could be left-overs from last loop
+                collisionResults.clear();
+
+            System.out.println("Processing collisions between ray and world...");
+            //find the collisions between the ray and other geoms
+            rootNode.collideWith(hand.getRay(),collisionResults);
+            
+            System.out.println("This frame's collisions list:");
+            
+            for(int i=0;i<collisionResults.size();i++)
+                
+                System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
+            
             //Update location of Geom
             hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
 
@@ -114,33 +132,8 @@ public class HandControl extends AbstractControl{
 
                 }else{
 
-                    //System.out.println("STARTING LASER LOOP");
-
-                    //check if the collisions array actually has anything in it
-                    if(collisionResults.size()>0)
-
-                        //if it does clear it because there could be left-overs from last loop
-                        collisionResults.clear();
-
-                    //find the collisions between the ray and other geoms
-                    rootNode.collideWith(hand.getRay(),collisionResults);
-
-                    //Finds the correct collision in the collision list
-                    //System.out.println("COLLISIONS PROCESSING START");
-                    
-                    //display list of collisions
-                    //System.out.println("\tCollisions:");
-                    //for(int i=0;i<collisionResults.size();i++){
-
-                        //System.out.println("\t\tCollision result geom name: "+collisionResults.getCollision(i).getGeometry().getName()+", its parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" and the name of the geometry cested to a spatial: "+((Spatial)(collisionResults.getCollision(i).getGeometry())).getName());
-
-                    //}
-                    
-                    //System.out.println("\tFinding correct collision:");
-
+                    //finding the correct collision in the list
                     for(int i=0;i<collisionResults.size();i++){
-                        
-                        //System.out.println("\t\tChecking if collision geom of collision "+i+" has the correctCollision userData");
                         
                         //Check if the collision geom is the correct collision
                         //if Not, check if its parent is the correct collision
@@ -422,28 +415,6 @@ public class HandControl extends AbstractControl{
     }
     
     private void processTeleportation(){
-
-        //check if the collisions array actually has anything in it
-        if(collisionResults.size()>0)
-
-            //if it does clear it because there could be left-overs from last loop
-            collisionResults.clear();
-
-        //find the collisions between the ray and other geoms
-        rootNode.collideWith(hand.getRay(),collisionResults);
-
-        //Finds the correct collision in the collision list
-        //System.out.println("COLLISIONS PROCESSING START");
-
-        //display list of collisions
-        //System.out.println("\tCollisions:");
-        //for(int i=0;i<collisionResults.size();i++){
-
-            //System.out.println("\t\tCollision result geom name: "+collisionResults.getCollision(i).getGeometry().getName()+", its parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" and the name of the geometry cested to a spatial: "+((Spatial)(collisionResults.getCollision(i).getGeometry())).getName());
-
-        //}
-
-        //System.out.println("\tFinding correct collision:");
         
         for(int i=0;i<collisionResults.size();i++){
                         

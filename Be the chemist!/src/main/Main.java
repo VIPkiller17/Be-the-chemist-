@@ -17,9 +17,9 @@ import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
 import objects.CustomTestObject;
-import worldObjects.player.Player;
-import worldObjects.staticWorld.testing.Floor;
-import worldObjects.staticWorld.testing.Room;
+import objects.player.Player;
+import objects.world.Floor;
+import objects.world.Room;
 //by Tommy
 public class Main extends VRApplication {
     

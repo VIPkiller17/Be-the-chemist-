@@ -21,57 +21,20 @@ public abstract class Container extends PhysicalObject{
     private boolean full;
     private boolean closed;
     private boolean contains;
-    private boolean closeable;
     private double quantity;
-    private double maxQuantity;
     private double temperature;
-    private double maxTemperature;
     private double pressure;
-    private double maxPressureOpenned;
-    private double maxPressureClosed;
-    private Spatial highlightModel;
-    private Material highlightModelMat;
-    private Spatial stopperModel;
-    private Material stopperMat;
-    private Spatial holedStopperModel;
-    private Material holedSTopperMat;
-    private Spatial liquidModel;
-    private Material liquidModelMat;
-    private Spatial solidModel;
-    private Material solidModelMat;
-    private ParticleEmitter particleEmitter;
     
-    public Container(String modelPath,Vector3f position,double maxQuantity,double maxTemperature,double maxPressureOpenned,double maxPressureClosed,boolean closeable,Spatial stopperModel,Spatial holedStopperModel,Spatial liquidModel,Spatial solidModel,Spatial highlightModel){
+    public Container(Vector3f position){
         
-        super(modelPath,position);
-        
-        this.maxQuantity=maxQuantity;
-        this.maxTemperature=maxTemperature;
-        this.maxPressureOpenned=maxPressureOpenned;
-        this.maxPressureClosed=maxPressureClosed;
-        this.closeable=closeable;
-        this.stopperModel=stopperModel;
-        this.holedStopperModel=holedStopperModel;
-        this.liquidModel=liquidModel;
-        this.solidModel=solidModel;
-        this.highlightModel=highlightModel;
+        super(position);
         
     }
     
-    public Container(String modelPath,Vector3f position,double maxQuantity,double maxTemperature,double maxPressureOpenned,double maxPressureClosed,boolean closeable,Spatial stopperModel,Spatial holedStopperModel,Spatial liquidModel,Spatial solidModel,Spatial highlightModel,Solution solution,double quantity){
+    public Container(Vector3f position,Solution solution,double quantity){
         
-        super(modelPath,position);
+        super(position);
         
-        this.maxQuantity=maxQuantity;
-        this.maxTemperature=maxTemperature;
-        this.maxPressureOpenned=maxPressureOpenned;
-        this.maxPressureClosed=maxPressureClosed;
-        this.closeable=closeable;
-        this.stopperModel=stopperModel;
-        this.holedStopperModel=holedStopperModel;
-        this.liquidModel=liquidModel;
-        this.solidModel=solidModel;
-        this.highlightModel=highlightModel;
         this.solution=solution;
         this.quantity=quantity;
         
@@ -125,13 +88,61 @@ public abstract class Container extends PhysicalObject{
         
     }
     
-    public boolean isCloseable(){
+    public void setQuantity(double quantity){
         
-        return closeable;
+        this.quantity=quantity;
         
     }
     
+    public double getQuantity(){
+        
+        return quantity;
+        
+    }
     
+    public void setTemperature(double temperature){
+        
+        this.temperature=temperature;
+        
+    }
+    
+    public double getTemperature(){
+        
+        return temperature;
+        
+    }
+    
+    public void setPressure(double pressure){
+        
+        this.pressure=pressure;
+        
+    }
+    
+    public double getPressure(){
+        
+        return pressure;
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherContainer){
+        
+        if(otherContainer instanceof Container)
+            
+            return ((Container)otherContainer).getQuantity()==quantity&&((Container)otherContainer).getTemperature()==temperature&&((Container)otherContainer).getPressure()==pressure;
+        
+        else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Container containing "+quantity+" liters of "+solution+" with temperature "+temperature+" and pressure "+pressure;
+        
+    }
     
     @Override
     public abstract String getDescription();

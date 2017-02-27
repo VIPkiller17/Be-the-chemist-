@@ -1,5 +1,6 @@
 package main;
 
+import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -26,6 +27,8 @@ public class Main extends VRApplication {
     private static VRAPI VRHardware=new OpenVR();
     
     private CollisionResults collisionResults=new CollisionResults();
+    
+    private BulletAppState bulletAppState;
     
     //Player
     Spatial observer;
@@ -71,6 +74,10 @@ public class Main extends VRApplication {
     @Override
     public void simpleInitApp() {
         
+        //Physics
+        bulletAppState = new BulletAppState();
+        getStateManager().attach(bulletAppState);
+        
         //LOAD SPATIALS START
         
         //OBSERVER INIT (PLAYER,HMD,THE HEADSET) START
@@ -83,9 +90,9 @@ public class Main extends VRApplication {
         playerLogic=new Player(getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
         //TEST WORLD INIT START
-        testRoom=new Room(getAssetManager(),rootNode);
+        testRoom=new Room(getAssetManager(),rootNode,bulletAppState);
         
-        testFloor=new Floor(getAssetManager(),rootNode);
+        testFloor=new Floor(getAssetManager(),rootNode,bulletAppState);
         //TEST WORLD INIT END
         
         //OBJECTS INIT START

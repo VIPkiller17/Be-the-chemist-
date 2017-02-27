@@ -5,6 +5,8 @@
 package objects.world;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
@@ -20,7 +22,9 @@ public class Room implements Savable{
     
     private Spatial spatial;
     
-    public Room(AssetManager assetManager,Node rootNode){
+    private RigidBodyControl room_phy;
+    
+    public Room(AssetManager assetManager,Node rootNode,BulletAppState bulletAppState){
         
         this.assetManager=assetManager;
         this.rootNode=rootNode;
@@ -33,6 +37,10 @@ public class Room implements Savable{
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         rootNode.attachChild(spatial);
+        
+        spatial.addControl(room_phy);
+        room_phy=new RigidBodyControl(0);
+        bulletAppState.getPhysicsSpace().add(room_phy);
         
     }
     

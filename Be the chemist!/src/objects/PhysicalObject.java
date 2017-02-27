@@ -21,40 +21,12 @@ import java.io.IOException;
  */
 public abstract class PhysicalObject implements Savable, Describable{
 
-    private String modelPath;
-    private Spatial model;
-    private Material mat;
     private Vector3f position;
     private Node node;
     
-    public PhysicalObject(String modelPath,Vector3f position){
+    public PhysicalObject(Vector3f position){
         
-        this.modelPath=modelPath;
         this.position=position;
-        
-    }
-    
-    public String getModelPath(){
-        
-        return modelPath;
-        
-    }
-    
-    public Spatial getSpatial() {
-        
-        return model;
-        
-    }
-    
-    public Material getMat(){
-        
-        return mat;
-        
-    }
-    
-    public void setColor(String code,ColorRGBA color){
-        
-        mat.setColor(code, color);
         
     }
     
@@ -70,12 +42,24 @@ public abstract class PhysicalObject implements Savable, Describable{
         
     }
     
+    public void attachObject(Spatial object){
+        
+        node.attachChild(object);
+        
+    }
+    
+    public void detachObject(int index){
+        
+        node.detachChildAt(index);
+        
+    }
+    
     @Override
     public boolean equals(Object otherPhysicalObject){
         
         if(otherPhysicalObject instanceof PhysicalObject)
             
-            return ((PhysicalObject)otherPhysicalObject).position.equals(position)&&((PhysicalObject)otherPhysicalObject).modelPath.equals(modelPath);
+            return ((PhysicalObject)otherPhysicalObject).position.equals(position);
             
         else
             
@@ -86,7 +70,7 @@ public abstract class PhysicalObject implements Savable, Describable{
     @Override
     public String toString(){
         
-        return "PhysicalObject at pos: "+position+" with modelPath: "+modelPath;
+        return "PhysicalObject at pos: "+position;
         
     }
     

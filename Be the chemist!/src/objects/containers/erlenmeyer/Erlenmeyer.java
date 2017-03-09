@@ -14,6 +14,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import objects.containers.Container;
 import objects.particleEmitter.ParticleEmitter;
+import com.jme3.math.ColorRGBA;
 import objects.solution.Solution;
 
 /**

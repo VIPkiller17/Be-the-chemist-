@@ -37,8 +37,8 @@ public class Floor implements Savable{
         spatial.setUserData("correspondingObject", this);
         rootNode.attachChild(spatial);
         
-        spatial.addControl(floor_phy);
         floor_phy=new RigidBodyControl(0);
+        spatial.addControl(floor_phy);
         bulletAppState.getPhysicsSpace().add(floor_phy);
         
     }

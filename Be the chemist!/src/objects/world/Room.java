@@ -38,8 +38,8 @@ public class Room implements Savable{
         spatial.setUserData("correspondingObject", this);
         rootNode.attachChild(spatial);
         
-        spatial.addControl(room_phy);
         room_phy=new RigidBodyControl(0);
+        spatial.addControl(room_phy);
         bulletAppState.getPhysicsSpace().add(room_phy);
         
     }

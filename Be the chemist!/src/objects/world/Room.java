@@ -10,6 +10,8 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
@@ -21,7 +23,7 @@ public class Room implements Savable{
     private Node rootNode;
     
     private Spatial spatial;
-    
+    private Material mat;
     private RigidBodyControl room_phy;
     
     public Room(AssetManager assetManager,Node rootNode,BulletAppState bulletAppState){
@@ -36,11 +38,18 @@ public class Room implements Savable{
         spatial.setLocalTranslation(0f,0f,0f);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        rootNode.attachChild(spatial);
+        
+        mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
+        mat.setBoolean("UseMaterialColors",true); 
+        mat.setColor("Ambient",new ColorRGBA(1f,1f,1f,1f)); 
+        //mat.setColor("Diffuse", ColorRGBA.Green); 
+        spatial.setMaterial(mat);
         
         room_phy=new RigidBodyControl(0);
         spatial.addControl(room_phy);
         bulletAppState.getPhysicsSpace().add(room_phy);
+        
+        rootNode.attachChild(spatial);
         
     }
     

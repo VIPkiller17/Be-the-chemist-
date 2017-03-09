@@ -6,7 +6,7 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.light.PointLight;
+import com.jme3.light.AmbientLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -74,6 +74,10 @@ public class Main extends VRApplication {
     @Override
     public void simpleInitApp() {
         
+        AmbientLight al = new AmbientLight();
+        al.setColor(ColorRGBA.White.mult(1.3f));
+        rootNode.addLight(al);
+        
         //Physics
         bulletAppState = new BulletAppState();
         getStateManager().attach(bulletAppState);
@@ -105,9 +109,9 @@ public class Main extends VRApplication {
         //OBJECTS INIT END
         
         //LIGHT INIT START
-        PointLight light = new PointLight(new Vector3f(0f,0.5f,0f));
-        light.setColor(ColorRGBA.White);
-        rootNode.addLight(light);
+        //PointLight light = new PointLight(new Vector3f(0f,0.5f,0f));
+        //light.setColor(ColorRGBA.White);
+        //rootNode.addLight(light);
         //LIGHT INIT END
         
         //LOAD SPACIALS END

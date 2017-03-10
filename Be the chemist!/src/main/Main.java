@@ -6,7 +6,8 @@ import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
-import com.jme3.light.AmbientLight;
+import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
@@ -44,8 +45,8 @@ public class Main extends VRApplication {
     private float controllerConnectionTPF;
     
     //World
-    private Room testRoom;
-    private Floor testFloor;
+    private Room room;
+    private Floor floor;
     
     //Objects
     
@@ -74,9 +75,12 @@ public class Main extends VRApplication {
     @Override
     public void simpleInitApp() {
         
-        AmbientLight al = new AmbientLight();
-        al.setColor(ColorRGBA.White.mult(1.3f));
-        rootNode.addLight(al);
+        //AmbientLight al = new AmbientLight();
+        //al.setColor(ColorRGBA.White.mult(1.3f));
+        //rootNode.addLight(al);
+        
+        //Lights
+        initLights();
         
         //Physics
         bulletAppState = new BulletAppState();
@@ -94,9 +98,9 @@ public class Main extends VRApplication {
         playerLogic=new Player(getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
         //TEST WORLD INIT START
-        testRoom=new Room(getAssetManager(),rootNode,bulletAppState);
+        room=new Room(getAssetManager(),rootNode,bulletAppState);
         
-        testFloor=new Floor(getAssetManager(),rootNode,bulletAppState);
+        floor=new Floor(getAssetManager(),rootNode,bulletAppState);
         //TEST WORLD INIT END
         
         //OBJECTS INIT START
@@ -122,7 +126,6 @@ public class Main extends VRApplication {
         
     }
 
-    //vt add
     private void initInputs() {
         
         //non-VR inputs for testing without VR
@@ -198,6 +201,60 @@ public class Main extends VRApplication {
         getInputManager().addListener(anl, "up");
         getInputManager().addListener(anl, "downControl");
         getInputManager().addListener(anl, "downShift");
+        
+    }
+    
+    public void initLights(){
+        /*
+        PointLight light = new PointLight();
+        light.setPosition(new Vector3f(0,2.5f,0));
+        light.setColor(ColorRGBA.White);
+        rootNode.addLight(light); 
+        */
+        
+        //DL's simulate the ambient light
+        DirectionalLight dl0 = new DirectionalLight();
+        dl0.setDirection((new Vector3f(0.5f,0,0)).normalizeLocal());
+        dl0.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(dl0); 
+        
+        DirectionalLight dl1 = new DirectionalLight();
+        dl1.setDirection((new Vector3f(-0.5f,0,0)).normalizeLocal());
+        dl1.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(dl1); 
+        
+        DirectionalLight dl2 = new DirectionalLight();
+        dl2.setDirection((new Vector3f(0,0.5f,0)).normalizeLocal());
+        dl2.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(dl2); 
+        
+        DirectionalLight dl3 = new DirectionalLight();
+        dl3.setDirection((new Vector3f(0,-0.5f,0)).normalizeLocal());
+        dl3.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(dl3); 
+        
+        DirectionalLight dl4 = new DirectionalLight();
+        dl4.setDirection((new Vector3f(0,0,0.5f)).normalizeLocal());
+        dl4.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(dl4); 
+        
+        DirectionalLight dl5 = new DirectionalLight();
+        dl5.setDirection((new Vector3f(0,0,-0.5f)).normalizeLocal());
+        dl5.setColor(ColorRGBA.White.mult(0.5f));
+        rootNode.addLight(dl5); 
+        
+        /*
+        for(int i=0;i<4;i++){
+            
+            for(int j=0;i<5;i++){
+                
+                
+                
+            }
+            
+        }
+        */
+        
         
     }
 

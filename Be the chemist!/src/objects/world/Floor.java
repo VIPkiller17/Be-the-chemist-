@@ -31,7 +31,7 @@ public class Floor implements Savable{
         this.assetManager=assetManager;
         this.rootNode=rootNode;
         
-        spatial = assetManager.loadModel("Models/Static/Floor/Floor_Final.j3o");
+        spatial = assetManager.loadModel("Models/Static/Floor/Floor.j3o");
         spatial.scale(1f,1f,1f);
         spatial.rotate(0.0f, 0.0f, 0.0f);
         spatial.setLocalTranslation(0f,0f,0f);
@@ -39,11 +39,12 @@ public class Floor implements Savable{
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         
-        mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-        mat.setBoolean("UseMaterialColors", true); 
-        mat.setColor("Ambient",new ColorRGBA(1f,1f,1f,1f)); 
-        //mat.setColor("Diffuse", ColorRGBA.Green); 
-        spatial.setMaterial(mat);
+        //mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
+        //mat.setBoolean("UseMaterialColors", true); 
+        //mat.setColor("Ambient",ColorRGBA.Gray); 
+        //mat.setColor("Diffuse", ColorRGBA.Gray);
+        //mat.setColor("Specular", ColorRGBA.Gray);
+        //spatial.setMaterial(mat);
         
         floor_phy=new RigidBodyControl(0);
         spatial.addControl(floor_phy);

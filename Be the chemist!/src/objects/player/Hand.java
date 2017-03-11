@@ -11,10 +11,10 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -82,6 +82,7 @@ public class Hand implements Describable,Savable{
         spatial.setCullHint(Spatial.CullHint.Never);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
+        spatial.setShadowMode(ShadowMode.CastAndReceive);
         handNode.attachChild(spatial);
         
         //System.out.println("Created hand model spatial with name "+spatial.getName());

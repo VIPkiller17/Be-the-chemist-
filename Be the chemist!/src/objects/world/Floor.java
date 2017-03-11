@@ -11,7 +11,7 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
@@ -38,6 +38,7 @@ public class Floor implements Savable{
         spatial.setName("Floor");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
+        spatial.setShadowMode(ShadowMode.Receive);
         
         //mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
         //mat.setBoolean("UseMaterialColors", true); 

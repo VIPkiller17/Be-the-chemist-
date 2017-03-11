@@ -125,26 +125,32 @@ public class HandControl extends AbstractControl{
             //Update due to menu button being pressed
             if(VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){//while its being held
 
+                System.out.println("Menu button pressed.");
+                
                 //check if there is an object in the hand
                 if(hand.isHoldingObject()){
 
                     //TODO display held object's details
 
                 }else{
+                    
+                    System.out.println("No object being held in that hand, finding correctCollision...");
 
                     //finding the correct collision in the list
                     for(int i=0;i<collisionResults.size();i++){
+                        
+                        System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
                         
                         //Check if the collision geom is the correct collision
                         //if Not, check if its parent is the correct collision
                         //if not, continue to the next element in the list of collisions
                         if(collisionResults.getCollision(i).getGeometry().getUserData("correctCollision")!=null){
                             
-                            //System.out.println("\t\t\tCollision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude);
+                            System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
                             
                             if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
 
-                                //System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName()+" with parent: "+collisionResults.getCollision(i).getGeometry().getParent().getName());
+                                System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
 
                                 correctCollisionSpatial=collisionResults.getCollision(i).getGeometry();
                                 
@@ -158,11 +164,11 @@ public class HandControl extends AbstractControl{
                             
                         }else if(collisionResults.getCollision(i).getGeometry().getParent().getUserData("correctCollision")!=null){
                             
-                            //System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
+                            System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
                             
                             if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
 
-                                //System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" with parent: "+collisionResults.getCollision(i).getGeometry().getParent().getParent().getName());
+                                System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
 
                                 correctCollisionSpatial=collisionResults.getCollision(i).getGeometry().getParent();
                                 
@@ -184,7 +190,7 @@ public class HandControl extends AbstractControl{
 
                     }
                     
-                    //System.out.println("\tUpdating laser position...");
+                    System.out.println("Updating laser position...");
 
                     //update start and end points of laser to display it correctly
                     collisionPointGeom.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
@@ -198,23 +204,23 @@ public class HandControl extends AbstractControl{
                     
                     descriptionMovedOut=false;
 
-                    //System.out.println("\tFinding collision spatial's corresponding object..");
+                    System.out.println("Finding collision spatial's corresponding object..");
                     
                     if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable){
                         
-                        //System.out.println("\tCorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
+                        System.out.println("CorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
                         
                         laserPointingAtDescribable=true;
                         
                     }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable)){
                         
-                        //System.out.println("\tCorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
+                        System.out.println("CorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
                         
                         laserPointingAtDescribable=false;
                         
                     }else{
                         
-                        //System.out.println("\tERROR: CorrectCollisionSpatial does not have a corresponding object!");
+                        System.out.println("\tERROR: CorrectCollisionSpatial does not have a corresponding object!");
                         
                     }
 
@@ -409,8 +415,6 @@ public class HandControl extends AbstractControl{
     
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
-        
-        
         
     }
     

@@ -7,11 +7,11 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
-import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -25,6 +25,7 @@ import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
 import com.jme3.shadow.DirectionalLightShadowRenderer;
+import com.jme3.shadow.EdgeFilteringMode;
 
 //by Tommy
 public class Main extends VRApplication {
@@ -119,6 +120,7 @@ public class Main extends VRApplication {
         //collisionPlain2=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0.6f,"Models/Testing/Collisions/ColPlainLeftHand.j3o");
         Box testBox=new Box(0.1f,0.1f,0.1f);
         testCube=new Geometry("Test cube",testBox);
+        testCube.setShadowMode(ShadowMode.CastAndReceive);
         Material testCubeMat=new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         testCubeMat.setColor("Color",ColorRGBA.Blue);
         testCube.setMaterial(testCubeMat);
@@ -260,6 +262,7 @@ public class Main extends VRApplication {
     
     public void initLights(){
         
+        /*
         //DL's simulate the ambient light coming from all 6 directions
         DirectionalLight dl0 = new DirectionalLight();
         dl0.setDirection((new Vector3f(0.5f,0,0)).normalizeLocal());
@@ -290,32 +293,32 @@ public class Main extends VRApplication {
         dl5.setDirection((new Vector3f(0,0,-0.5f)).normalizeLocal());
         dl5.setColor(ColorRGBA.White.mult(0.5f));
         rootNode.addLight(dl5);
+        */
+        
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun); 
         
         DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), 1024, 3);
-        dlsr.setLight(dl3);
+        dlsr.setLight(sun);
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        getViewPort().addProcessor(dlsr);
         getLeftViewPort().addProcessor(dlsr);
         getRightViewPort().addProcessor(dlsr);
         
-        //this loop doesn't seem to work, need to make it work, temporarily replaced with the stuff after
         /*
+        //this loop doesn't seem to work, need to make it work, temporarily replaced with the stuff after
         for(int i=0;i<4;i++){
             
             for(int j=0;j<5;j++){
                 
                 PointLight light = new PointLight();
-                light.setPosition(new Vector3f((j*-2)-1.14f,2.75f,(i*2)+0.75f));
-                light.setColor(ColorRGBA.White.mult(0.1f));
+                light.setPosition(new Vector3f((i*2)+0.75f,2.5f,(j*2)+1.14f));
+                light.setColor(ColorRGBA.White.mult(0.03f));
                 rootNode.addLight(light); 
                 
-                Box boxMesh = new Box((j*-2)-1.14f,2.5f,(i*2)+0.75f);
-                Geometry boxGeo = new Geometry("Colored Box", boxMesh);
-                boxGeo.setLocalScale(0.01f);
-                Material boxMat = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md"); 
-                boxMat.setBoolean("UseMaterialColors", true); 
-                boxMat.setColor("Ambient", ColorRGBA.Green); 
-                boxMat.setColor("Diffuse", ColorRGBA.Green); 
-                boxGeo.setMaterial(boxMat); 
-                rootNode.attachChild(boxGeo);
+                
                 
                 System.out.println("Light placed at "+light.getPosition());
                 
@@ -323,124 +326,6 @@ public class Main extends VRApplication {
             
         }
         */
-        
-        PointLight pl0 = new PointLight();
-        pl0.setPosition(new Vector3f(0.75f,2.75f,1.14f));
-        pl0.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl0);
-        
-        Box boxMesh = new Box(pl0.getPosition(),0.01f,0.01f,0.01f);
-        Geometry boxGeo = new Geometry("Colored Box", boxMesh);
-        Material boxMat = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md"); 
-        boxMat.setBoolean("UseMaterialColors", true); 
-        boxMat.setColor("Ambient", ColorRGBA.Green); 
-        boxMat.setColor("Diffuse", ColorRGBA.Green); 
-        boxGeo.setMaterial(boxMat); 
-        rootNode.attachChild(boxGeo);
-        
-        PointLight pl1 = new PointLight();
-        pl1.setPosition(new Vector3f(0.75f,2.75f,3.14f));
-        pl1.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl1);
-        
-        Box boxMesh0 = new Box(pl1.getPosition(),0.01f,0.01f,0.01f);
-        Geometry boxGeo0 = new Geometry("Colored Box", boxMesh0);
-        Material boxMat0 = new Material(getAssetManager(), "Common/MatDefs/Light/Lighting.j3md"); 
-        boxMat0.setBoolean("UseMaterialColors", true); 
-        boxMat0.setColor("Ambient", ColorRGBA.Green); 
-        boxMat0.setColor("Diffuse", ColorRGBA.Green); 
-        boxGeo0.setMaterial(boxMat0); 
-        rootNode.attachChild(boxGeo0);
-        
-        PointLight pl2 = new PointLight();
-        pl2.setPosition(new Vector3f(0.75f,2.75f,5.14f));
-        pl2.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl2);
-        
-        PointLight pl3 = new PointLight();
-        pl3.setPosition(new Vector3f(0.75f,2.75f,7.14f));
-        pl3.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl3);
-        
-        PointLight pl4 = new PointLight();
-        pl4.setPosition(new Vector3f(0.75f,2.75f,9.14f));
-        pl4.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl4);
-        
-        PointLight pl5 = new PointLight();
-        pl5.setPosition(new Vector3f(2.75f,2.75f,1.14f));
-        pl5.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl5);
-        
-        PointLight pl6 = new PointLight();
-        pl6.setPosition(new Vector3f(2.75f,2.75f,3.14f));
-        pl6.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl6);
-        
-        PointLight pl7 = new PointLight();
-        pl7.setPosition(new Vector3f(2.75f,2.75f,5.14f));
-        pl7.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl7);
-        
-        PointLight pl8 = new PointLight();
-        pl8.setPosition(new Vector3f(2.75f,2.75f,7.14f));
-        pl8.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl8);
-        
-        PointLight pl9 = new PointLight();
-        pl9.setPosition(new Vector3f(2.75f,2.75f,9.14f));
-        pl9.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl9);
-        
-        PointLight pl10 = new PointLight();
-        pl10.setPosition(new Vector3f(5.75f,2.75f,1.14f));
-        pl10.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl10);
-        
-        PointLight pl11 = new PointLight();
-        pl11.setPosition(new Vector3f(5.75f,2.75f,3.14f));
-        pl11.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl11);
-        
-        PointLight pl12 = new PointLight();
-        pl12.setPosition(new Vector3f(5.75f,2.75f,5.14f));
-        pl12.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl12);
-        
-        PointLight pl13 = new PointLight();
-        pl13.setPosition(new Vector3f(5.75f,2.75f,7.14f));
-        pl13.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl13);
-        
-        PointLight pl14 = new PointLight();
-        pl14.setPosition(new Vector3f(5.75f,2.75f,9.14f));
-        pl14.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl14);
-        
-        PointLight pl15 = new PointLight();
-        pl15.setPosition(new Vector3f(7.75f,2.75f,1.14f));
-        pl15.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl15);
-        
-        PointLight pl16 = new PointLight();
-        pl16.setPosition(new Vector3f(7.75f,2.75f,3.14f));
-        pl16.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl16);
-        
-        PointLight pl17 = new PointLight();
-        pl17.setPosition(new Vector3f(7.75f,2.75f,5.14f));
-        pl17.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl17);
-        
-        PointLight pl18 = new PointLight();
-        pl18.setPosition(new Vector3f(7.75f,2.75f,7.14f));
-        pl18.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl18);
-        
-        PointLight pl19 = new PointLight();
-        pl19.setPosition(new Vector3f(7.75f,2.75f,9.14f));
-        pl19.setColor(ColorRGBA.White.mult(0.05f));
-        rootNode.addLight(pl19);
         
     }
 

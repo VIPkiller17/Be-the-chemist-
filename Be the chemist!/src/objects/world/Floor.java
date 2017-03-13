@@ -40,12 +40,9 @@ public class Floor implements Savable{
         spatial.setUserData("correspondingObject", this);
         spatial.setShadowMode(ShadowMode.Receive);
         
-        //mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-        //mat.setBoolean("UseMaterialColors", true); 
-        //mat.setColor("Ambient",ColorRGBA.Gray); 
-        //mat.setColor("Diffuse", ColorRGBA.Gray);
-        //mat.setColor("Specular", ColorRGBA.Gray);
-        //spatial.setMaterial(mat);
+        mat = new Material(assetManager, "jmevr/shaders/unshaded.j3md"); 
+        mat.setBoolean("UseMaterialColors", true);
+        spatial.setMaterial(mat);
         
         floor_phy=new RigidBodyControl(0);
         spatial.addControl(floor_phy);

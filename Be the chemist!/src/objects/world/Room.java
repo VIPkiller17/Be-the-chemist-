@@ -49,12 +49,10 @@ public class Room implements Savable{
         furniture.setUserData("correspondingObject", this);
         furniture.setShadowMode(ShadowMode.CastAndReceive);
         
-        //mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md"); 
-        //mat.setBoolean("UseMaterialColors",true); 
-        //mat.setColor("Ambient",ColorRGBA.Gray); 
-        //mat.setColor("Diffuse", ColorRGBA.Gray);
-        //mat.setColor("Specular", ColorRGBA.Gray);
-        //spatial.setMaterial(mat);
+        mat = new Material(assetManager, "jmevr/shaders/Unshaded.j3md"); 
+        mat.setBoolean("UseMaterialColors",true); 
+        room.setMaterial(mat);
+        furniture.setMaterial(mat);
         
         room_phy=new RigidBodyControl(0);
         room.addControl(room_phy);

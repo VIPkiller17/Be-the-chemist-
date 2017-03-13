@@ -7,6 +7,7 @@ import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
+import com.jme3.light.PointLight;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
@@ -16,16 +17,16 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
+import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
+import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
-import com.jme3.shadow.DirectionalLightShadowRenderer;
-import com.jme3.shadow.EdgeFilteringMode;
 
 //by Tommy
 public class Main extends VRApplication {
@@ -75,6 +76,9 @@ public class Main extends VRApplication {
         
         //Makes it so that the game pauses on loss of focus
         app.setPauseOnLostFocus(true);
+        
+        //Make the game use VR instancing
+        //app.preconfigureVRApp(PRECONFIG_PARAMETER.INSTANCE_VR_RENDERING,true);
         
         //starts the game
         app.start();
@@ -262,70 +266,78 @@ public class Main extends VRApplication {
     
     public void initLights(){
         
-        /*
+        
         //DL's simulate the ambient light coming from all 6 directions
         DirectionalLight dl0 = new DirectionalLight();
         dl0.setDirection((new Vector3f(0.5f,0,0)).normalizeLocal());
-        dl0.setColor(ColorRGBA.White.mult(0.5f));
+        dl0.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl0); 
         
         DirectionalLight dl1 = new DirectionalLight();
         dl1.setDirection((new Vector3f(-0.5f,0,0)).normalizeLocal());
-        dl1.setColor(ColorRGBA.White.mult(0.5f));
+        dl1.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl1); 
         
         DirectionalLight dl2 = new DirectionalLight();
         dl2.setDirection((new Vector3f(0,0.5f,0)).normalizeLocal());
-        dl2.setColor(ColorRGBA.White.mult(0.5f));
+        dl2.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl2); 
         
         DirectionalLight dl3 = new DirectionalLight();
         dl3.setDirection((new Vector3f(0,-0.5f,0)).normalizeLocal());
-        dl3.setColor(ColorRGBA.White.mult(0.5f));
+        dl3.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl3); 
         
         DirectionalLight dl4 = new DirectionalLight();
         dl4.setDirection((new Vector3f(0,0,0.5f)).normalizeLocal());
-        dl4.setColor(ColorRGBA.White.mult(0.5f));
+        dl4.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl4); 
         
         DirectionalLight dl5 = new DirectionalLight();
         dl5.setDirection((new Vector3f(0,0,-0.5f)).normalizeLocal());
-        dl5.setColor(ColorRGBA.White.mult(0.5f));
+        dl5.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl5);
-        */
         
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
         rootNode.addLight(sun); 
         
-        DirectionalLightShadowRenderer dlsr = new DirectionalLightShadowRenderer(getAssetManager(), 1024, 3);
+        VRDirectionalLightShadowRenderer dlsr = new VRDirectionalLightShadowRenderer(getAssetManager(), 2048, 4);
         dlsr.setLight(sun);
-        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
-        getViewPort().addProcessor(dlsr);
+        //dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        //getViewPort().addProcessor(dlsr);
         getLeftViewPort().addProcessor(dlsr);
         getRightViewPort().addProcessor(dlsr);
         
-        /*
-        //this loop doesn't seem to work, need to make it work, temporarily replaced with the stuff after
+        
+        //adds the point lights
         for(int i=0;i<4;i++){
             
             for(int j=0;j<5;j++){
                 
                 PointLight light = new PointLight();
-                light.setPosition(new Vector3f((i*2)+0.75f,2.5f,(j*2)+1.14f));
+                light.setPosition(new Vector3f((i*2)+0.75f,2.75f,(j*2)+1.14f));
                 light.setColor(ColorRGBA.White.mult(0.03f));
                 rootNode.addLight(light); 
                 
-                
+                /*Adds marker cubes to show the pointlight positions
+                Box box=new Box(0.1f,0.1f,0.1f);
+                Geometry boxGeom=new Geometry("Light marker",box);
+                boxGeom.setLocalTranslation((i*2)+0.75f,2.5f,(j*2)+1.14f);
+                boxGeom.setShadowMode(ShadowMode.CastAndReceive);
+                Material testCubeMat=new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+                testCubeMat.setColor("Color",ColorRGBA.Blue);
+                boxGeom.setMaterial(testCubeMat);
+                rootNode.attachChild(boxGeom);
+                */
                 
                 System.out.println("Light placed at "+light.getPosition());
                 
             }
             
         }
-        */
+        
         
     }
 

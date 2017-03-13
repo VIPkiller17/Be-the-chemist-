@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package control;
+package objects.player;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.collision.CollisionResults;
@@ -21,7 +21,6 @@ import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
-import objects.world.DescDisplay;
 import objects.player.Hand;
 import objects.player.Player;
 import objects.world.Floor;
@@ -49,6 +48,9 @@ public class HandControl extends AbstractControl{
     
     private boolean laserMovedOut,laserPointingAtDescribable;
     private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;
+    private boolean menuPressed,touchpadPressed,triggerPressed,gripPressed;
+    private boolean menuWasPressed,touchPadWasPressed,triggerWasPressed,gripWasPressed;
+    private boolean laserActivatedByTeleportation,laserActivatedByDescription,laserActivatedByDisplay;
     
     private Geometry testLaserGeom;
     private Material testLaserMat;
@@ -90,6 +92,7 @@ public class HandControl extends AbstractControl{
     protected void controlUpdate(float tpf) {
 
         //Update hand
+        //check if controller exists
         if(VRHardware.getVRinput().getRawControllerState(handSide)!=null){
             
             System.out.println("Updating ray position...");
@@ -119,7 +122,45 @@ public class HandControl extends AbstractControl{
             //Update Rotation of Geom
             hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
 
+            //Init. check to get is any button is being pressed this frame
+            menuPressed = VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton);
+            touchpadPressed = VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis);
+            triggerPressed = VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTriggerAxis);
+            gripPressed = VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveGripButton);
+            
             //Update due to trigger axis
+            if(VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTriggerAxis)){
+                
+                if(triggerWasPressed){
+                    
+                    //add what happens when the player continues to hold the trigger
+                    
+                }else{//trigger was not being pressed
+                    
+                    //add what happens when the player starts pressing the trigger
+                    //if a button (display) is being pointed, trigger that button's action
+                    //make the player grab an objet if it is available to be grabbed
+                    
+                }
+                    
+                triggerWasPressed=true;
+                
+            }else{//trigger is not being pressed
+                
+                if(triggerWasPressed){
+                    
+                    //add what happens when the player releases the trigger
+                    //if the player was holding an object and if statichold is not currently active, make them drop the item
+                    
+                }else{//trigger was not being pressed
+                    
+                    //add what happens when the player is still not pressing the trigger
+                    
+                }
+                
+                triggerWasPressed=false;
+                
+            }
             //rightHandSpatial.setLocalScale(VRHardware.getVRinput().getAxis(0,VRINPUT_TYPE.ViveTriggerAxis).x+0.1f);
 
             //Update due to menu button being pressed
@@ -129,12 +170,15 @@ public class HandControl extends AbstractControl{
                 
                 //check if there is an object in the hand
                 if(hand.isHoldingObject()){
-
-                    //TODO display held object's details
-
-                }else{
                     
-                    System.out.println("No object being held in that hand, finding correctCollision...");
+                    hand.setDescriptionText(hand.getHeldObject().getDescription());
+                    hand.setDescriptionMovedOut(false);
+                        
+                    descriptionMovedOut=false;
+
+                }else if(!hand.isHoldingObject()&&laserMovedOut){
+                    
+                    System.out.println("No object being held in that hand and laser not out, finding correctCollision...");
 
                     //finding the correct collision in the list
                     for(int i=0;i<collisionResults.size();i++){
@@ -252,14 +296,18 @@ public class HandControl extends AbstractControl{
             }else if(!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){
 
                 //check if the laser is already out of sight
-                if(!laserMovedOut){
+                if(!laserActivatedByTeleportation||!laserActivatedByDisplay){
+                
+                    if(!laserMovedOut){
 
-                    //if not already out of sight, move laser out of sight
-                    hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+                        //if not already out of sight, move laser out of sight
+                        hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
 
-                    //set laserMovedOut to true once the laser has been moved out
-                    laserMovedOut=true;
+                        //set laserMovedOut to true once the laser has been moved out
+                        laserMovedOut=true;
 
+                    }
+                    
                 }
                 
                 //check if description is already out of sight
@@ -307,9 +355,9 @@ public class HandControl extends AbstractControl{
                 //System.out.println("\t\tAngle in rads compared to X axis: "+radTouchPadXAngle);
                 //System.out.println("\t\tAngle in degrees compared to X axis: "+degTouchPadXAngle);
                 
-                if(touchPadX>0&&touchPadY>0){
+                if(touchPadX>0&&touchPadY>0){//Touchpad being pressed on quadrant #1
                     
-                    if(degTouchPadXAngle>45){
+                    if(degTouchPadXAngle>45){//Touchpad being pressed UP 
                         
                         //System.out.println("\t\tTouchPad: UP");
                         
@@ -317,7 +365,7 @@ public class HandControl extends AbstractControl{
                         
                         teleportationPrimed=false;
                         
-                    }else{
+                    }else{//Touchpad being pressed RIGHT
                         
                         //System.out.println("\t\tTouchPad: RIGHT");
                         
@@ -327,9 +375,9 @@ public class HandControl extends AbstractControl{
                         
                     }
                     
-                }else if(touchPadX<0&&touchPadY>0){
+                }else if(touchPadX<0&&touchPadY>0){//Touchpad being pressed on quadrant #2
                     
-                    if(degTouchPadXAngle>45){
+                    if(degTouchPadXAngle>45){//Touchpad being pressed UP
                         
                         //System.out.println("\t\tTouchPad: UP");
                         
@@ -338,7 +386,7 @@ public class HandControl extends AbstractControl{
                         teleportationPrimed=false;
                         
                         
-                    }else{
+                    }else{//Touchpad being pressed LEFT
                         
                         //System.out.println("\t\tTouchPad: LEFT");
                         
@@ -348,15 +396,15 @@ public class HandControl extends AbstractControl{
                         
                     }
                     
-                }else if(touchPadX<0&&touchPadY<0){
+                }else if(touchPadX<0&&touchPadY<0){//Touchpad being pressed in quadrant #3
                     
-                    if(degTouchPadXAngle>45){
+                    if(degTouchPadXAngle>45){//Touchpad being presse DOWN
                         
                         //System.out.println("\t\tTouchPad: DOWN");
                         
                         processTeleportation();
                         
-                    }else{
+                    }else{//Touchpad being pressed LEFT
                         
                         //System.out.println("\t\tTouchPad: LEFT");
                         
@@ -366,15 +414,15 @@ public class HandControl extends AbstractControl{
                         
                     }
                     
-                }else if(touchPadX>0&&touchPadY<0){
+                }else if(touchPadX>0&&touchPadY<0){//Touchpad being pressed on quadrant #4
                     
-                    if(degTouchPadXAngle>45){
+                    if(degTouchPadXAngle>45){//Touchpad being pressed DOWN
                         
                         //System.out.println("\t\tTouchPad: DOWN");
                         
                         processTeleportation();
                         
-                    }else{
+                    }else{//Touchpad being pressed RIGHT
                         
                         //System.out.println("\t\tTouchPad: RIGHT");
                         
@@ -395,11 +443,6 @@ public class HandControl extends AbstractControl{
                 if(teleportationPrimed){
                     
                     player.teleportArea(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-                    
-                    /*
-                    observer.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-                    hand.setHandNodeLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-                    */
                     
                 }
                 

@@ -19,12 +19,11 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Line;
-import control.HandControl;
 import interfaces.Describable;
 import java.io.IOException;
 import java.util.ArrayList;
 import jmevr.input.VRAPI;
-import objects.world.DescDisplay;
+import objects.PhysicalObject;
 //by Tommy
 public class Hand implements Describable,Savable{
     
@@ -50,7 +49,7 @@ public class Hand implements Describable,Savable{
     
     private HandControl handControl;
     
-    private Object object;
+    private PhysicalObject heldObject;
     
     private Player player;
     
@@ -225,7 +224,13 @@ public class Hand implements Describable,Savable{
     //object being held and holding logic
     public boolean isHoldingObject(){
         
-        return object!=null;
+        return heldObject!=null;
+        
+    }
+    
+    public PhysicalObject getHeldObject(){
+        
+        return heldObject;
         
     }
     

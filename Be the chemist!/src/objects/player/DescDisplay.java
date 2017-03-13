@@ -2,14 +2,13 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package objects.world;
+package objects.player;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import control.DescriptionControl;
 import java.util.ArrayList;
 import java.util.Arrays;
 import jmevr.input.VRAPI;

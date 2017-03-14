@@ -34,7 +34,6 @@ public class DescDisplay {
         observer=newObserver;
         
         //init the font of the text
-        font=new BitmapFont();
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         
         //init the control for the description to always face the player

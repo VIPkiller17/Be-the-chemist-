@@ -239,6 +239,8 @@ public class HandControl extends AbstractControl{
                     //update start and end points of laser to display it correctly
                     collisionPointGeom.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
                     hand.setLaserGeometryPoints(hand.getWorldTranslation(),collisionPointGeom.getWorldTranslation());
+                    
+                    laserActivatedByDescription=true;
 
                     //set laserMovedOut to false because it has been displayed
                     laserMovedOut=false;
@@ -292,12 +294,16 @@ public class HandControl extends AbstractControl{
                     }
 
                 }
-
+                //Update due to menu button not being pressed
+                //Keep in mind that this is on every loop
             }else if(!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){
 
-                //check if the laser is already out of sight
-                if(!laserActivatedByTeleportation||!laserActivatedByDisplay){
+                //check if the laser is being used by something else
+                //if it is, dont move it out of sight
+                //if it isnt, move it out of sight
+                if(!laserActivatedByTeleportation&&!laserActivatedByDisplay){
                 
+                    //check if the laser is already out of sight
                     if(!laserMovedOut){
 
                         //if not already out of sight, move laser out of sight
@@ -305,6 +311,8 @@ public class HandControl extends AbstractControl{
 
                         //set laserMovedOut to true once the laser has been moved out
                         laserMovedOut=true;
+                        
+                        laserActivatedByDescription=false;
 
                     }
                     
@@ -339,21 +347,28 @@ public class HandControl extends AbstractControl{
                 
             }
             
-            //Update depending on where the touchpad is being pressed, not touched
+            //Update depending on where the touchpad is being pressed, NOT TOUCHED
             if(VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis)){
                 
+                //The touchpad is now being pressed
+                //Used later
+                //should be changed to the new touchpadBeingPressed
                 touchPadDown=true;
                 
+                //Get x and y position of the player's finger on the touchpad
                 touchPadX=VRHardware.getVRinput().getAxis(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis).getX();
                 touchPadY=VRHardware.getVRinput().getAxis(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis).getY();
                 
                 //System.out.println("Touchpad pressed:\n\tAxis: "+VRHardware.getVRinput().getAxis(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis));
                 
+                //get the angle in rad between the x axis of the touchpad and the player's finger
+                //convert the angle to degrees
                 radTouchPadXAngle=Math.abs(Math.atan(touchPadY/touchPadX));
                 degTouchPadXAngle=Math.toDegrees(radTouchPadXAngle);
                 
                 //System.out.println("\t\tAngle in rads compared to X axis: "+radTouchPadXAngle);
                 //System.out.println("\t\tAngle in degrees compared to X axis: "+degTouchPadXAngle);
+                
                 
                 if(touchPadX>0&&touchPadY>0){//Touchpad being pressed on quadrant #1
                     
@@ -436,6 +451,8 @@ public class HandControl extends AbstractControl{
                 
             }
             
+            //Checks if the touchpad was being pressed but isn't anymore\
+            //Meaning that the touchpad has been released
             if(touchPadDown&&!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis)){
                 
                 //System.out.println("Touchpad released");
@@ -449,6 +466,71 @@ public class HandControl extends AbstractControl{
                 conditionalMoveTeleLaserOut();
                 
                 touchPadDown=false;
+                
+            }
+            
+            //check if laser is being used
+            //if it isn't check if player is pointing a display
+            if(laserMovedOut){
+                
+                System.out.println("Laser not in use, checking is player is pointing at a display...");
+                
+                for(int i=0;i<collisionResults.size();i++){
+                        
+                    System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
+
+                    //Check if the collision geom is the correct collision
+                    //if Not, check if its parent is the correct collision
+                    //if not, continue to the next element in the list of collisions
+                    if(collisionResults.getCollision(i).getGeometry().getUserData("correctCollision")!=null){
+
+                        System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
+
+                        if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
+
+                            System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
+
+                            correctCollisionSpatial=collisionResults.getCollision(i).getGeometry();
+
+                            presentCorrectCollisionIndex=i;
+
+                            System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+
+                            break;
+
+                        }
+
+                    }else if(collisionResults.getCollision(i).getGeometry().getParent().getUserData("correctCollision")!=null){
+
+                        System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
+
+                        if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
+
+                            System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
+
+                            correctCollisionSpatial=collisionResults.getCollision(i).getGeometry().getParent();
+
+                            presentCorrectCollisionIndex=i;
+
+                            System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+
+                            break;
+
+                        }
+
+                    }else{
+
+                        //System.out.println("\t\t\tCollision geom and its parents do not have correctCollision userData, skipping to next collision");
+
+                        continue;
+
+                    }
+
+                }
+                
+                //We now have the correct collision in the list
+                //Now we check to see if that colision is a display or button
+                
                 
             }
 
@@ -516,7 +598,9 @@ public class HandControl extends AbstractControl{
 
         //update start and end points of laser to display it correctly
         hand.setLaserCoords(hand.getWorldTranslation(),collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-
+        
+        laserActivatedByTeleportation=true;
+        
         System.out.println("Set laser coords to start: "+VRHardware.getVRinput().getPosition(handSide)+" and end: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
         
         //set laserMovedOut to false because it has been displayed
@@ -571,16 +655,23 @@ public class HandControl extends AbstractControl{
     
     private void conditionalMoveTeleLaserOut(){
         
-        if(!teleLaserMovedOut){
+        //if laser isnt being used by something else, move it out
+        if(!laserActivatedByDescription&&!laserActivatedByDisplay){
+        
+            if(!teleLaserMovedOut){
 
-            //if not already out of sight, move laser out of sight
-            hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+                //if not already out of sight, move laser out of sight
+                hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+
+                hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
+
+                //set laserMovedOut to true once the laser has been moved out
+                teleLaserMovedOut=true;
+                
+                laserActivatedByTeleportation=false;
+
+            }
             
-            hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
-
-            //set laserMovedOut to true once the laser has been moved out
-            teleLaserMovedOut=true;
-
         }
         
     }

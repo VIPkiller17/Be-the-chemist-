@@ -11,6 +11,7 @@ import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -49,11 +50,15 @@ public class Room implements Savable{
         furniture.setUserData("correspondingObject", this);
         furniture.setShadowMode(ShadowMode.CastAndReceive);
         
-        mat = new Material(assetManager, "jmevr/shaders/Unshaded.j3md"); 
-        mat.setBoolean("UseMaterialColors",true); 
+        //Using a material makes vthe model appear the color you set it, it doesn't seem to want to use the colors of the material
+        /*
+        mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", ColorRGBA.White);
+        mat.setColor("Specular", ColorRGBA.White);
         room.setMaterial(mat);
         furniture.setMaterial(mat);
-        
+        */
         room_phy=new RigidBodyControl(0);
         room.addControl(room_phy);
         bulletAppState.getPhysicsSpace().add(room_phy);

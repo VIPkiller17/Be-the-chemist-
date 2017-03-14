@@ -298,6 +298,7 @@ public class Main extends VRApplication {
         dl5.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl5);
         
+        /*
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
@@ -309,7 +310,7 @@ public class Main extends VRApplication {
         //getViewPort().addProcessor(dlsr);
         getLeftViewPort().addProcessor(dlsr);
         getRightViewPort().addProcessor(dlsr);
-        
+        */
         
         //adds the point lights
         for(int i=0;i<4;i++){

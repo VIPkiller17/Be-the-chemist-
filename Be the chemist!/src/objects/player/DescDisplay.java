@@ -7,6 +7,7 @@ package objects.player;
 import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
+import com.jme3.material.Material;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -44,6 +45,9 @@ public class DescDisplay {
         
         //set the initial size of the etxt to 0.05 times its orginal
         description.setSize(0.035f);
+        
+        //Material mat = new Material(assetManager, "jmevr/shaders/Unshaded.j3md");
+        //description.setMaterial(mat);
         
         //make the node of the description
         centeredNode=new Node();

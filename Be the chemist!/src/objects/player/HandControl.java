@@ -121,6 +121,7 @@ public class HandControl extends AbstractControl{
 
             //Update Rotation of Geom
             hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
+            System.out.println("HAND ROTATION: "+hand.getRotation());
 
             //Init. check to get is any button is being pressed this frame
             menuPressed = VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton);

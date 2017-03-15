@@ -66,8 +66,8 @@ public class Display implements Pointable{
                 buttons.add(new Button(assetManager,this,0));
                 buttons.add(new Button(assetManager,this,1));
                 buttons.add(new Button(assetManager,this,2));
-                background.setLocalTranslation(new Vector3f(-0.81f,0.75,2));
-                background.setLocalRotation(rotation);
+                background.setLocalTranslation(new Vector3f(-0.81f,0.75f,2));
+                //background.setLocalRotation(rotation);
             
         }
         

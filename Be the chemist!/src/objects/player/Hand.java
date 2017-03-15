@@ -200,6 +200,12 @@ public class Hand implements Describable,Savable{
         
     }
     
+    public Quaternion getRotation(){
+        
+        return spatial.getLocalRotation();
+        
+    }
+    
     //hand node
     public void setHandNodeLocation(Vector3f location){
         

@@ -4,14 +4,14 @@
  */
 package objects;
 
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.AbstractControl;
 import interfaces.Describable;
 import java.io.IOException;
 
@@ -51,6 +51,18 @@ public abstract class PhysicalObject implements Savable, Describable{
     public void detachObject(int index){
         
         node.detachChildAt(index);
+        
+    }
+    
+    public Node getNode(){
+        
+        return node;
+        
+    }
+    
+    public void addPhysicsControl(RigidBodyControl control){
+        
+        node.addControl(control);
         
     }
     

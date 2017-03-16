@@ -15,6 +15,9 @@ import com.jme3.scene.Spatial;
 import objects.containers.Container;
 import objects.particleEmitter.ParticleEmitter;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
 import objects.solution.Solution;
 
 /**
@@ -28,7 +31,6 @@ public class Beaker extends Container implements Savable{
     private BeakerControl beakerControl;
     private Spatial spatial;
     private RigidBodyControl beaker_phy;
-    private Node node;
     
     private boolean closeable;
     private double maxQuantity;
@@ -79,11 +81,9 @@ public class Beaker extends Container implements Savable{
         maxPressureOpenned=6;
         maxPressureClosed=3;
         
-        node.addControl(beaker_phy);
+        addPhysicsControl(beaker_phy);
         beaker_phy=new RigidBodyControl(1f);
         bulletAppState.getPhysicsSpace().add(beaker_phy);
-        
-        particleEmitter=new ParticleEmitter();
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Beaker/Beaker.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Highlight/Beaker_Highlight.j3o");
@@ -102,7 +102,7 @@ public class Beaker extends Container implements Savable{
         highlightModel.setName("Beaker #"+index+"'s highlight");
         highlightModel.setUserData("correctCollision", true);
         highlightModel.setUserData("correspondingObject", this);
-        node.attachChild(highlightModel);
+        attachObject(highlightModel);
         
         liquidModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         liquidModelMat.setBoolean("UseMaterialColors", true); 
@@ -113,7 +113,7 @@ public class Beaker extends Container implements Savable{
         liquidModel.setName("Beaker #"+index+"'s liquid");
         liquidModel.setUserData("correctCollision", true);
         liquidModel.setUserData("correspondingObject", this);
-        node.attachChild(liquidModel);
+        attachObject(liquidModel);
         
         solidModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
         solidModelMat.setBoolean("UseMaterialColors", true); 
@@ -124,7 +124,7 @@ public class Beaker extends Container implements Savable{
         solidModel.setName("Beaker #"+index+"'s solid");
         solidModel.setUserData("correctCollision", true);
         solidModel.setUserData("correspondingObject", this);
-        node.attachChild(solidModel);
+        attachObject(solidModel);
         
         spatial.scale(1f,1f,1f);
         spatial.rotate(0.0f, 0.0f, 0.0f);
@@ -132,9 +132,11 @@ public class Beaker extends Container implements Savable{
         spatial.setName("Beaker #"+index++);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        node.attachChild(spatial);
+        attachObject(spatial);
         
-        rootNode.attachChild(node);
+        rootNode.attachChild(getNode());
+        
+        particleEmitter=new ParticleEmitter(this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
     }
     
@@ -170,14 +172,14 @@ public class Beaker extends Container implements Savable{
     
     public void startParticleEmission(){
         
-        particleEmitter.startEmission();
+        particleEmitter.begin();
         isEmitting=true;
         
     }
     
     public void stopParticleEmission(){
         
-        particleEmitter.stopEmission();
+        particleEmitter.stop();
         isEmitting=false;
         
     }

@@ -86,4 +86,103 @@ public class Solution {
         
     }
     
+    public int getRandomContainedState(int minState,int maxState){
+        
+        boolean containsGas=false;
+        boolean containsLiquid=false;
+        boolean containsSolid=false;
+        
+        for(Substance s: substances){
+            
+            switch(s.getStateInteger()){
+                
+                case 0:
+                    containsGas=true;
+                    break;
+                case 1:
+                    containsLiquid=true;
+                    break;
+                case 2:
+                    containsSolid=true;
+                    break;
+                default:
+                    System.out.println("ERROR: @ getting random contained state, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
+                
+            }
+            
+        }
+        
+        int result;
+        
+        while(true){
+            
+            result=((int)(Math.random()*(maxState+1)))+minState;
+            
+            switch(result){
+                
+                case 0:
+                    if(containsGas)
+                        return 0;
+                    break;
+                case 1:
+                    if(containsLiquid)
+                        return 1;
+                    break;
+                case 2:
+                    if(containsSolid)
+                        return 2;
+                    break;
+                default:
+                    System.out.println("ERROR: @ getting random contained state, result generated invalid.");
+                
+            }
+            
+        }
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherSolution){
+        
+        if(otherSolution instanceof Solution){
+            
+            if(substances.size()==((Solution)otherSolution).getSubstances().size()){
+                
+                for(int i=0;i<substances.size();i++){
+
+                    if(!substances.get(i).equals(((Solution)otherSolution).getSubstances().get(i))){
+                        
+                        return false;
+                        
+                    }
+
+                }
+                
+                return true;
+            
+            }else
+                
+                return false;
+            
+        }else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        String t="Solution containing: ";
+        
+        for(Substance s: substances){
+            
+            t+=s.getName()+", ";
+            
+        }
+        
+        return t;
+        
+    }
+    
 }

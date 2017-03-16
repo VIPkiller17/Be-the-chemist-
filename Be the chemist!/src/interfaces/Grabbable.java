@@ -8,6 +8,6 @@ package interfaces;
  *
  * @author VIPkiller17
  */
-public class Grabbable {
+public interface Grabbable {
     
 }

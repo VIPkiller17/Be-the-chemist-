@@ -4,14 +4,14 @@
  */
 package objects;
 
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.control.AbstractControl;
 import interfaces.Describable;
 import java.io.IOException;
 
@@ -21,40 +21,12 @@ import java.io.IOException;
  */
 public abstract class PhysicalObject implements Savable, Describable{
 
-    private String modelPath;
-    private Spatial model;
-    private Material mat;
     private Vector3f position;
     private Node node;
     
-    public PhysicalObject(String modelPath,Vector3f position){
+    public PhysicalObject(Vector3f position){
         
-        this.modelPath=modelPath;
         this.position=position;
-        
-    }
-    
-    public String getModelPath(){
-        
-        return modelPath;
-        
-    }
-    
-    public Spatial getSpatial() {
-        
-        return model;
-        
-    }
-    
-    public Material getMat(){
-        
-        return mat;
-        
-    }
-    
-    public void setColor(String code,ColorRGBA color){
-        
-        mat.setColor(code, color);
         
     }
     
@@ -70,12 +42,36 @@ public abstract class PhysicalObject implements Savable, Describable{
         
     }
     
+    public void attachObject(Spatial object){
+        
+        node.attachChild(object);
+        
+    }
+    
+    public void detachObject(int index){
+        
+        node.detachChildAt(index);
+        
+    }
+    
+    public Node getNode(){
+        
+        return node;
+        
+    }
+    
+    public void addPhysicsControl(RigidBodyControl control){
+        
+        node.addControl(control);
+        
+    }
+    
     @Override
     public boolean equals(Object otherPhysicalObject){
         
         if(otherPhysicalObject instanceof PhysicalObject)
             
-            return ((PhysicalObject)otherPhysicalObject).position.equals(position)&&((PhysicalObject)otherPhysicalObject).modelPath.equals(modelPath);
+            return ((PhysicalObject)otherPhysicalObject).position.equals(position);
             
         else
             
@@ -86,7 +82,7 @@ public abstract class PhysicalObject implements Savable, Describable{
     @Override
     public String toString(){
         
-        return "PhysicalObject at pos: "+position+" with modelPath: "+modelPath;
+        return "PhysicalObject at pos: "+position;
         
     }
     

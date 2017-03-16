@@ -12,6 +12,8 @@ import com.jme3.scene.control.AbstractControl;
  *
  * @author VIPkiller17
  */
+
+//Modify methods for better OOP (put reused ones in container and replace private data fields with setter method)
 public class ErlenmeyerControl extends AbstractControl {
     
     private Erlenmeyer erlenmeyer;

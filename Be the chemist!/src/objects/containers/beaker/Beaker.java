@@ -61,7 +61,7 @@ public class Beaker extends Container implements Savable{
     
     public Beaker(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
         
-        super(position);
+        super(position,solution,quantity);
         
         init(position,rootNode,assetManager,bulletAppState);
         

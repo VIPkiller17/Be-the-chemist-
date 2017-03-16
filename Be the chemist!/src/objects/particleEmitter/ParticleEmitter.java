@@ -8,6 +8,7 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import objects.PhysicalObject;
+import objects.containers.Container;
 
 /**
  *
@@ -242,6 +243,18 @@ public class ParticleEmitter {
     public PhysicalObject getParentObject(){
         
         return parentObject;
+        
+    }
+    
+    public Container ifParentObjectContainerGetIt(){
+        
+        if(parentObject instanceof Container)
+            
+            return ((Container)parentObject);
+        
+        else 
+            
+            return null;
         
     }
     

@@ -23,7 +23,7 @@ public class Particle {
     
     private Spatial model;
     
-    public Particle(ParticleEmitter particleEmitter){
+    public Particle(ParticleEmitter particleEmitter,String modelPath,int state){
         
         this.particleEmitter=particleEmitter;
         

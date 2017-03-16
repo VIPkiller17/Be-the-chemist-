@@ -7,6 +7,8 @@ package objects.particleEmitter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
+import objects.containers.Container;
+import objects.particleEmitter.particle.Particle;
 
 /**
  *
@@ -17,6 +19,8 @@ public class ParticleEmitterControl extends AbstractControl{
     private ParticleEmitter particleEmitter;
     
     private float timer;
+    
+    private int gasEmissionCounter,liquidEmissionCounter,solidEmissionCounter;
     
     public ParticleEmitterControl(ParticleEmitter particleEmitter){
         
@@ -31,7 +35,19 @@ public class ParticleEmitterControl extends AbstractControl{
         
         if(timer>particleEmitter.getDelay()){
             
-            //MAKE A NEW PARTICLE WITH THE GIVEN PARAMETERS
+            Container presentParent=particleEmitter.ifParentObjectContainerGetIt();
+            
+            if(presentParent!=null){
+                
+                boolean[] possibleStates=presentParent.getSolution().containsStates();
+                
+                if(gasEmissionCounter<=liquidEmissionCounter&&gasEmissionCounter<=solidEmissionCounter){
+                    
+                    new Particle(particleEmitter,particleEmitter.getGasParticleModelPath(),0);
+                    
+                }
+                
+            }
             
         }
         

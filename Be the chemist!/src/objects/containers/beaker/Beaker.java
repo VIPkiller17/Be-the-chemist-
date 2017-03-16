@@ -190,6 +190,24 @@ public class Beaker extends Container implements Savable{
         
     }
     
+    public void explode(){
+        
+        
+        
+    }
+    
+    public void meltDown(){
+        
+        
+        
+    }
+    
+    public void breakContainer(){
+        
+        
+        
+    }
+    
     @Override
     public String getDescription() {
         

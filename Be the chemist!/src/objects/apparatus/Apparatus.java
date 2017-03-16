@@ -4,10 +4,17 @@
  */
 package objects.apparatus;
 
+import com.jme3.math.Vector3f;
+import objects.PhysicalObject;
+
 /**
  *
  * @author VIPkiller17
  */
-public class Apparatus {
+public abstract class Apparatus extends PhysicalObject{
+    
+    public Apparatus(Vector3f position) {
+        super(position);
+    }
     
 }

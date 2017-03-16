@@ -17,16 +17,20 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
-import jmevr.shadow.VRDirectionalLightShadowRenderer;
+import objects.PhysicalObject;
+import objects.apparatus.analyticalBalance.AnalyticalBalance;
+import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
+import objects.apparatus.fumeHood.FumeHood;
+import objects.apparatus.trashBin.TrashBin;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
+import objects.world.display.Display;
 
 //by Tommy
 public class Main extends VRApplication {
@@ -37,6 +41,8 @@ public class Main extends VRApplication {
     private CollisionResults collisionResults=new CollisionResults();
     
     private BulletAppState bulletAppState;
+    
+    public static ArrayList<PhysicalObject> items;
     
     //Player
     Spatial observer;
@@ -54,6 +60,16 @@ public class Main extends VRApplication {
     //World
     private Room room;
     private Floor floor;
+    private AnalyticalBalance analyticalBalance;
+    private DistilledWaterContainer distilledWaterContainer;
+    private FumeHood fumeHood;
+    private TrashBin trashBin;
+    
+    private Display mainMenu;
+    private Display settingsMenu;
+    private Display substanceList;
+    private Display materialList;
+    private Display periodicTable;
     
     //Objects
     
@@ -113,6 +129,8 @@ public class Main extends VRApplication {
         room=new Room(getAssetManager(),rootNode,bulletAppState);
         
         floor=new Floor(getAssetManager(),rootNode,bulletAppState);
+        
+        fumeHood=new FumeHood(getAssetManager(),rootNode);
         //TEST WORLD INIT END
         
         //OBJECTS INIT START

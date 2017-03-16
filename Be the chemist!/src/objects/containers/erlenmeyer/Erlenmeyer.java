@@ -81,7 +81,7 @@ public class Erlenmeyer extends Container implements Savable{
         erlenmeyer_phy=new RigidBodyControl(1f);
         bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
         
-        particleEmitter=new ParticleEmitter();
+        //particleEmitter=new ParticleEmitter();
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Erlenmeyer.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Highlight/Erlenmeyer_Highlight.j3o");

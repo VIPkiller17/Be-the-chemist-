@@ -16,13 +16,14 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.shape.Box;
-import com.jme3.scene.shape.Line;
 import interfaces.Describable;
+import interfaces.Grabbable;
 import java.util.ArrayList;
 import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
-import objects.player.Hand;
-import objects.player.Player;
+import main.Main;
+import objects.PhysicalObject;
+import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.world.Floor;
 //by Tommy
 public class HandControl extends AbstractControl{
@@ -39,6 +40,8 @@ public class HandControl extends AbstractControl{
     private int handSide;
     private String collisionToExclude;
     private Spatial correctCollisionSpatial;
+    private PhysicalObject possibleItemToGrab;
+    private boolean itemInRange;
     
     private float touchPadX,touchPadY;
     private double radTouchPadXAngle,degTouchPadXAngle;
@@ -122,6 +125,19 @@ public class HandControl extends AbstractControl{
             //Update Rotation of Geom
             hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
             System.out.println("HAND ROTATION: "+hand.getRotation());
+            
+            //Check the closest grabbable item to the hand and see if it is grabbable
+            for(PhysicalObject p: Main.items){
+                
+                if(p instanceof Grabbable&&p.getPos().distance(hand.getWorldTranslation())<0.1f&&(possibleItemToGrab==null||p.getPos().distance(hand.getWorldTranslation())<p.getPos().distance(possibleItemToGrab.getPos()))){
+                    
+                    possibleItemToGrab=p;
+                    
+                    p.highlightVisible();
+                    
+                }
+                
+            }
 
             //Init. check to get is any button is being pressed this frame
             menuPressed = VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton);
@@ -531,6 +547,12 @@ public class HandControl extends AbstractControl{
                 
                 //We now have the correct collision in the list
                 //Now we check to see if that colision is a display or button
+                
+                
+            }
+            
+            if(hand.getHeldObject() instanceof FumeHoodDoor){
+                
                 
                 
             }

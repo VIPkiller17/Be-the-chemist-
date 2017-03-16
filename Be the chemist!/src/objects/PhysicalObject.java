@@ -24,9 +24,13 @@ public abstract class PhysicalObject implements Savable, Describable{
     private Vector3f position;
     private Node node;
     
+    private boolean insideFumeHood;
+    
     public PhysicalObject(Vector3f position){
         
         this.position=position;
+        
+        node=new Node();
         
     }
     
@@ -63,6 +67,18 @@ public abstract class PhysicalObject implements Savable, Describable{
     public void addPhysicsControl(RigidBodyControl control){
         
         node.addControl(control);
+        
+    }
+    
+    public void setInsideFumeHood(boolean insideFumeHood){
+        
+        this.insideFumeHood=insideFumeHood;
+        
+    }
+    
+    public boolean isInsideFumeHood(){
+        
+        return insideFumeHood;
         
     }
     

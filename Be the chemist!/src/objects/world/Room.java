@@ -5,9 +5,14 @@
 package objects.world;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
+import com.jme3.material.Material;
+import com.jme3.math.ColorRGBA;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
@@ -18,33 +23,60 @@ public class Room implements Savable{
     private AssetManager assetManager;
     private Node rootNode;
     
-    private Spatial spatial;
+    private Spatial room,furniture;
+    private Material mat;
+    private RigidBodyControl room_phy;
     
-    public Room(AssetManager assetManager,Node rootNode){
+    public Room(AssetManager assetManager,Node rootNode,BulletAppState bulletAppState){
         
         this.assetManager=assetManager;
         this.rootNode=rootNode;
         
-        spatial = assetManager.loadModel("Models/Static/Room/Room_Final.j3o");
-        spatial.setName("Room");
-        spatial.scale(1f,1f,1f);
-        spatial.rotate(0.0f, 0.0f, 0.0f);
-        spatial.setLocalTranslation(0f,0f,0f);
-        spatial.setUserData("correctCollision", true);
-        spatial.setUserData("correspondingObject", this);
-        rootNode.attachChild(spatial);
+        room = assetManager.loadModel("Models/Static/Room/Room.j3o");
+        room.setName("Room");
+        room.scale(1f,1f,1f);
+        room.rotate(0.0f, 0.0f, 0.0f);
+        room.setLocalTranslation(0f,0f,0f);
+        room.setUserData("correctCollision", true);
+        room.setUserData("correspondingObject", this);
+        room.setShadowMode(ShadowMode.Receive);
+        
+        furniture = assetManager.loadModel("Models/Static/Room/Room.j3o");
+        furniture.setName("Room");
+        furniture.scale(1f,1f,1f);
+        furniture.rotate(0.0f, 0.0f, 0.0f);
+        furniture.setLocalTranslation(0f,0f,0f);
+        furniture.setUserData("correctCollision", true);
+        furniture.setUserData("correspondingObject", this);
+        furniture.setShadowMode(ShadowMode.CastAndReceive);
+        
+        //Using a material makes vthe model appear the color you set it, it doesn't seem to want to use the colors of the material
+        /*
+        mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
+        mat.setBoolean("UseMaterialColors", true);
+        mat.setColor("Diffuse", ColorRGBA.White);
+        mat.setColor("Specular", ColorRGBA.White);
+        room.setMaterial(mat);
+        furniture.setMaterial(mat);
+        */
+        room_phy=new RigidBodyControl(0);
+        room.addControl(room_phy);
+        bulletAppState.getPhysicsSpace().add(room_phy);
+        
+        rootNode.attachChild(room);
+        rootNode.attachChild(furniture);
         
     }
     
     public Spatial getSpatial(){
         
-        return spatial;
+        return room;
         
     }
     
     public void addControl(Control control){
         
-        spatial.addControl(control);
+        room.addControl(control);
         
     }
 

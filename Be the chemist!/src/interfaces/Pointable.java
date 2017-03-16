@@ -8,6 +8,6 @@ package interfaces;
  *
  * @author VIPkiller17
  */
-public class Pointable {
+public interface Pointable {
     
 }

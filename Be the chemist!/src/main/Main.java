@@ -1,24 +1,33 @@
 package main;
 
+import com.jme3.bullet.BulletAppState;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
+import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
+import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
+import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.scene.shape.Box;
+import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
+import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
+
 //by Tommy
 public class Main extends VRApplication {
     
@@ -26,6 +35,8 @@ public class Main extends VRApplication {
     private static VRAPI VRHardware=new OpenVR();
     
     private CollisionResults collisionResults=new CollisionResults();
+    
+    private BulletAppState bulletAppState;
     
     //Player
     Spatial observer;
@@ -41,12 +52,14 @@ public class Main extends VRApplication {
     private float controllerConnectionTPF;
     
     //World
-    private Room testRoom;
-    private Floor testFloor;
+    private Room room;
+    private Floor floor;
     
     //Objects
     
     private ArrayList<Describable> describables=new ArrayList<Describable>();
+    
+    private Geometry testCube;
 
     public static void main(String[] args) {
         
@@ -64,12 +77,26 @@ public class Main extends VRApplication {
         //Makes it so that the game pauses on loss of focus
         app.setPauseOnLostFocus(true);
         
+        //Make the game use VR instancing
+        //app.preconfigureVRApp(PRECONFIG_PARAMETER.INSTANCE_VR_RENDERING,true);
+        
         //starts the game
         app.start();
     }
     
     @Override
     public void simpleInitApp() {
+        
+        //AmbientLight al = new AmbientLight();
+        //al.setColor(ColorRGBA.White.mult(1.3f));
+        //rootNode.addLight(al);
+        
+        //Lights
+        initLights();
+        
+        //Physics
+        bulletAppState = new BulletAppState();
+        getStateManager().attach(bulletAppState);
         
         //LOAD SPATIALS START
         
@@ -83,9 +110,9 @@ public class Main extends VRApplication {
         playerLogic=new Player(getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
         //TEST WORLD INIT START
-        testRoom=new Room(getAssetManager(),rootNode);
+        room=new Room(getAssetManager(),rootNode,bulletAppState);
         
-        testFloor=new Floor(getAssetManager(),rootNode);
+        floor=new Floor(getAssetManager(),rootNode,bulletAppState);
         //TEST WORLD INIT END
         
         //OBJECTS INIT START
@@ -95,12 +122,19 @@ public class Main extends VRApplication {
         //collisionPlain0=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPlain.j3o");
         //collisionPlain1=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0f,"Models/Testing/Collisions/ColPlainRightHand.j3o");
         //collisionPlain2=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0.6f,"Models/Testing/Collisions/ColPlainLeftHand.j3o");
+        Box testBox=new Box(0.1f,0.1f,0.1f);
+        testCube=new Geometry("Test cube",testBox);
+        testCube.setShadowMode(ShadowMode.CastAndReceive);
+        Material testCubeMat=new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        testCubeMat.setColor("Color",ColorRGBA.Blue);
+        testCube.setMaterial(testCubeMat);
+        rootNode.attachChild(testCube);
         //OBJECTS INIT END
         
         //LIGHT INIT START
-        PointLight light = new PointLight(new Vector3f(0f,0.5f,0f));
-        light.setColor(ColorRGBA.White);
-        rootNode.addLight(light);
+        //PointLight light = new PointLight(new Vector3f(0f,0.5f,0f));
+        //light.setColor(ColorRGBA.White);
+        //rootNode.addLight(light);
         //LIGHT INIT END
         
         //LOAD SPACIALS END
@@ -111,7 +145,6 @@ public class Main extends VRApplication {
         
     }
 
-    //vt add
     private void initInputs() {
         
         //non-VR inputs for testing without VR
@@ -123,7 +156,15 @@ public class Main extends VRApplication {
         getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
         getInputManager().addMapping("downControl", new KeyTrigger(KeyInput.KEY_LCONTROL));
         getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));
-
+        
+        //test cube controls
+        getInputManager().addMapping("cubeNegativeZ", new KeyTrigger(KeyInput.KEY_NUMPAD8));
+        getInputManager().addMapping("cubePositiveZ", new KeyTrigger(KeyInput.KEY_NUMPAD2));
+        getInputManager().addMapping("cubePositiveX", new KeyTrigger(KeyInput.KEY_NUMPAD6));
+        getInputManager().addMapping("cubeNegativeX", new KeyTrigger(KeyInput.KEY_NUMPAD4));
+        getInputManager().addMapping("cubePositiveY", new KeyTrigger(KeyInput.KEY_NUMPAD9));
+        getInputManager().addMapping("cubeNegativeY", new KeyTrigger(KeyInput.KEY_NUMPAD7));
+        
         //inputs' action listener
         ActionListener acl = new ActionListener() {
             
@@ -136,6 +177,30 @@ public class Main extends VRApplication {
                     System.exit(0);
                     
                     //observer.move(VRApplication.getFinalObserverRotation().getRotationColumn(0).mult(1f));
+                    
+                }else if(name.equals("cubeNegativeZ")){
+                    
+                    testCube.move(0,0,-0.1f);
+                    
+                }else if(name.equals("cubePositiveZ")){
+                    
+                    testCube.move(0,0,0.1f);
+                    
+                }else if(name.equals("cubeNegativeX")){
+                    
+                    testCube.move(-0.1f,0,0);
+                    
+                }else if(name.equals("cubePositiveX")){
+                    
+                    testCube.move(0.1f,0,0);
+                    
+                }else if(name.equals("cubeNegativeY")){
+                    
+                    testCube.move(0,-0.1f,0);
+                    
+                }else if(name.equals("cubePositiveY")){
+                    
+                    testCube.move(0,0.1f,0);
                     
                 }
                 
@@ -187,6 +252,93 @@ public class Main extends VRApplication {
         getInputManager().addListener(anl, "up");
         getInputManager().addListener(anl, "downControl");
         getInputManager().addListener(anl, "downShift");
+        
+        
+        getInputManager().addListener(acl, "cubePositiveZ");
+        getInputManager().addListener(acl, "cubeNegativeZ");
+        getInputManager().addListener(acl, "cubePositiveX");
+        getInputManager().addListener(acl, "cubeNegativeX");
+        getInputManager().addListener(acl, "cubePositiveY");
+        getInputManager().addListener(acl, "cubeNegativeY");
+        
+        
+    }
+    
+    public void initLights(){
+        
+        
+        //DL's simulate the ambient light coming from all 6 directions
+        DirectionalLight dl0 = new DirectionalLight();
+        dl0.setDirection((new Vector3f(0.5f,0,0)).normalizeLocal());
+        dl0.setColor(ColorRGBA.White.mult(0.3f));
+        rootNode.addLight(dl0); 
+        
+        DirectionalLight dl1 = new DirectionalLight();
+        dl1.setDirection((new Vector3f(-0.5f,0,0)).normalizeLocal());
+        dl1.setColor(ColorRGBA.White.mult(0.3f));
+        rootNode.addLight(dl1); 
+        
+        DirectionalLight dl2 = new DirectionalLight();
+        dl2.setDirection((new Vector3f(0,0.5f,0)).normalizeLocal());
+        dl2.setColor(ColorRGBA.White.mult(0.3f));
+        rootNode.addLight(dl2); 
+        
+        DirectionalLight dl3 = new DirectionalLight();
+        dl3.setDirection((new Vector3f(0,-0.5f,0)).normalizeLocal());
+        dl3.setColor(ColorRGBA.White.mult(0.3f));
+        rootNode.addLight(dl3); 
+        
+        DirectionalLight dl4 = new DirectionalLight();
+        dl4.setDirection((new Vector3f(0,0,0.5f)).normalizeLocal());
+        dl4.setColor(ColorRGBA.White.mult(0.3f));
+        rootNode.addLight(dl4); 
+        
+        DirectionalLight dl5 = new DirectionalLight();
+        dl5.setDirection((new Vector3f(0,0,-0.5f)).normalizeLocal());
+        dl5.setColor(ColorRGBA.White.mult(0.3f));
+        rootNode.addLight(dl5);
+        
+        /*
+        DirectionalLight sun = new DirectionalLight();
+        sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
+        sun.setColor(ColorRGBA.White);
+        rootNode.addLight(sun); 
+        
+        VRDirectionalLightShadowRenderer dlsr = new VRDirectionalLightShadowRenderer(getAssetManager(), 2048, 4);
+        dlsr.setLight(sun);
+        //dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        //getViewPort().addProcessor(dlsr);
+        getLeftViewPort().addProcessor(dlsr);
+        getRightViewPort().addProcessor(dlsr);
+        */
+        
+        //adds the point lights
+        for(int i=0;i<4;i++){
+            
+            for(int j=0;j<5;j++){
+                
+                PointLight light = new PointLight();
+                light.setPosition(new Vector3f((i*2)+0.75f,2.75f,(j*2)+1.14f));
+                light.setColor(ColorRGBA.White.mult(0.03f));
+                rootNode.addLight(light); 
+                
+                /*Adds marker cubes to show the pointlight positions
+                Box box=new Box(0.1f,0.1f,0.1f);
+                Geometry boxGeom=new Geometry("Light marker",box);
+                boxGeom.setLocalTranslation((i*2)+0.75f,2.5f,(j*2)+1.14f);
+                boxGeom.setShadowMode(ShadowMode.CastAndReceive);
+                Material testCubeMat=new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+                testCubeMat.setColor("Color",ColorRGBA.Blue);
+                boxGeom.setMaterial(testCubeMat);
+                rootNode.attachChild(boxGeom);
+                */
+                
+                System.out.println("Light placed at "+light.getPosition());
+                
+            }
+            
+        }
+        
         
     }
 

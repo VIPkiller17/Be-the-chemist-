@@ -45,7 +45,7 @@ public class BeakerControl extends AbstractControl{
             
         }
         
-        //if teh temperature of the container is too high
+        //if the temperature of the container is too high
         if(beaker.getTemperature()>beaker.getMaxTemperature()){
             
             

@@ -22,6 +22,8 @@ public class ParticleEmitterControl extends AbstractControl{
     
     private int gasEmissionCounter,liquidEmissionCounter,solidEmissionCounter;
     
+    private Particle lastParticle;
+    
     public ParticleEmitterControl(ParticleEmitter particleEmitter){
         
         this.particleEmitter=particleEmitter;
@@ -43,7 +45,7 @@ public class ParticleEmitterControl extends AbstractControl{
                 
                 if(gasEmissionCounter<=liquidEmissionCounter&&gasEmissionCounter<=solidEmissionCounter){
                     
-                    new Particle(particleEmitter,particleEmitter.getGasParticleModelPath(),0);
+                    lastParticle=new Particle(particleEmitter,particleEmitter.getGasParticleModelPath(),0);
                     
                 }
                 

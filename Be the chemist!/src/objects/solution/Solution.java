@@ -141,6 +141,42 @@ public class Solution {
         
     }
     
+    public boolean[] containsStates(){
+        
+        boolean containsGas=false;
+        boolean containsLiquid=false;
+        boolean containsSolid=false;
+        
+        for(Substance s: substances){
+            
+            switch(s.getStateInteger()){
+                
+                case 0:
+                    containsGas=true;
+                    break;
+                case 1:
+                    containsLiquid=true;
+                    break;
+                case 2:
+                    containsSolid=true;
+                    break;
+                default:
+                    System.out.println("ERROR: @ getting contained states, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
+                
+            }
+            
+        }
+        
+        boolean[] containedStates=new boolean[3];
+        containedStates[0]=containsGas;
+        containedStates[1]=containsLiquid;
+        containedStates[2]=containsSolid;
+        
+        return containedStates;
+        
+        
+    }
+    
     @Override
     public boolean equals(Object otherSolution){
         

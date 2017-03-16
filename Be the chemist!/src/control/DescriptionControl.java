@@ -10,11 +10,7 @@ import com.jme3.renderer.ViewPort;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.AbstractControl;
 import jmevr.input.VRAPI;
-
-/**
- *
- * @author VIPkiller17
- */
+//by Tommy
 public class DescriptionControl extends AbstractControl {
     
     public static Spatial observer;

@@ -1,0 +1,14 @@
+Project Requirements Specification
+The game will satisfy the following requirements:
+-	The player must be able to fully run the game on Windows operating system, using a Virtual Reality system which, in turn, is using the HTC Vive headset and 2 of its accompanying controllers, which will be entirely handled using SteamVR.
+-	The player must be able to have the full expected experience of the game as long as the minimum hardware specifications are met; 2 HTC Vive controllers and a minimum play area of “Standing”, meaning there is not additional space to play in, the player is incapable of moving around in a physical room.
+-	The player must have access to certain options using a menu put on a wall. The menu will have the basic settings, quit and mode options.
+-	The player must be able to teleport within the in-game room using input from the “Down” direction on the touchpad on either of the controllers.
+-	The player must be able to get the description of any describable object using the menu button on either of the controllers.
+-	The player must be able to grab grabbable objects to manipulate them by using the trigger button on either of the controllers.
+-	The player must be able to acquire any element from a periodic table put on a wall.
+-	The player must be able to acquire any substance from a list put on a wall. The list will be browsable using a slider and a field to specify a set of characters to search for.
+-	The player must have access to all tools generally accessible within a chemistry laboratory.
+-	The player must have the capability to do as they please with the chemicals available to them, including mixing them.
+-	The player must use safety precautions to avoid in-game consequences depending on the mode chosen.
+This list might not be completed yet, stuff could be added as the first month goes by

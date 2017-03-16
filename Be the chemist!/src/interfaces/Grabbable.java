@@ -3,8 +3,11 @@
  * and open the template in the editor.
  */
 package interfaces;
-public interface Describable {
-    
-    abstract String getDescription();
 
+/**
+ *
+ * @author VIPkiller17
+ */
+public class Grabbable {
+    
 }

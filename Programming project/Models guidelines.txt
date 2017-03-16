@@ -1,3 +1,5 @@
+TEST
+
 Models guideline
 All models are to be done in .obj format, scaled correctly to the metric measurement system, logically positioned on the origin; a bottle’s bottom’s center would be at the origin. All are to be low-poly; a round bottle would be an octagon. All are to be simply textured, no details, faces are to be single colored to give a cartoony and yet realistic feel to them. Every model that could possibly be held my hand must have a highlight model, slightly bigger then the original model and of a completely translucid orange color. When the player hover their hands over a grabbable object, the highlight model will appear to indicate that it ca be grabbed.
 Hands:

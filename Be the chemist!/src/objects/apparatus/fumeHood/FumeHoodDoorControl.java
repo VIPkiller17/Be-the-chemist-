@@ -7,6 +7,7 @@ package objects.apparatus.fumeHood;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
+import main.Main;
 
 /**
  *
@@ -25,7 +26,7 @@ public class FumeHoodDoorControl extends AbstractControl{
     @Override
     protected void controlUpdate(float f) {
         
-        if
+        
         
     }
 

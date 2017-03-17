@@ -9,6 +9,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
+import main.Main;
 import objects.PhysicalObject;
 import objects.apparatus.Apparatus;
 
@@ -26,9 +27,9 @@ public class FumeHood extends Apparatus{
     
     private Spatial spatial;
     
-    public FumeHood(AssetManager assetManager,Node rootNode){
+    public FumeHood(Main main,AssetManager assetManager,Node rootNode){
         
-        super(Vector3f.ZERO);
+        super(main,Vector3f.ZERO);
         
         spatial=assetManager.loadModel("Models/Static/FumeHood/FumeHood.j3o");
         //spatial.scale(1f,1f,1f);
@@ -39,7 +40,7 @@ public class FumeHood extends Apparatus{
         spatial.setUserData("correspondingObject", this);
         attachObject(spatial);
         
-        fumeHoodDoor=new FumeHoodDoor(this,assetManager,rootNode);
+        fumeHoodDoor=new FumeHoodDoor(main,this,assetManager,rootNode);
         
         rootNode.attachChild(getNode());
         

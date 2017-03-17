@@ -10,4 +10,8 @@ package interfaces;
  */
 public interface Grabbable {
     
+    void highlightVisible(boolean isHighlightVisible);
+    
+    boolean isHighlightVisible();
+    
 }

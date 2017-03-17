@@ -7,12 +7,12 @@ package objects.player;
 import com.jme3.asset.AssetManager;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.input.VRAPI;
+import main.Main;
 //by Tommy
 public class Player {
     
@@ -27,7 +27,7 @@ public class Player {
     
     private Node playerNode;
     
-    public Player(AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,Spatial observer){
+    public Player(Main main,AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,Spatial observer){
         
         this.assetManager=assetManager;
         this.rootNode=rootNode;

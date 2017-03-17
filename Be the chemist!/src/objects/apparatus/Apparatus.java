@@ -5,6 +5,7 @@
 package objects.apparatus;
 
 import com.jme3.math.Vector3f;
+import main.Main;
 import objects.PhysicalObject;
 
 /**
@@ -13,8 +14,8 @@ import objects.PhysicalObject;
  */
 public abstract class Apparatus extends PhysicalObject{
     
-    public Apparatus(Vector3f position) {
-        super(position);
+    public Apparatus(Main main,Vector3f position) {
+        super(main,position);
     }
     
 }

@@ -9,7 +9,6 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
-import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import objects.containers.Container;
@@ -18,6 +17,7 @@ import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import main.Main;
 import objects.solution.Solution;
 
 /**
@@ -51,17 +51,17 @@ public class Beaker extends Container implements Savable{
     
     private boolean isEmitting;
     
-    public Beaker(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    public Beaker(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
-        super(position);
+        super(main,position);
         
         init(position,rootNode,assetManager,bulletAppState);
         
     }
     
-    public Beaker(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
+    public Beaker(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
         
-        super(position,solution,quantity);
+        super(main,position,solution,quantity);
         
         init(position,rootNode,assetManager,bulletAppState);
         

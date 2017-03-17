@@ -44,6 +44,9 @@ public class Main extends VRApplication {
     
     public static ArrayList<PhysicalObject> items;
     
+    public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(153,255,51,0.5f);
+    public static final ColorRGBA HIGHLIGHT_INVISIBLE=new ColorRGBA(153,255,51,0);
+    
     //Player
     Spatial observer;
     //protected Geometry player;
@@ -123,7 +126,7 @@ public class Main extends VRApplication {
         //OBSERVER INIT END
         
         //init playerObject
-        playerLogic=new Player(getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
+        playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
         //TEST WORLD INIT START
         room=new Room(getAssetManager(),rootNode,bulletAppState);

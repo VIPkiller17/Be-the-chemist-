@@ -8,19 +8,25 @@ import com.jme3.asset.AssetManager;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import interfaces.Grabbable;
 import java.io.IOException;
 import objects.apparatus.Apparatus;
+import main.Main;
 
 /**
  *
  * @author VIPkiller17
  */
-public class FumeHoodDoor extends Apparatus implements Savable{
+public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     
     private FumeHood fumeHood;
     
@@ -29,10 +35,12 @@ public class FumeHoodDoor extends Apparatus implements Savable{
     
     private Spatial spatial;
     private Spatial handleHighlight;
+    private Material handleHighlightMat;
+    private boolean isHighlightVisible;
     
-    public FumeHoodDoor(FumeHood fumeHood,AssetManager assetManager,Node rootNode){
+    public FumeHoodDoor(Main main,FumeHood fumeHood,AssetManager assetManager,Node rootNode){
         
-        super(new Vector3f(6.72f,1.02f,10.18f));
+        super(main,new Vector3f(6.72f,1.02f,10.18f));
         
         this.fumeHood=fumeHood;
         
@@ -49,9 +57,14 @@ public class FumeHoodDoor extends Apparatus implements Savable{
         //spatial.scale(1f,1f,1f);
         handleHighlight.rotate(new Quaternion().fromAngleAxis(FastMath.PI, Vector3f.UNIT_Y));
         handleHighlight.setLocalTranslation(6.72f,1.02f,10.18f);
-        handleHighlight.setName("Fume hood");
+        handleHighlight.setName("Fume hood door handle highlight");
         handleHighlight.setUserData("correctCollision", true);
         handleHighlight.setUserData("correspondingObject", this);
+        handleHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+        handleHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        handleHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
+        handleHighlight.setMaterial(handleHighlightMat);
         fumeHood.attachObject(handleHighlight);
         
     }
@@ -68,6 +81,28 @@ public class FumeHoodDoor extends Apparatus implements Savable{
     public String getDescription() {
         
         return "The fume hood's door.";
+        
+    }
+
+    @Override
+    public void highlightVisible(boolean isHighlightVisible) {
+        
+        this.isHighlightVisible=isHighlightVisible;
+        
+        if(isHighlightVisible)
+        
+            handleHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        
+        else
+            
+            handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+        
+    }
+
+    @Override
+    public boolean isHighlightVisible() {
+        
+        return isHighlightVisible;
         
     }
     

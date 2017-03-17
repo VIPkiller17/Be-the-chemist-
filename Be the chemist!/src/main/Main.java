@@ -133,16 +133,10 @@ public class Main extends VRApplication {
         
         floor=new Floor(getAssetManager(),rootNode,bulletAppState);
         
-        fumeHood=new FumeHood(getAssetManager(),rootNode);
+        fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         //TEST WORLD INIT END
         
         //OBJECTS INIT START
-        //collisionPrism0=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPrism.j3o");
-        //collisionPrism1=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0f,"Models/Testing/Collisions/ColPrismRightHand.j3o");
-        //collisionPrism2=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0.6f,"Models/Testing/Collisions/ColPrismLeftHand.j3o");
-        //collisionPlain0=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPlain.j3o");
-        //collisionPlain1=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0f,"Models/Testing/Collisions/ColPlainRightHand.j3o");
-        //collisionPlain2=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0.6f,"Models/Testing/Collisions/ColPlainLeftHand.j3o");
         Box testBox=new Box(0.1f,0.1f,0.1f);
         testCube=new Geometry("Test cube",testBox);
         testCube.setShadowMode(ShadowMode.CastAndReceive);

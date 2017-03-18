@@ -23,7 +23,6 @@ import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
 import main.Main;
 import objects.PhysicalObject;
-import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.world.Floor;
 //by Tommy
 public class HandControl extends AbstractControl{
@@ -64,7 +63,11 @@ public class HandControl extends AbstractControl{
     
     private Player player;
     
-    public HandControl(Node newRootNode,AssetManager assetManager,ArrayList<Describable> newDescribables,CollisionResults newCollisionResults,Hand hand,Spatial newObserver,Player player){
+    private Main main;
+    
+    public HandControl(Main main,Node newRootNode,AssetManager assetManager,ArrayList<Describable> newDescribables,CollisionResults newCollisionResults,Hand hand,Spatial newObserver,Player player){
+        
+        this.main=main;
         
         //init variables
         this.hand=hand;
@@ -173,7 +176,7 @@ public class HandControl extends AbstractControl{
 
             }else{
 
-                System.out.println("\t\t\tCollision geom and its parents do not have correctCollision userData, skipping to next collision");
+                //System.out.println("\t\t\tCollision geom and its parents do not have correctCollision userData, skipping to next collision");
 
                 continue;
 
@@ -188,7 +191,7 @@ public class HandControl extends AbstractControl{
         
         laserActivatedByTeleportation=true;
         
-        System.out.println("Set laser coords to start: "+VRHardware.getVRinput().getPosition(handSide)+" and end: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+        //System.out.println("Set laser coords to start: "+VRHardware.getVRinput().getPosition(handSide)+" and end: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
         
         //set laserMovedOut to false because it has been displayed
         teleLaserMovedOut=false;
@@ -274,43 +277,49 @@ public class HandControl extends AbstractControl{
     
     private void setupHandForFrame(){
         
-        System.out.println("Updating ray position...");
+        //System.out.println("Updating ray position...");
         
         //Put the ray to correct position and direction
         hand.setRayCoords(hand.getWorldTranslation(),new Vector3f(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(2)));
 
-        System.out.println("Clearing collisions list...");
+        //System.out.println("Clearing collisions list...");
         //check if the collisions array actually has anything in it
         if(collisionResults.size()>0)
 
             //if it does clear it because there could be left-overs from last loop
             collisionResults.clear();
 
-        System.out.println("Processing collisions between ray and world...");
+        //System.out.println("Processing collisions between ray and world...");
         //find the collisions between the ray and other geoms
         rootNode.collideWith(hand.getRay(),collisionResults);
 
-        System.out.println("This frame's collisions list:");
+        //System.out.println("This frame's collisions list:");
 
         for(int i=0;i<collisionResults.size();i++)
 
-            System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
+            //System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
 
         //Update location of Geom
         hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
 
         //Update Rotation of Geom
         hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
-        System.out.println("HAND ROTATION: "+hand.getRotation());
+        //System.out.println("HAND ROTATION: "+hand.getRotation());
         
     }
     
     private void grabProcess(){
         
-        for(PhysicalObject p: Main.items){
+        System.out.println("Grab process method called with main item list size: "+main.getItemsList().size());
+        
+        for(PhysicalObject p: main.getItemsList()){
+            
+            System.out.println("Grabbable: "+(p instanceof Grabbable)+", its pos: "+p.getPos()+", Hand pos: "+hand.getWorldTranslation()+", distance: "+p.getPos().distance(hand.getWorldTranslation()));
                 
             if(p instanceof Grabbable&&p.getPos().distance(hand.getWorldTranslation())<0.1f&&(possibleItemToGrab==null||p.getPos().distance(hand.getWorldTranslation())<p.getPos().distance(possibleItemToGrab.getPos()))){
 
+                System.out.println("Found new better grabbable item");
+                
                 possibleItemToGrab=p;
                 
                 ((Grabbable)p).highlightVisible(true);
@@ -376,7 +385,7 @@ public class HandControl extends AbstractControl{
         
         if(VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){//while its being held
 
-                System.out.println("Menu button pressed.");
+                //System.out.println("Menu button pressed.");
                 
                 //check if there is an object in the hand
                 if(hand.isHoldingObject()){
@@ -388,29 +397,29 @@ public class HandControl extends AbstractControl{
 
                 }else if(!hand.isHoldingObject()&&laserMovedOut){
                     
-                    System.out.println("No object being held in that hand and laser not out, finding correctCollision...");
+                    //System.out.println("No object being held in that hand and laser not out, finding correctCollision...");
 
                     //finding the correct collision in the list
                     for(int i=0;i<collisionResults.size();i++){
                         
-                        System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
+                        //System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
                         
                         //Check if the collision geom is the correct collision
                         //if Not, check if its parent is the correct collision
                         //if not, continue to the next element in the list of collisions
                         if(collisionResults.getCollision(i).getGeometry().getUserData("correctCollision")!=null){
                             
-                            System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
+                            //System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
                             
                             if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
 
-                                System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
+                                //System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
 
                                 correctCollisionSpatial=collisionResults.getCollision(i).getGeometry();
                                 
                                 presentCorrectCollisionIndex=i;
                                 
-                                System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+                                //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
 
                                 break;
 
@@ -418,17 +427,17 @@ public class HandControl extends AbstractControl{
                             
                         }else if(collisionResults.getCollision(i).getGeometry().getParent().getUserData("correctCollision")!=null){
                             
-                            System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
+                            //System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
                             
                             if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
 
-                                System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
+                                //System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
 
                                 correctCollisionSpatial=collisionResults.getCollision(i).getGeometry().getParent();
                                 
                                 presentCorrectCollisionIndex=i;
                                 
-                                System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+                                //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
                              
                                 break;
 
@@ -444,7 +453,7 @@ public class HandControl extends AbstractControl{
 
                     }
                     
-                    System.out.println("Updating laser position...");
+                    //System.out.println("Updating laser position...");
 
                     //update start and end points of laser to display it correctly
                     collisionPointGeom.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
@@ -460,23 +469,23 @@ public class HandControl extends AbstractControl{
                     
                     descriptionMovedOut=false;
 
-                    System.out.println("Finding collision spatial's corresponding object..");
+                    //System.out.println("Finding collision spatial's corresponding object..");
                     
                     if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable){
                         
-                        System.out.println("CorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
+                        //System.out.println("CorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
                         
                         laserPointingAtDescribable=true;
                         
                     }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable)){
                         
-                        System.out.println("CorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
+                        //System.out.println("CorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
                         
                         laserPointingAtDescribable=false;
                         
                     }else{
                         
-                        System.out.println("\tERROR: CorrectCollisionSpatial does not have a corresponding object!");
+                        //System.out.println("\tERROR: CorrectCollisionSpatial does not have a corresponding object!");
                         
                     }
 
@@ -696,28 +705,28 @@ public class HandControl extends AbstractControl{
         //if it isn't check if player is pointing a display
         if(laserMovedOut){
 
-            System.out.println("Laser not in use, checking is player is pointing at a display...");
+            //System.out.println("Laser not in use, checking is player is pointing at a display...");
 
             for(int i=0;i<collisionResults.size();i++){
 
-                System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
+                //System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
 
                 //Check if the collision geom is the correct collision
                 //if Not, check if its parent is the correct collision
                 //if not, continue to the next element in the list of collisions
                 if(collisionResults.getCollision(i).getGeometry().getUserData("correctCollision")!=null){
 
-                    System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
+                    //System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
 
                     if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
 
-                        System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
+                        //System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
 
                         correctCollisionSpatial=collisionResults.getCollision(i).getGeometry();
 
                         presentCorrectCollisionIndex=i;
 
-                        System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+                        //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
 
                         break;
 
@@ -725,17 +734,17 @@ public class HandControl extends AbstractControl{
 
                 }else if(collisionResults.getCollision(i).getGeometry().getParent().getUserData("correctCollision")!=null){
 
-                    System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
+                    //System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
 
                     if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
 
-                        System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
+                        //System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
 
                         correctCollisionSpatial=collisionResults.getCollision(i).getGeometry().getParent();
 
                         presentCorrectCollisionIndex=i;
 
-                        System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+                        //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
 
                         break;
 

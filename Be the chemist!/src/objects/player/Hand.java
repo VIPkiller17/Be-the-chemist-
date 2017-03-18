@@ -23,6 +23,7 @@ import interfaces.Describable;
 import java.io.IOException;
 import java.util.ArrayList;
 import jmevr.input.VRAPI;
+import main.Main;
 import objects.PhysicalObject;
 //by Tommy
 public class Hand implements Describable,Savable{
@@ -53,7 +54,11 @@ public class Hand implements Describable,Savable{
     
     private Player player;
     
-    public Hand(AssetManager assetManager,Node rootNode,VRAPI newVRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,int side,Spatial newObserver,Node playerNode,Player player){
+    private Main main;
+    
+    public Hand(Main main,AssetManager assetManager,Node rootNode,VRAPI newVRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,int side,Spatial newObserver,Node playerNode,Player player){
+        
+        this.main=main;
         
         //if right hand, create the handNode
         if(side==0)
@@ -98,7 +103,7 @@ public class Hand implements Describable,Savable{
         describables.add(this);
         
         //create and add the hand control to the hand spatial
-        this.handControl=new HandControl(rootNode,assetManager,describables,collisionResults,this,observer,player);
+        this.handControl=new HandControl(main,rootNode,assetManager,describables,collisionResults,this,observer,player);
         spatial.addControl(handControl);
         
         //create descriptionDisplay and add its control

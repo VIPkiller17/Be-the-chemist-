@@ -42,7 +42,7 @@ public class Main extends VRApplication {
     
     private BulletAppState bulletAppState;
     
-    public static ArrayList<PhysicalObject> items;
+    private ArrayList<PhysicalObject> items;
     
     public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(153,255,51,0.5f);
     public static final ColorRGBA HIGHLIGHT_INVISIBLE=new ColorRGBA(153,255,51,0);
@@ -105,6 +105,9 @@ public class Main extends VRApplication {
     
     @Override
     public void simpleInitApp() {
+        
+        //var init
+        items=new ArrayList<>();
         
         //AmbientLight al = new AmbientLight();
         //al.setColor(ColorRGBA.White.mult(1.3f));
@@ -354,6 +357,12 @@ public class Main extends VRApplication {
             
         }
         
+        
+    }
+    
+    public ArrayList<PhysicalObject> getItemsList(){
+        
+        return items;
         
     }
 

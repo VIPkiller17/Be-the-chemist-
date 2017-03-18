@@ -53,7 +53,7 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         spatial.setUserData("correspondingObject", this);
         fumeHood.attachObject(spatial);
         
-        handleHighlight=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor.j3o");
+        handleHighlight=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor_Highlight.j3o");
         //spatial.scale(1f,1f,1f);
         handleHighlight.rotate(new Quaternion().fromAngleAxis(FastMath.PI, Vector3f.UNIT_Y));
         handleHighlight.setLocalTranslation(6.72f,1.02f,10.18f);
@@ -66,6 +66,8 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         handleHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
         handleHighlight.setMaterial(handleHighlightMat);
         fumeHood.attachObject(handleHighlight);
+        
+        main.getItemsList().add(this);
         
     }
 

@@ -19,11 +19,15 @@ public class FumeHoodControl extends AbstractControl{
 
     private FumeHood fumeHood;
     
+    private Main main;
+    
     private float timer;
     
     private Vector3f presentObjectPosition;
     
-    public FumeHoodControl(FumeHood fumeHood){
+    public FumeHoodControl(Main main,FumeHood fumeHood){
+        
+        this.main=main;
         
         this.fumeHood=fumeHood;
         
@@ -37,7 +41,7 @@ public class FumeHoodControl extends AbstractControl{
         //Every 0.5 seconds, this will check through every items in the world. If the item is within the bounds of the fume hood, its insideFumeHood boolean is set to true
         if(timer>0.5f){
         
-            for(PhysicalObject p: Main.items){
+            for(PhysicalObject p: main.getItemsList()){
 
                 presentObjectPosition=p.getPos();
 

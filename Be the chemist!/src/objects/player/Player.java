@@ -27,7 +27,11 @@ public class Player {
     
     private Node playerNode;
     
+    private Main main;
+    
     public Player(Main main,AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,Spatial observer){
+        
+        this.main=main;
         
         this.assetManager=assetManager;
         this.rootNode=rootNode;
@@ -47,11 +51,11 @@ public class Player {
         
         if(side==0){
             
-            rightHand=new Hand(assetManager,rootNode,VRHardware,collisionResults,describables,0,observer,playerNode,this);
+            rightHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,describables,0,observer,playerNode,this);
         
         }else if(side==1){
             
-            leftHand=new Hand(assetManager,rootNode,VRHardware,collisionResults,describables,1,observer,playerNode,this);
+            leftHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,describables,1,observer,playerNode,this);
         
         }else
             

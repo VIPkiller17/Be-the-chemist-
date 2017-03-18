@@ -23,6 +23,7 @@ import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
 import main.Main;
 import objects.PhysicalObject;
+import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.world.Floor;
 //by Tommy
 public class HandControl extends AbstractControl{
@@ -103,6 +104,9 @@ public class HandControl extends AbstractControl{
             
             //setup the hand's position and all for this frame
             setupHandForFrame();
+            
+            //Update due to static hold
+            updateHold();
             
             //Check the closest grabbable item to the hand and see if it is grabbable
             grabProcess();
@@ -310,15 +314,36 @@ public class HandControl extends AbstractControl{
     
     private void grabProcess(){
         
-        System.out.println("Grab process method called with main item list size: "+main.getItemsList().size());
+        //if the distance between the possibble to grab item is now more than 15cm, set the possible to grab item to null
+        //also set its highliahgt model to invisible
+        if(possibleItemToGrab!=null&&possibleItemToGrab.getPos().distance(hand.getWorldTranslation())>0.15f){
+            
+            ((Grabbable)possibleItemToGrab).highlightVisible(false);
+            
+            possibleItemToGrab=null;
+            
+        }
         
+        //System.out.println("Grab process method called with main item list size: "+main.getItemsList().size());
+        
+        //for each item in the item list
         for(PhysicalObject p: main.getItemsList()){
             
-            System.out.println("Grabbable: "+(p instanceof Grabbable)+", its pos: "+p.getPos()+", Hand pos: "+hand.getWorldTranslation()+", distance: "+p.getPos().distance(hand.getWorldTranslation()));
+            //System.out.println("Grabbable: "+(p instanceof Grabbable)+", its pos: "+p.getPos()+", Hand pos: "+hand.getWorldTranslation()+", distance: "+p.getPos().distance(hand.getWorldTranslation()));
                 
-            if(p instanceof Grabbable&&p.getPos().distance(hand.getWorldTranslation())<0.1f&&(possibleItemToGrab==null||p.getPos().distance(hand.getWorldTranslation())<p.getPos().distance(possibleItemToGrab.getPos()))){
+            //check if the item is grabbable
+            //check if the item's distance compared to the hand is less than 15cm
+            //check if the last grabbable item is null or if the item's distance compared to the hand is less than the last grabbable item
+            if(p instanceof Grabbable&&p.getPos().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||p.getPos().distance(hand.getWorldTranslation())<possibleItemToGrab.getPos().distance(hand.getWorldTranslation()))){
 
-                System.out.println("Found new better grabbable item");
+                //System.out.println("Found new better grabbable item");
+                
+                //set the last grabbable item's highlight to invisible
+                //set the grabbable item to the item
+                //set the grabbable item's highlight to visible
+                if(possibleItemToGrab!=null)
+                
+                    ((Grabbable)possibleItemToGrab).highlightVisible(false);
                 
                 possibleItemToGrab=p;
                 
@@ -346,7 +371,22 @@ public class HandControl extends AbstractControl{
                     
                     //add what happens when the player continues to hold the trigger
                     
+                    System.out.println("The trigger is still being pressed");
+                    
+                    setGrabbedItemPosition();
+                    
                 }else{//trigger was not being pressed
+                    
+                    System.out.println("The trigger has just started being pressed");
+                    
+                    //if there is an item possible to grab
+                    if(possibleItemToGrab!=null){
+                        
+                        System.out.println("Item prossible to grab not null, calling method to grab...");
+                    
+                        grabGrabbableItem();
+                        
+                    }
                     
                     //add what happens when the player starts pressing the trigger
                     //if a button (display) is being pointed, trigger that button's action
@@ -356,22 +396,30 @@ public class HandControl extends AbstractControl{
                     
                 triggerWasPressed=true;
                 
-            }else{//trigger is not being pressed
+        }else{//trigger is not being pressed
+
+            if(triggerWasPressed){
                 
-                if(triggerWasPressed){
-                    
-                    //add what happens when the player releases the trigger
-                    //if the player was holding an object and if statichold is not currently active, make them drop the item
-                    
-                }else{//trigger was not being pressed
-                    
-                    //add what happens when the player is still not pressing the trigger
-                    
-                }
+                System.out.println("The trigger has just been released");
                 
-                triggerWasPressed=false;
+                if(!hand.hasStaticHold())
                 
+                    hand.setHeldObject(null);
+
+                //add what happens when the player releases the trigger
+                //if the player was holding an object and if statichold is not currently active, make them drop the item
+
+            }else{//trigger was not being pressed
+                
+                System.out.println("The trigger is still not being pressed");
+
+                //add what happens when the player is still not pressing the trigger
+
             }
+
+            triggerWasPressed=false;
+
+        }
         
     }
     
@@ -765,6 +813,41 @@ public class HandControl extends AbstractControl{
 
 
         }
+        
+    }
+    
+    private void grabGrabbableItem(){
+        
+        System.out.println("Grab grabbable item called, setting hand's held object to possible item to grab...");
+        
+        hand.setHeldObject(possibleItemToGrab);
+        
+        System.out.println("calling method to inittially position grabebd item...");
+        
+        setGrabbedItemPosition();
+        
+    }
+    
+    private void setGrabbedItemPosition(){
+        
+        System.out.println("setting the item's position depending on what it is...");
+        
+        //for the exceptional case that the held object is the fume hood door
+        if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof FumeHoodDoor&&hand.getSpatial().getWorldTranslation().getY()<=2&&hand.getSpatial().getWorldTranslation().getY()>=1.02f){
+            
+            System.out.println("Held ojbject is not null, it is a fume hood door, the hand's Y position is less or equal to 2 and higher or equal to 1.02");
+            
+            ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getSpatial().getWorldTranslation().getY(),10.18f));
+            
+        }
+        
+    }
+    
+    private void updateHold(){
+        
+        if(hand.hasStaticHold())
+        
+            setGrabbedItemPosition();
         
     }
     

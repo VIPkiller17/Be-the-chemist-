@@ -70,6 +70,12 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         main.getItemsList().add(this);
         
     }
+    
+    public void setPosition(Vector3f position){
+        
+        spatial.setLocalTranslation(position);
+        
+    }
 
     @Override
     public void write(JmeExporter je) throws IOException {

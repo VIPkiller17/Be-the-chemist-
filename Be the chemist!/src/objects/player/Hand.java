@@ -245,6 +245,12 @@ public class Hand implements Describable,Savable{
         
     }
     
+    public void setHeldObject(PhysicalObject possibleItemToGrab){
+        
+        heldObject=possibleItemToGrab;
+        
+    }
+    
     public boolean hasStaticHold(){
         
         return staticHold;

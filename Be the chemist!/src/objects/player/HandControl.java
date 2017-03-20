@@ -53,7 +53,7 @@ public class HandControl extends AbstractControl{
     private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;
     private boolean menuPressed,touchpadPressed,triggerPressed,gripPressed;
     private boolean menuWasPressed,touchPadWasPressed,triggerWasPressed,gripWasPressed;
-    private boolean laserActivatedByTeleportation,laserActivatedByDescription,laserActivatedByDisplay;
+    private boolean laserActivatedByTeleportation,laserActivatedByDescription,laserActivatedByDisplay,laserActivated;
     
     private Geometry testLaserGeom;
     private Material testLaserMat;
@@ -194,6 +194,7 @@ public class HandControl extends AbstractControl{
         hand.setLaserCoords(hand.getWorldTranslation(),collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
         
         laserActivatedByTeleportation=true;
+        laserActivated=true;
         
         //System.out.println("Set laser coords to start: "+VRHardware.getVRinput().getPosition(handSide)+" and end: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
         
@@ -263,6 +264,7 @@ public class HandControl extends AbstractControl{
                 teleLaserMovedOut=true;
                 
                 laserActivatedByTeleportation=false;
+                laserActivated=false;
 
             }
             
@@ -299,15 +301,20 @@ public class HandControl extends AbstractControl{
 
         //System.out.println("This frame's collisions list:");
 
-        for(int i=0;i<collisionResults.size();i++)
+        /*
+        for(int i=0;i<collisionResults.size();i++){
 
-            //System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
-
+            System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
+            
+        }
+        */
+        
         //Update location of Geom
         hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
 
         //Update Rotation of Geom
         hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
+        
         //System.out.println("HAND ROTATION: "+hand.getRotation());
         
     }
@@ -433,168 +440,171 @@ public class HandControl extends AbstractControl{
         
         if(VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){//while its being held
 
-                //System.out.println("Menu button pressed.");
-                
-                //check if there is an object in the hand
-                if(hand.isHoldingObject()){
-                    
-                    hand.setDescriptionText(hand.getHeldObject().getDescription());
-                    hand.setDescriptionMovedOut(false);
-                        
-                    descriptionMovedOut=false;
+            //System.out.println("Menu button pressed.");
 
-                }else if(!hand.isHoldingObject()&&laserMovedOut){
-                    
-                    //System.out.println("No object being held in that hand and laser not out, finding correctCollision...");
+            //check if there is an object in the hand
+            if(hand.isHoldingObject()){
 
-                    //finding the correct collision in the list
-                    for(int i=0;i<collisionResults.size();i++){
-                        
-                        //System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
-                        
-                        //Check if the collision geom is the correct collision
-                        //if Not, check if its parent is the correct collision
-                        //if not, continue to the next element in the list of collisions
-                        if(collisionResults.getCollision(i).getGeometry().getUserData("correctCollision")!=null){
-                            
-                            //System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
-                            
-                            if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
+                hand.setDescriptionText(hand.getHeldObject().getDescription());
+                hand.setDescriptionMovedOut(false);
 
-                                //System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
+                descriptionMovedOut=false;
 
-                                correctCollisionSpatial=collisionResults.getCollision(i).getGeometry();
-                                
-                                presentCorrectCollisionIndex=i;
-                                
-                                //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+            }else if(!hand.isHoldingObject()&&laserMovedOut){
 
-                                break;
+                //System.out.println("No object being held in that hand and laser not out, finding correctCollision...");
 
-                            }
-                            
-                        }else if(collisionResults.getCollision(i).getGeometry().getParent().getUserData("correctCollision")!=null){
-                            
-                            //System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
-                            
-                            if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
+                //finding the correct collision in the list
+                for(int i=0;i<collisionResults.size();i++){
 
-                                //System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
+                    //System.out.println("Checking "+collisionResults.getCollision(i).getGeometry().getName()+" at index: "+i);
 
-                                correctCollisionSpatial=collisionResults.getCollision(i).getGeometry().getParent();
-                                
-                                presentCorrectCollisionIndex=i;
-                                
-                                //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-                             
-                                break;
+                    //Check if the collision geom is the correct collision
+                    //if Not, check if its parent is the correct collision
+                    //if not, continue to the next element in the list of collisions
+                    if(collisionResults.getCollision(i).getGeometry().getUserData("correctCollision")!=null){
 
-                            }
-                            
-                        }else{
-                            
-                            //System.out.println("\t\t\tCollision geom and its parents do not have correctCollision userData, skipping to next collision");
-                            
-                            continue;
-                            
+                        //System.out.println("Collision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude+"...");
+
+                        if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
+
+                            //System.out.println("First collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getName());
+
+                            correctCollisionSpatial=collisionResults.getCollision(i).getGeometry();
+
+                            presentCorrectCollisionIndex=i;
+
+                            //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+
+                            break;
+
                         }
 
+                    }else if(collisionResults.getCollision(i).getGeometry().getParent().getUserData("correctCollision")!=null){
+
+                        //System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
+
+                        if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
+
+                            //System.out.println("\t\t\t\tFirst collision of the list not containing "+collisionToExclude+" in name \""+collisionResults.getCollision(i).getGeometry().getParent().getName()+"\" found, correct colision found on spatial "+collisionResults.getCollision(i).getGeometry().getParent().getName());
+
+                            correctCollisionSpatial=collisionResults.getCollision(i).getGeometry().getParent();
+
+                            presentCorrectCollisionIndex=i;
+
+                            //System.out.println("Found correct collision at index: "+presentCorrectCollisionIndex+"\nCollision point: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+
+                            break;
+
+                        }
+
+                    }else{
+
+                        //System.out.println("\t\t\tCollision geom and its parents do not have correctCollision userData, skipping to next collision");
+
+                        continue;
+
                     }
-                    
-                    //System.out.println("Updating laser position...");
 
-                    //update start and end points of laser to display it correctly
-                    collisionPointGeom.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-                    hand.setLaserGeometryPoints(hand.getWorldTranslation(),collisionPointGeom.getWorldTranslation());
-                    
-                    laserActivatedByDescription=true;
+                }
 
-                    //set laserMovedOut to false because it has been displayed
-                    laserMovedOut=false;
+                //System.out.println("Updating laser position...");
 
-                    //set isPointingDescribable to false initially because this is checked in the next lines
+                //update start and end points of laser to display it correctly
+                collisionPointGeom.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+                hand.setLaserGeometryPoints(hand.getWorldTranslation(),collisionPointGeom.getWorldTranslation());
+
+                laserActivatedByDescription=true;
+                laserActivated=true;
+
+                //set laserMovedOut to false because it has been displayed
+                laserMovedOut=false;
+
+                //set isPointingDescribable to false initially because this is checked in the next lines
+                laserPointingAtDescribable=false;
+
+                descriptionMovedOut=false;
+
+                //System.out.println("Finding collision spatial's corresponding object..");
+
+                if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable){
+
+                    //System.out.println("CorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
+
+                    laserPointingAtDescribable=true;
+
+                }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable)){
+
+                    //System.out.println("CorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
+
                     laserPointingAtDescribable=false;
-                    
+
+                }else{
+
+                    //System.out.println("\tERROR: CorrectCollisionSpatial does not have a corresponding object!");
+
+                }
+
+                //if it has found to be pointing at a describable object
+                if(laserPointingAtDescribable){
+
+                    //make laser green
+                    hand.setLaserMaterialColor("Color", ColorRGBA.Green);
+
+                    hand.setDescriptionText(((Describable)(correctCollisionSpatial.getUserData("correspondingObject"))).getDescription());
+                    hand.setDescriptionMovedOut(false);
+
                     descriptionMovedOut=false;
 
-                    //System.out.println("Finding collision spatial's corresponding object..");
-                    
-                    if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable){
-                        
-                        //System.out.println("CorrectCollisionSpatial's corresponding object is describable, setting laser accordingly...");
-                        
-                        laserPointingAtDescribable=true;
-                        
-                    }else if(correctCollisionSpatial.getUserData("correspondingObject")!=null&&!(correctCollisionSpatial.getUserData("correspondingObject") instanceof Describable)){
-                        
-                        //System.out.println("CorrectCollisionSpatial's corresponding object is not describable, setting laser accordingly...");
-                        
-                        laserPointingAtDescribable=false;
-                        
-                    }else{
-                        
-                        //System.out.println("\tERROR: CorrectCollisionSpatial does not have a corresponding object!");
-                        
-                    }
+                }else{
 
-                    //if it has found to be pointing at a describable object
-                    if(laserPointingAtDescribable){
+                    //otherwise make it red
+                    hand.setLaserMaterialColor("Color", ColorRGBA.Red);
 
-                        //make laser green
-                        hand.setLaserMaterialColor("Color", ColorRGBA.Green);
-
-                        hand.setDescriptionText(((Describable)(correctCollisionSpatial.getUserData("correspondingObject"))).getDescription());
-                        hand.setDescriptionMovedOut(false);
-                        
-                        descriptionMovedOut=false;
-
-                    }else{
-
-                        //otherwise make it red
-                        hand.setLaserMaterialColor("Color", ColorRGBA.Red);
-
-                        hand.setDescriptionText("");
-                        hand.setDescriptionMovedOut(true);
-                        
-                        descriptionMovedOut=true;
-
-                    }
-
-                }
-                //Update due to menu button not being pressed
-                //Keep in mind that this is on every loop
-            }else if(!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){
-
-                //check if the laser is being used by something else
-                //if it is, dont move it out of sight
-                //if it isnt, move it out of sight
-                if(!laserActivatedByTeleportation&&!laserActivatedByDisplay){
-                
-                    //check if the laser is already out of sight
-                    if(!laserMovedOut){
-
-                        //if not already out of sight, move laser out of sight
-                        hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
-
-                        //set laserMovedOut to true once the laser has been moved out
-                        laserMovedOut=true;
-                        
-                        laserActivatedByDescription=false;
-
-                    }
-                    
-                }
-                
-                //check if description is already out of sight
-                if(!descriptionMovedOut){
-
-                    hand.setDescriptionMovedOut(true);
                     hand.setDescriptionText("");
+                    hand.setDescriptionMovedOut(true);
 
                     descriptionMovedOut=true;
-                
+
                 }
+
             }
+            //Update due to menu button not being pressed
+            //Keep in mind that this is on every loop
+        }else if(!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveMenuButton)){
+
+            //check if the laser is being used by something else
+            //if it is, dont move it out of sight
+            //if it isnt, move it out of sight
+            if(!laserActivatedByTeleportation&&!laserActivatedByDisplay){
+
+                //check if the laser is already out of sight
+                if(!laserMovedOut){
+
+                    //if not already out of sight, move laser out of sight
+                    hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+
+                    //set laserMovedOut to true once the laser has been moved out
+                    laserMovedOut=true;
+
+                    laserActivatedByDescription=false;
+                    laserActivated=false;
+
+                }
+
+            }
+
+            //check if description is already out of sight
+            if(!descriptionMovedOut){
+
+                hand.setDescriptionMovedOut(true);
+                hand.setDescriptionText("");
+
+                descriptionMovedOut=true;
+
+            }
+
+        }
         
     }
     
@@ -833,11 +843,11 @@ public class HandControl extends AbstractControl{
         System.out.println("setting the item's position depending on what it is...");
         
         //for the exceptional case that the held object is the fume hood door
-        if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof FumeHoodDoor&&hand.getSpatial().getWorldTranslation().getY()<=2&&hand.getSpatial().getWorldTranslation().getY()>=1.02f){
+        if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof FumeHoodDoor&&hand.getSpatial().getLocalTranslation().getY()<=2&&hand.getSpatial().getLocalTranslation().getY()>=1.02f){
             
             System.out.println("Held ojbject is not null, it is a fume hood door, the hand's Y position is less or equal to 2 and higher or equal to 1.02");
             
-            ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getSpatial().getWorldTranslation().getY(),10.18f));
+            ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getSpatial().getLocalTranslation().getY(),10.18f));
             
         }
         

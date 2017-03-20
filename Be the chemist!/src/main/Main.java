@@ -44,8 +44,8 @@ public class Main extends VRApplication {
     
     private ArrayList<PhysicalObject> items;
     
-    public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(153,255,51,0.5f);
-    public static final ColorRGBA HIGHLIGHT_INVISIBLE=new ColorRGBA(153,255,51,0);
+    public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(0,255,0,0.7f);
+    public static final ColorRGBA HIGHLIGHT_INVISIBLE=new ColorRGBA(0,255,0,0);
     
     //Player
     Spatial observer;
@@ -131,13 +131,15 @@ public class Main extends VRApplication {
         //init playerObject
         playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
-        //TEST WORLD INIT START
+        //WORLD INIT START
         room=new Room(getAssetManager(),rootNode,bulletAppState);
         
         floor=new Floor(getAssetManager(),rootNode,bulletAppState);
         
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
-        //TEST WORLD INIT END
+        
+        mainMenu=new Display(getAssetManager(),rootNode,0);
+        //WORLD INIT END
         
         //OBJECTS INIT START
         Box testBox=new Box(0.1f,0.1f,0.1f);

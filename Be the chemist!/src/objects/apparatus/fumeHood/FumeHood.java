@@ -47,13 +47,6 @@ public class FumeHood extends Apparatus{
     }
     
     @Override
-    public void setPos(Vector3f position){
-        
-        spatial.setLocalTranslation(position);
-        
-    }
-    
-    @Override
     public String getDescription() {
         
         return "The fume hood.";

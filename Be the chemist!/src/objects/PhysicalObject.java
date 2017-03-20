@@ -34,7 +34,7 @@ public abstract class PhysicalObject implements Savable, Describable{
         
     }
     
-    public void setPos(Vector3f position){
+    public void setLogicPos(Vector3f position){
         
         this.position=position;
         

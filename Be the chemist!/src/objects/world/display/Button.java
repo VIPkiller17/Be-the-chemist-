@@ -8,7 +8,12 @@ import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
+import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
@@ -37,7 +42,7 @@ public class Button {
     private Node node;
     
     //Main menu
-    public static final int TOGGLE_MODE=0,GOTO_SETTINGS=1,EXIT_GAME=2;
+    public static final int TOGGLE_MODE=0,CREDITS=1,EXIT_GAME=2;
         //Settings TODO
     //Substance list, material list
     public static final int SPAWN_ITEM=3;
@@ -53,7 +58,10 @@ public class Button {
         
         this.assetManager=assetManager;
         this.parentDisplay=parentDisplay;
+        node=new Node();
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
+        text=new BitmapText(font);
+        node.attachChild(text);
         
         setup(preset);
         
@@ -64,11 +72,46 @@ public class Button {
         switch(preset){
             
             case 0:
-                createBackground(0.3f,0.2f);
+                
+                text.setSize(0.08f);
                 text.setText("Toggle mode");
-                node.attachChild(text);
+                createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,0.25f,0.1f);
+                break;
+                
+                
+            case 1:
+                
+                text.setSize(0.08f);
+                text.setText("Credits");
+                createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.2f,0.1f);
+                break;
+                
+            case 2:
+                
+                text.setSize(0.08f);
+                text.setText("Exit");
+                createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.65f,0.1f);
+                break;
             
         }
+        
+        if(background!=null&&text!=null){
+        
+            node.attachChild(background);
+            node.attachChild(text);
+            
+        }
+        
+        parentDisplay.getNode().attachChild(node);
         
     }
     
@@ -76,11 +119,12 @@ public class Button {
         
         quad=new Quad(width,height);
         background=new Geometry("Button background",quad);
+        background.setLocalTranslation(-width/2,0,0);
         backgroundMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        backgroundMat.setColor("Color", ColorRGBA.Green);
+        backgroundMat.setColor("Color",new ColorRGBA(0,0,255,0.7f));
+        backgroundMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        background.setQueueBucket(RenderQueue.Bucket.Transparent);
         background.setMaterial(backgroundMat);
-        
-        node.attachChild(background);
         
     }
     

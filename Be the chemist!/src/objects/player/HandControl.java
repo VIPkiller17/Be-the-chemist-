@@ -25,6 +25,8 @@ import main.Main;
 import objects.PhysicalObject;
 import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.world.Floor;
+import objects.world.display.Button;
+import objects.world.display.Display;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -61,6 +63,13 @@ public class HandControl extends AbstractControl{
     private Box collisionPoint;
     private Geometry collisionPointGeom;
     private Material collisionPointMat;
+    
+    private Button presentPointedButton;
+    private boolean pointingDisplay;
+    private boolean pointingButton;
+    
+    private static final Vector3f OUT_OF_MAP=new Vector3f(0,-1,0);
+    private static final ColorRGBA GREEN_LASER=ColorRGBA.Green,RED_LASER=ColorRGBA.Red;
     
     private Player player;
     
@@ -511,8 +520,7 @@ public class HandControl extends AbstractControl{
                 //System.out.println("Updating laser position...");
 
                 //update start and end points of laser to display it correctly
-                collisionPointGeom.setLocalTranslation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
-                hand.setLaserGeometryPoints(hand.getWorldTranslation(),collisionPointGeom.getWorldTranslation());
+                hand.setLaserCoords(hand.getWorldTranslation(),collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
 
                 laserActivatedByDescription=true;
                 laserActivated=true;
@@ -820,9 +828,66 @@ public class HandControl extends AbstractControl{
 
             //We now have the correct collision in the list
             //Now we check to see if that colision is a display or button
+            if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof Button){
+                
+                pointingButton=true;
+                pointingDisplay=false;
+                
+                makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                
+                presentPointedButton=((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
+                
+                presentPointedButton.setPointed(true);
+                
+            }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof Display){
+                
+                pointingDisplay=true;
+                pointingButton=false;
+                
+                makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
+                
+                if(presentPointedButton!=null){
+                
+                    presentPointedButton.setPointed(false);
 
+                    presentPointedButton=null;
+                
+                }
+                
+            }else{
+                
+                pointingButton=false;
+                pointingDisplay=false;
+                
+                if(presentPointedButton!=null){
+                
+                    presentPointedButton.setPointed(false);
+
+                    presentPointedButton=null;
+                
+                }
+                
+            }
 
         }
+        
+    }
+    
+    private void makeLaserAppear(Vector3f endPoint,ColorRGBA color){
+        
+        hand.setLaserMaterialColor("Color",color);
+        
+        hand.setLaserCoords(hand.getWorldTranslation(),endPoint);
+        
+        laserMovedOut=false;
+        
+    }
+    
+    private void makeLaserDisappear(){
+        
+        hand.setLaserCoords(OUT_OF_MAP,OUT_OF_MAP);
+        
+        laserMovedOut=true;
         
     }
     

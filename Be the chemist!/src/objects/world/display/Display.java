@@ -5,6 +5,9 @@
 package objects.world.display;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.Savable;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
@@ -18,13 +21,14 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
 import interfaces.Pointable;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
  *
  * @author VIPkiller17
  */
-public class Display implements Pointable{
+public class Display implements Pointable,Savable{
     
     private AssetManager assetManager;
     
@@ -85,6 +89,17 @@ public class Display implements Pointable{
                 node.setLocalTranslation(new Vector3f(-1.1f,1.2f,0.5f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
+                
+            case 1:
+                
+                createBackground(1,2);
+                texts.get(texts.size()-1).setSize(0.08f);
+                texts.get(texts.size()-1).setText("Substance list");
+                texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.9f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
+                buttons.add(new Button(assetManager,this,3));
+                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,2f));
+                node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
+                break;
             
         }
         
@@ -96,6 +111,8 @@ public class Display implements Pointable{
         
         quad=new Quad(width,height);
         background=new Geometry("Display background",quad);
+        background.setUserData("correctCollision",true);
+        background.setUserData("correspondingObject", this);
         backgroundMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         backgroundMat.setColor("Color",new ColorRGBA(0,255,0,0.5f));
         backgroundMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
@@ -112,6 +129,14 @@ public class Display implements Pointable{
         
         return node;
         
+    }
+
+    @Override
+    public void write(JmeExporter je) throws IOException {
+    }
+
+    @Override
+    public void read(JmeImporter ji) throws IOException {
     }
             
     

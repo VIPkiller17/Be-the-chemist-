@@ -5,25 +5,26 @@
 package objects.world.display;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.export.JmeExporter;
+import com.jme3.export.JmeImporter;
+import com.jme3.export.Savable;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
-import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
+import java.io.IOException;
 import objects.PhysicalObject;
 
 /**
  *
  * @author VIPkiller17
  */
-public class Button {
+public class Button implements Savable{
     
     private AssetManager assetManager;
     
@@ -41,11 +42,16 @@ public class Button {
     
     private Node node;
     
+    private boolean pointed;
+    
+    private static final ColorRGBA POINTED_COLOR=new ColorRGBA(0,255,255,0.7f);
+    private static final ColorRGBA NORMAL_COLOR=new ColorRGBA(0,0,255,0.7f);
+    
     //Main menu
     public static final int TOGGLE_MODE=0,CREDITS=1,EXIT_GAME=2;
         //Settings TODO
     //Substance list, material list
-    public static final int SPAWN_ITEM=3;
+    public static final int GET_ITEM=3;
         //Filters
     public static final int OPEN_KEYBOARD=4,GAS=5,LIQUID=6,SOLID=7;
             //Keyboard
@@ -101,6 +107,16 @@ public class Button {
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,-0.65f,0.1f);
                 break;
+                
+            case 3:
+                
+                text.setSize(0.08f);
+                text.setText("Get selected item");
+                createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.85f,0.1f);
+                break;
             
         }
         
@@ -119,6 +135,8 @@ public class Button {
         
         quad=new Quad(width,height);
         background=new Geometry("Button background",quad);
+        background.setUserData("correctCollision",true);
+        background.setUserData("correspondingObject", this);
         background.setLocalTranslation(-width/2,0,0);
         backgroundMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
         backgroundMat.setColor("Color",new ColorRGBA(0,0,255,0.7f));
@@ -126,6 +144,36 @@ public class Button {
         background.setQueueBucket(RenderQueue.Bucket.Transparent);
         background.setMaterial(backgroundMat);
         
+    }
+    
+    public boolean isPointed(){
+        
+        return pointed;
+        
+    }
+    
+    public void setPointed(boolean pointed){
+        
+        this.pointed=pointed;
+        
+        if(pointed){
+            
+            backgroundMat.setColor("Color", POINTED_COLOR);
+            
+        }else{
+            
+            backgroundMat.setColor("Color", NORMAL_COLOR);
+            
+        }
+        
+    }
+
+    @Override
+    public void write(JmeExporter je) throws IOException {
+    }
+
+    @Override
+    public void read(JmeImporter ji) throws IOException {
     }
     
 }

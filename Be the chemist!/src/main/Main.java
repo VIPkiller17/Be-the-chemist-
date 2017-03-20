@@ -139,6 +139,7 @@ public class Main extends VRApplication {
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         
         mainMenu=new Display(getAssetManager(),rootNode,0);
+        substanceList=new Display(getAssetManager(),rootNode,1);
         //WORLD INIT END
         
         //OBJECTS INIT START

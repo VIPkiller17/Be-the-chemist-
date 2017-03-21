@@ -4,18 +4,17 @@
  */
 package objects.containers;
 
-import com.jme3.material.Material;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Spatial;
+import interfaces.Grabbable;
+import main.Main;
 import objects.PhysicalObject;
-import objects.particleEmitter.ParticleEmitter;
 import objects.solution.Solution;
 
 /**
  *
  * @author VIPkiller17
  */
-public abstract class Container extends PhysicalObject{
+public abstract class Container extends PhysicalObject implements Grabbable{
 
     private Solution solution;
     private boolean full;
@@ -25,15 +24,17 @@ public abstract class Container extends PhysicalObject{
     private double temperature;
     private double pressure;
     
-    public Container(Vector3f position){
+    private boolean isHighlightVisible;
+    
+    public Container(Main main,Vector3f position){
         
-        super(position);
+        super(main,position);
         
     }
     
-    public Container(Vector3f position,Solution solution,double quantity){
+    public Container(Main main,Vector3f position,Solution solution,double quantity){
         
-        super(position);
+        super(main,position);
         
         this.solution=solution;
         this.quantity=quantity;
@@ -141,6 +142,21 @@ public abstract class Container extends PhysicalObject{
     public String toString(){
         
         return "Container containing "+quantity+" liters of "+solution+" with temperature "+temperature+" and pressure "+pressure;
+        
+    }
+    
+    @Override
+    public void highlightVisible(boolean isHighlightVisible) {
+        
+        this.isHighlightVisible=isHighlightVisible;
+        //TODO: MAKE THE HIGHLIGHT VISIBLE OR DECIDE IF WE CONTROL THAT IN THE CONTROL DEPENDING ON THE VALUE OF THE VARIABLE
+        
+    }
+
+    @Override
+    public boolean isHighlightVisible() {
+        
+        return isHighlightVisible;
         
     }
     

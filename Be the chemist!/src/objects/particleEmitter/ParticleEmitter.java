@@ -4,6 +4,7 @@
  */
 package objects.particleEmitter;
 
+import com.jme3.asset.AssetManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
@@ -15,6 +16,8 @@ import objects.containers.Container;
  * @author VIPkiller17
  */
 public class ParticleEmitter {
+    
+    private AssetManager assetManager;
     
     private PhysicalObject parentObject;
     
@@ -35,7 +38,7 @@ public class ParticleEmitter {
     
     public Node node;
     
-    public ParticleEmitter(PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,double initialSpeed,double randomInitialSpeedOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
+    public ParticleEmitter(AssetManager assetManager,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,double initialSpeed,double randomInitialSpeedOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
         
         this.parentObject=parentObject;
         this.position=position;
@@ -255,6 +258,12 @@ public class ParticleEmitter {
         else 
             
             return null;
+        
+    }
+    
+    public AssetManager getAssetManager(){
+        
+        return assetManager;
         
     }
     

@@ -17,6 +17,7 @@ import objects.particleEmitter.ParticleEmitter;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import main.Main;
 import objects.solution.Solution;
 
 /**
@@ -31,6 +32,7 @@ public class Erlenmeyer extends Container implements Savable{
     private Spatial spatial;
     private RigidBodyControl erlenmeyer_phy;
     private Node node;
+    private Main main;
     
     private boolean closeable;
     private double maxQuantity;
@@ -49,17 +51,17 @@ public class Erlenmeyer extends Container implements Savable{
     private Material solidModelMat;
     private ParticleEmitter particleEmitter;
     
-    public Erlenmeyer(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    public Erlenmeyer(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
-        super(position);
+        super(main,position);
         
         init(position,rootNode,assetManager,bulletAppState);
         
     }
     
-    public Erlenmeyer(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
+    public Erlenmeyer(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
         
-        super(position);
+        super(main,position);
         
         init(position,rootNode,assetManager,bulletAppState);
         
@@ -84,6 +86,7 @@ public class Erlenmeyer extends Container implements Savable{
         bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
         
         particleEmitter=new ParticleEmitter(this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Erlenmeyer.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Highlight/Erlenmeyer_Highlight.j3o");

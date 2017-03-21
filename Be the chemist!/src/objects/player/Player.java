@@ -7,12 +7,12 @@ package objects.player;
 import com.jme3.asset.AssetManager;
 import com.jme3.collision.CollisionResults;
 import com.jme3.math.Vector3f;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.input.VRAPI;
+import main.Main;
 //by Tommy
 public class Player {
     
@@ -27,7 +27,11 @@ public class Player {
     
     private Node playerNode;
     
-    public Player(AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,Spatial observer){
+    private Main main;
+    
+    public Player(Main main,AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,Spatial observer){
+        
+        this.main=main;
         
         this.assetManager=assetManager;
         this.rootNode=rootNode;
@@ -47,11 +51,11 @@ public class Player {
         
         if(side==0){
             
-            rightHand=new Hand(assetManager,rootNode,VRHardware,collisionResults,describables,0,observer,playerNode,this);
+            rightHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,describables,0,observer,playerNode,this);
         
         }else if(side==1){
             
-            leftHand=new Hand(assetManager,rootNode,VRHardware,collisionResults,describables,1,observer,playerNode,this);
+            leftHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,describables,1,observer,playerNode,this);
         
         }else
             
@@ -75,19 +79,19 @@ public class Player {
         
         if(direction.equals("forward")){
         
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,distanceMeters)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,-distanceMeters)));
         
         }else if(direction.equals("backward")){
             
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,-distanceMeters)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(0f,0f,distanceMeters)));
 
         }else if(direction.equals("right")){
             
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(-distanceMeters,0f,0f)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(distanceMeters,0f,0f)));
 
         }else if(direction.equals("left")){
             
-            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(distanceMeters,0f,0f)));
+            playerNode.setLocalTranslation(playerNode.getLocalTranslation().add(new Vector3f(-distanceMeters,0f,0f)));
 
         }else if(direction.equals("up")){
             

@@ -46,6 +46,9 @@ public class Display implements Pointable,Savable{
     
     public static final int MAIN_MENU=0,SUBSTANCE_LIST=1,KEYBOARD=2,MATERIAL_LIST=3,PERIODIC_TABLE=4,SETTINGS_MENU=5;
     
+    private static int keyBoardSelectedDisplay;
+    private static boolean keyBoardIsInCaps;
+    
     public Display(AssetManager assetManager,Node rootNode,int preset){
         
         this.assetManager=assetManager;
@@ -94,21 +97,21 @@ public class Display implements Pointable,Savable{
                 
                 createBackground(1,2);
                 
-                Quad textFieldQuad=new Quad(0.80f,0.15f);
-                Geometry textField=new Geometry("Substance list text field",textFieldQuad);
-                Material textFieldMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-                textFieldMat.setColor("Color",ColorRGBA.BlackNoAlpha);
-                textField.setMaterial(textFieldMat);
-                node.attachChild(textField);
-                textField.setLocalTranslation(-0.40f,0.75f,0.05f);
+                Quad substanceTextFieldQuad=new Quad(0.80f,0.15f);
+                Geometry substanceTextField=new Geometry("Substance list text field",substanceTextFieldQuad);
+                Material substanceTextFieldMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                substanceTextFieldMat.setColor("Color",ColorRGBA.BlackNoAlpha);
+                substanceTextField.setMaterial(substanceTextFieldMat);
+                node.attachChild(substanceTextField);
+                substanceTextField.setLocalTranslation(-0.40f,0.75f,0.05f);
                 
-                Quad listBackgroundQuad=new Quad(0.8f,1.2f);
-                Geometry listBackground=new Geometry("Substance list background",listBackgroundQuad);
-                Material listBackgroundMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-                listBackgroundMat.setColor("Color",ColorRGBA.Gray);
-                listBackground.setMaterial(listBackgroundMat);
-                node.attachChild(listBackground);
-                listBackground.setLocalTranslation(-0.40f,-0.5f,0.03f);
+                Quad substanceListBackgroundQuad=new Quad(0.8f,1.2f);
+                Geometry substanceListBackground=new Geometry("Substance list background",substanceListBackgroundQuad);
+                Material substanceListBackgroundMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                substanceListBackgroundMat.setColor("Color",ColorRGBA.Gray);
+                substanceListBackground.setMaterial(substanceListBackgroundMat);
+                node.attachChild(substanceListBackground);
+                substanceListBackground.setLocalTranslation(-0.40f,-0.5f,0.03f);
                 
                 texts.get(texts.size()-1).setSize(0.08f);
                 texts.get(texts.size()-1).setText("Substance list");
@@ -120,16 +123,55 @@ public class Display implements Pointable,Savable{
                 
             case 2://Keyboard
                 
-                
                 createBackground(1.13f,0.58f);
-                for(int i=8;i<51;i++){
+                for(int i=8;i<53;i++){
                     
                     if(i!=45)
                     
                         buttons.add(new Button(assetManager,this,i));
                     
                 }
-                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,3.1f));
+                node.setLocalTranslation(new Vector3f(-1.1f,0.49f,3.1f));
+                node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
+                break;
+                
+            case 3://Material list
+                
+                createBackground(1,2);
+                    
+                Quad materialTextFieldQuad=new Quad(0.80f,0.15f);
+                Geometry materialTextField=new Geometry("Material list text field",materialTextFieldQuad);
+                Material materialTextFieldMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                materialTextFieldMat.setColor("Color",ColorRGBA.BlackNoAlpha);
+                materialTextField.setMaterial(materialTextFieldMat);
+                node.attachChild(materialTextField);
+                materialTextField.setLocalTranslation(-0.40f,0.75f,0.05f);
+                
+                Quad materialListBackgroundQuad=new Quad(0.8f,1.2f);
+                Geometry materialListBackground=new Geometry("Material list background",materialListBackgroundQuad);
+                Material materialListBackgroundMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                materialListBackgroundMat.setColor("Color",ColorRGBA.Gray);
+                materialListBackground.setMaterial(materialListBackgroundMat);
+                node.attachChild(materialListBackground);
+                materialListBackground.setLocalTranslation(-0.40f,-0.5f,0.03f);
+                
+                texts.get(texts.size()-1).setSize(0.08f);
+                texts.get(texts.size()-1).setText("Material list");
+                texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.9f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
+                buttons.add(new Button(assetManager,this,3));
+                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,4.18f));
+                node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
+                break;
+                
+            case 4:
+                
+                createBackground(1.13f,1.4f);
+                buttons.add(new Button(assetManager,this,5));
+                buttons.add(new Button(assetManager,this,6));
+                buttons.add(new Button(assetManager,this,7));
+                buttons.add(new Button(assetManager,this,57));
+                buttons.add(new Button(assetManager,this,58));
+                node.setLocalTranslation(new Vector3f(-1.1f,1.5f,3.1f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
             

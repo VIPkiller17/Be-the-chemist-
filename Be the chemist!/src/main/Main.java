@@ -71,6 +71,7 @@ public class Main extends VRApplication {
     private Display mainMenu;
     private Display settingsMenu;
     private Display substanceList;
+    private Display filters;
     private Display keyBoard;
     private Display materialList;
     private Display periodicTable;
@@ -141,7 +142,9 @@ public class Main extends VRApplication {
         
         mainMenu=new Display(getAssetManager(),rootNode,0);
         substanceList=new Display(getAssetManager(),rootNode,1);
+        filters=new Display(getAssetManager(),rootNode,4);
         keyBoard=new Display(getAssetManager(),rootNode,2);
+        materialList=new Display(getAssetManager(),rootNode,3);
         //WORLD INIT END
         
         //OBJECTS INIT START

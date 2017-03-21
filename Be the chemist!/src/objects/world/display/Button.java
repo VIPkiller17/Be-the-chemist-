@@ -51,15 +51,16 @@ public class Button implements Savable{
     public static final int TOGGLE_MODE=0,CREDITS=1,EXIT_GAME=2;
         //Settings TODO
     //Substance list, material list
-    public static final int GET_ITEM=3;
+    public static final int GET_SUBSTANCE=3,GET_MATERIAL=53;
         //Filters
-    public static final int GAS=5,LIQUID=6,SOLID=7,PAGE_UP=44,PAGE_DOWN=45;
+    public static final int GAS=5,LIQUID=6,SOLID=7,SUBSTANCE_PAGE_UP=45,SUBSTANCE_PAGE_DOWN=54,MATERIAL_PAGE_UP=55,MATERIAL_PAGE_DOWN=56;
+    public static final int TYPE=57,CLASS=58;
             //Keyboard
     public static final int KEY_Q=8,KEY_W=9,KEY_E=10,KEY_R=11,KEY_T=12,KEY_Y=13,KEY_U=14,KEY_I=15,KEY_O=16,KEY_P=17;
     public static final int KEY_A=18,KEY_S=19,KEY_D=20,KEY_F=21,KEY_G=22,KEY_H=23,KEY_J=24,KEY_K=25,KEY_L=26,KEY_Z=27;
     public static final int KEY_X=28,KEY_C=29,KEY_V=30,KEY_B=31,KEY_N=32,KEY_M=33,KEY_1=34,KEY_2=35,KEY_3=36,KEY_4=37;
     public static final int KEY_5=38,KEY_6=39,KEY_7=40,KEY_8=41,KEY_9=42,KEY_0=43,KEY_BACKSPACE=44,KEY_SPACE=46,KEY_DASH=47;
-    public static final int KEY_OPEN_PARENTHESES=48,KEY_CLOSE_PARENTHESES=49,KEY_CAPS=50;
+    public static final int KEY_OPEN_PARENTHESES=48,KEY_CLOSE_PARENTHESES=49,KEY_CAPS=50,KEY_COMMA=51,KEY_PERIOD=52;
     
     
     public Button(AssetManager assetManager,Display parentDisplay,int preset){
@@ -124,9 +125,33 @@ public class Button implements Savable{
                 
             case 5:
                 
+                text.setSize(0.08f);
+                text.setText("Gases \u25A1");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.85f,0.05f);
+                break;
+                
             case 6:
                 
+                text.setSize(0.08f);
+                text.setText("Liquid \u25A1");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.85f,0.05f);
+                break;
+                
             case 7:
+                
+                text.setSize(0.08f);
+                text.setText("Solid \u25A1");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.85f,0.05f);
+                break;
                 
             case 8:
                 
@@ -135,7 +160,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.495f,0.11f,0.01f);
+                node.setLocalTranslation(-0.495f,0.03f,0.01f);
                 break;
                 
             case 9:
@@ -145,7 +170,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.385f,0.11f,0.01f);
+                node.setLocalTranslation(-0.385f,0.03f,0.01f);
                 break;
                 
             case 10:
@@ -155,7 +180,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.275f,0.11f,0.01f);
+                node.setLocalTranslation(-0.275f,0.03f,0.01f);
                 break;
                 
             case 11:
@@ -165,7 +190,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.165f,0.11f,0.01f);
+                node.setLocalTranslation(-0.165f,0.03f,0.01f);
                 break;
                 
             case 12:
@@ -175,7 +200,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.055f,0.11f,0.01f);
+                node.setLocalTranslation(-0.055f,0.03f,0.01f);
                 break;
                 
             case 13:
@@ -185,7 +210,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.055f,0.11f,0.01f);
+                node.setLocalTranslation(0.055f,0.03f,0.01f);
                 break;
                 
             case 14:
@@ -195,7 +220,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.165f,0.11f,0.01f);
+                node.setLocalTranslation(0.165f,0.03f,0.01f);
                 break;
                 
             case 15:
@@ -205,7 +230,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.275f,0.11f,0.01f);
+                node.setLocalTranslation(0.275f,0.03f,0.01f);
                 break;
                 
             case 16:
@@ -215,7 +240,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.385f,0.11f,0.01f);
+                node.setLocalTranslation(0.385f,0.03f,0.01f);
                 break;
                 
             case 17:
@@ -225,7 +250,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.495f,0.11f,0.01f);
+                node.setLocalTranslation(0.495f,0.03f,0.01f);
                 break;
                 
             case 18:
@@ -235,7 +260,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.44f,0f,0.01f);
+                node.setLocalTranslation(-0.44f,-0.08f,0.01f);
                 break;
                 
             case 19:
@@ -245,7 +270,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.33f,0f,0.01f);
+                node.setLocalTranslation(-0.33f,-0.08f,0.01f);
                 break;
                 
             case 20:
@@ -255,7 +280,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.22f,0f,0.01f);
+                node.setLocalTranslation(-0.22f,-0.08f,0.01f);
                 break;
                 
             case 21:
@@ -265,7 +290,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.11f,0f,0.01f);
+                node.setLocalTranslation(-0.11f,-0.08f,0.01f);
                 break;
                 
             case 22:
@@ -275,7 +300,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0f,0f,0.01f);
+                node.setLocalTranslation(0f,-0.08f,0.01f);
                 break;
                 
             case 23:
@@ -285,7 +310,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.11f,0f,0.01f);
+                node.setLocalTranslation(0.11f,-0.08f,0.01f);
                 break;
                 
             case 24:
@@ -295,7 +320,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.22f,0f,0.01f);
+                node.setLocalTranslation(0.22f,-0.08f,0.01f);
                 break;
                 
             case 25:
@@ -305,7 +330,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.33f,0f,0.01f);
+                node.setLocalTranslation(0.33f,-0.08f,0.01f);
                 break;
                 
             case 26:
@@ -315,7 +340,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.44f,0f,0.01f);
+                node.setLocalTranslation(0.44f,-0.08f,0.01f);
                 break;
                 
             case 27:
@@ -325,7 +350,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.385f,-0.11f,0.01f);
+                node.setLocalTranslation(-0.385f,-0.19f,0.01f);
                 break;
                 
             case 28:
@@ -335,7 +360,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.275f,-0.11f,0.01f);
+                node.setLocalTranslation(-0.275f,-0.19f,0.01f);
                 break;
                 
             case 29:
@@ -345,7 +370,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.165f,-0.11f,0.01f);
+                node.setLocalTranslation(-0.165f,-0.19f,0.01f);
                 break;
                 
             case 30:
@@ -355,7 +380,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.055f,-0.11f,0.01f);
+                node.setLocalTranslation(-0.055f,-0.19f,0.01f);
                 break;
                 
             case 31:
@@ -365,7 +390,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.055f,-0.11f,0.01f);
+                node.setLocalTranslation(0.055f,-0.19f,0.01f);
                 break;
                 
             case 32:
@@ -375,7 +400,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.165f,-0.11f,0.01f);
+                node.setLocalTranslation(0.165f,-0.19f,0.01f);
                 break;
                 
             case 33:
@@ -385,7 +410,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.275f,-0.11f,0.01f);
+                node.setLocalTranslation(0.275f,-0.19f,0.01f);
                 break;
                 
             case 34:
@@ -395,7 +420,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.495f,0.22f,0.01f);
+                node.setLocalTranslation(-0.495f,0.14f,0.01f);
                 break;
                 
             case 35:
@@ -405,7 +430,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.385f,0.22f,0.01f);
+                node.setLocalTranslation(-0.385f,0.14f,0.01f);
                 break;
                 
             case 36:
@@ -415,7 +440,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.275f,0.22f,0.01f);
+                node.setLocalTranslation(-0.275f,0.14f,0.01f);
                 break;
                 
             case 37:
@@ -425,7 +450,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.165f,0.22f,0.01f);
+                node.setLocalTranslation(-0.165f,0.14f,0.01f);
                 break;
                 
             case 38:
@@ -435,7 +460,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.055f,0.22f,0.01f);
+                node.setLocalTranslation(-0.055f,0.14f,0.01f);
                 break;
                 
             case 39:
@@ -445,7 +470,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.055f,0.22f,0.01f);
+                node.setLocalTranslation(0.055f,0.14f,0.01f);
                 break;
                 
             case 40:
@@ -455,7 +480,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.165f,0.22f,0.01f);
+                node.setLocalTranslation(0.165f,0.14f,0.01f);
                 break;
                 
             case 41:
@@ -465,7 +490,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.275f,0.22f,0.01f);
+                node.setLocalTranslation(0.275f,0.14f,0.01f);
                 break;
                 
             case 42:
@@ -475,7 +500,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.385f,0.22f,0.01f);
+                node.setLocalTranslation(0.385f,0.14f,0.01f);
                 break;
                 
             case 43:
@@ -485,7 +510,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.495f,0.22f,0.01f);
+                node.setLocalTranslation(0.495f,0.14f,0.01f);
                 break;
                 
             case 44:
@@ -495,7 +520,7 @@ public class Button implements Savable{
                 createBackground(0.14f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.405f,-0.11f,0.01f);
+                node.setLocalTranslation(0.405f,-0.19f,0.01f);
                 break;
                 
             case 45:
@@ -509,7 +534,7 @@ public class Button implements Savable{
                 createBackground(0.30f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0f,-0.22f,0.01f);
+                node.setLocalTranslation(0f,-0.30f,0.01f);
                 break;
                 
             case 47:
@@ -519,7 +544,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.21f,-0.22f,0.01f);
+                node.setLocalTranslation(-0.21f,-0.30f,0.01f);
                 break;
                 
             case 48:
@@ -529,7 +554,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.43f,-0.22f,0.01f);
+                node.setLocalTranslation(-0.43f,-0.30f,0.01f);
                 break;
                 
             case 49:
@@ -539,7 +564,7 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.32f,-0.22f,0.01f);
+                node.setLocalTranslation(-0.32f,-0.30f,0.01f);
                 break;
                 
             case 50:
@@ -549,8 +574,39 @@ public class Button implements Savable{
                 createBackground(0.1f,0.1f);
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.495f,-0.11f,0.01f);
+                node.setLocalTranslation(-0.495f,-0.19f,0.01f);
                 break;
+                
+            case 51:
+                
+                text.setSize(0.08f);
+                text.setText(",");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.21f,-0.30f,0.01f);
+                break;
+                
+            case 52:
+                
+                text.setSize(0.08f);
+                text.setText(".");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.32f,-0.30f,0.01f);
+                break;
+                
+            case 53:
+                
+                text.setSize(0.08f);
+                text.setText("Get selected item");
+                createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,-0.85f,0.05f);
+                break;
+                
             
         }
         

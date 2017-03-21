@@ -53,12 +53,14 @@ public class Button implements Savable{
     //Substance list, material list
     public static final int GET_ITEM=3;
         //Filters
-    public static final int OPEN_KEYBOARD=4,GAS=5,LIQUID=6,SOLID=7;
+    public static final int GAS=5,LIQUID=6,SOLID=7,PAGE_UP=44,PAGE_DOWN=45;
             //Keyboard
-    public static final int KEY_A=8,KEY_B=9,KEY_C=10,KEY_D=11,KEY_E=12,KEY_F=13,KEY_G=14,KEY_H=15,KEY_I=16,KEY_J=17;
-    public static final int KEY_K=18,KEY_L=19,KEY_M=20,KEY_N=21,KEY_O=22,KEY_P=23,KEY_Q=24,KEY_R=25,KEY_S=26,KEY_T=27;
-    public static final int KEY_U=28,KEY_V=29,KEY_W=30,KEY_X=31,KEY_Y=32,KEY_Z=33,KEY_1=34,KEY_2=35,KEY_3=36,KEY_4=37;
-    public static final int KEY_5=38,KEY_6=39,KEY_7=40,KEY_8=41,KEY_9=42,KEY_BACKSPACE=43;
+    public static final int KEY_Q=8,KEY_W=9,KEY_E=10,KEY_R=11,KEY_T=12,KEY_Y=13,KEY_U=14,KEY_I=15,KEY_O=16,KEY_P=17;
+    public static final int KEY_A=18,KEY_S=19,KEY_D=20,KEY_F=21,KEY_G=22,KEY_H=23,KEY_J=24,KEY_K=25,KEY_L=26,KEY_Z=27;
+    public static final int KEY_X=28,KEY_C=29,KEY_V=30,KEY_B=31,KEY_N=32,KEY_M=33,KEY_1=34,KEY_2=35,KEY_3=36,KEY_4=37;
+    public static final int KEY_5=38,KEY_6=39,KEY_7=40,KEY_8=41,KEY_9=42,KEY_0=43,KEY_BACKSPACE=44,KEY_SPACE=46,KEY_DASH=47;
+    public static final int KEY_OPEN_PARENTHESES=48,KEY_CLOSE_PARENTHESES=49,KEY_CAPS=50;
+    
     
     public Button(AssetManager assetManager,Display parentDisplay,int preset){
         
@@ -84,7 +86,7 @@ public class Button implements Savable{
                 createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,0.25f,0.1f);
+                node.setLocalTranslation(0,0.25f,0.05f);
                 break;
                 
                 
@@ -95,7 +97,7 @@ public class Button implements Savable{
                 createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.2f,0.1f);
+                node.setLocalTranslation(0,-0.2f,0.05f);
                 break;
                 
             case 2:
@@ -105,7 +107,7 @@ public class Button implements Savable{
                 createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.65f,0.1f);
+                node.setLocalTranslation(0,-0.65f,0.05f);
                 break;
                 
             case 3:
@@ -115,7 +117,439 @@ public class Button implements Savable{
                 createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.85f,0.1f);
+                node.setLocalTranslation(0,-0.85f,0.05f);
+                break;
+                
+            case 4:
+                
+            case 5:
+                
+            case 6:
+                
+            case 7:
+                
+            case 8:
+                
+                text.setSize(0.08f);
+                text.setText("Q");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.495f,0.11f,0.01f);
+                break;
+                
+            case 9:
+                
+                text.setSize(0.08f);
+                text.setText("W");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.385f,0.11f,0.01f);
+                break;
+                
+            case 10:
+                
+                text.setSize(0.08f);
+                text.setText("E");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.275f,0.11f,0.01f);
+                break;
+                
+            case 11:
+                
+                text.setSize(0.08f);
+                text.setText("R");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.165f,0.11f,0.01f);
+                break;
+                
+            case 12:
+                
+                text.setSize(0.08f);
+                text.setText("T");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.055f,0.11f,0.01f);
+                break;
+                
+            case 13:
+                
+                text.setSize(0.08f);
+                text.setText("Y");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.055f,0.11f,0.01f);
+                break;
+                
+            case 14:
+                
+                text.setSize(0.08f);
+                text.setText("U");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.165f,0.11f,0.01f);
+                break;
+                
+            case 15:
+                
+                text.setSize(0.08f);
+                text.setText("I");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.275f,0.11f,0.01f);
+                break;
+                
+            case 16:
+                
+                text.setSize(0.08f);
+                text.setText("O");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.385f,0.11f,0.01f);
+                break;
+                
+            case 17:
+                
+                text.setSize(0.08f);
+                text.setText("P");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.495f,0.11f,0.01f);
+                break;
+                
+            case 18:
+                
+                text.setSize(0.08f);
+                text.setText("A");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.44f,0f,0.01f);
+                break;
+                
+            case 19:
+                
+                text.setSize(0.08f);
+                text.setText("S");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.33f,0f,0.01f);
+                break;
+                
+            case 20:
+                
+                text.setSize(0.08f);
+                text.setText("D");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.22f,0f,0.01f);
+                break;
+                
+            case 21:
+                
+                text.setSize(0.08f);
+                text.setText("F");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.11f,0f,0.01f);
+                break;
+                
+            case 22:
+                
+                text.setSize(0.08f);
+                text.setText("G");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0f,0f,0.01f);
+                break;
+                
+            case 23:
+                
+                text.setSize(0.08f);
+                text.setText("H");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.11f,0f,0.01f);
+                break;
+                
+            case 24:
+                
+                text.setSize(0.08f);
+                text.setText("J");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.22f,0f,0.01f);
+                break;
+                
+            case 25:
+                
+                text.setSize(0.08f);
+                text.setText("K");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.33f,0f,0.01f);
+                break;
+                
+            case 26:
+                
+                text.setSize(0.08f);
+                text.setText("L");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.44f,0f,0.01f);
+                break;
+                
+            case 27:
+                
+                text.setSize(0.08f);
+                text.setText("Z");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.385f,-0.11f,0.01f);
+                break;
+                
+            case 28:
+                
+                text.setSize(0.08f);
+                text.setText("X");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.275f,-0.11f,0.01f);
+                break;
+                
+            case 29:
+                
+                text.setSize(0.08f);
+                text.setText("C");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.165f,-0.11f,0.01f);
+                break;
+                
+            case 30:
+                
+                text.setSize(0.08f);
+                text.setText("V");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.055f,-0.11f,0.01f);
+                break;
+                
+            case 31:
+                
+                text.setSize(0.08f);
+                text.setText("B");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.055f,-0.11f,0.01f);
+                break;
+                
+            case 32:
+                
+                text.setSize(0.08f);
+                text.setText("N");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.165f,-0.11f,0.01f);
+                break;
+                
+            case 33:
+                
+                text.setSize(0.08f);
+                text.setText("M");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.275f,-0.11f,0.01f);
+                break;
+                
+            case 34:
+                
+                text.setSize(0.08f);
+                text.setText("1");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.495f,0.22f,0.01f);
+                break;
+                
+            case 35:
+                
+                text.setSize(0.08f);
+                text.setText("2");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.385f,0.22f,0.01f);
+                break;
+                
+            case 36:
+                
+                text.setSize(0.08f);
+                text.setText("3");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.275f,0.22f,0.01f);
+                break;
+                
+            case 37:
+                
+                text.setSize(0.08f);
+                text.setText("4");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.165f,0.22f,0.01f);
+                break;
+                
+            case 38:
+                
+                text.setSize(0.08f);
+                text.setText("5");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.055f,0.22f,0.01f);
+                break;
+                
+            case 39:
+                
+                text.setSize(0.08f);
+                text.setText("6");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.055f,0.22f,0.01f);
+                break;
+                
+            case 40:
+                
+                text.setSize(0.08f);
+                text.setText("7");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.165f,0.22f,0.01f);
+                break;
+                
+            case 41:
+                
+                text.setSize(0.08f);
+                text.setText("8");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.275f,0.22f,0.01f);
+                break;
+                
+            case 42:
+                
+                text.setSize(0.08f);
+                text.setText("9");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.385f,0.22f,0.01f);
+                break;
+                
+            case 43:
+                
+                text.setSize(0.08f);
+                text.setText("0");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.495f,0.22f,0.01f);
+                break;
+                
+            case 44:
+                
+                text.setSize(0.08f);
+                text.setText(" < ");
+                createBackground(0.14f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0.405f,-0.11f,0.01f);
+                break;
+                
+            case 45:
+                
+                
+                
+            case 46:
+                
+                text.setSize(0.08f);
+                text.setText(" ");
+                createBackground(0.30f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0f,-0.22f,0.01f);
+                break;
+                
+            case 47:
+                
+                text.setSize(0.08f);
+                text.setText("-");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.21f,-0.22f,0.01f);
+                break;
+                
+            case 48:
+                
+                text.setSize(0.08f);
+                text.setText("(");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.43f,-0.22f,0.01f);
+                break;
+                
+            case 49:
+                
+                text.setSize(0.08f);
+                text.setText(")");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.32f,-0.22f,0.01f);
+                break;
+                
+            case 50:
+                
+                text.setSize(0.08f);
+                text.setText("\u2191");
+                createBackground(0.1f,0.1f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-0.495f,-0.11f,0.01f);
                 break;
             
         }

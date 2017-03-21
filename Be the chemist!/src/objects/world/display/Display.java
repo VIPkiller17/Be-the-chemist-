@@ -44,7 +44,7 @@ public class Display implements Pointable,Savable{
     private Node node;
     private Node rootNode;
     
-    public static final int MAIN_MENU=0,SUBSTANCE_LIST=1,MATERIAL_LIST=2,PERIODIC_TABLE=3,SETTINGS_MENU=4;
+    public static final int MAIN_MENU=0,SUBSTANCE_LIST=1,KEYBOARD=2,MATERIAL_LIST=3,PERIODIC_TABLE=4,SETTINGS_MENU=5;
     
     public Display(AssetManager assetManager,Node rootNode,int preset){
         
@@ -77,7 +77,7 @@ public class Display implements Pointable,Savable{
         //IN HERE SET THE POSITION AND ROTATION OF THE DISPLAY WITH THE NODE CONTAINING THE BUTTONS AND TEXTS
         switch(preset){
             
-            case 0:
+            case 0://Main menu
                 
                 createBackground(1,2);
                 texts.get(texts.size()-1).setSize(0.08f);
@@ -90,14 +90,46 @@ public class Display implements Pointable,Savable{
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
                 
-            case 1:
+            case 1://Substance list
                 
                 createBackground(1,2);
+                
+                Quad textFieldQuad=new Quad(0.80f,0.15f);
+                Geometry textField=new Geometry("Substance list text field",textFieldQuad);
+                Material textFieldMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                textFieldMat.setColor("Color",ColorRGBA.BlackNoAlpha);
+                textField.setMaterial(textFieldMat);
+                node.attachChild(textField);
+                textField.setLocalTranslation(-0.40f,0.75f,0.05f);
+                
+                Quad listBackgroundQuad=new Quad(0.8f,1.2f);
+                Geometry listBackground=new Geometry("Substance list background",listBackgroundQuad);
+                Material listBackgroundMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+                listBackgroundMat.setColor("Color",ColorRGBA.Gray);
+                listBackground.setMaterial(listBackgroundMat);
+                node.attachChild(listBackground);
+                listBackground.setLocalTranslation(-0.40f,-0.5f,0.03f);
+                
                 texts.get(texts.size()-1).setSize(0.08f);
                 texts.get(texts.size()-1).setText("Substance list");
                 texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.9f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
                 buttons.add(new Button(assetManager,this,3));
                 node.setLocalTranslation(new Vector3f(-1.1f,1.2f,2f));
+                node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
+                break;
+                
+            case 2://Keyboard
+                
+                
+                createBackground(1.13f,0.58f);
+                for(int i=8;i<51;i++){
+                    
+                    if(i!=45)
+                    
+                        buttons.add(new Button(assetManager,this,i));
+                    
+                }
+                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,3.1f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
             
@@ -121,13 +153,19 @@ public class Display implements Pointable,Savable{
         
         node.attachChild(background);
         
-        background.setLocalTranslation(-0.5f,-1f,0f);
+        background.setLocalTranslation(-quad.getWidth()/2,-quad.getHeight()/2,0f);
         
     }
     
     public Node getNode(){
         
         return node;
+        
+    }
+    
+    public void addSubstance(){
+        
+        
         
     }
 

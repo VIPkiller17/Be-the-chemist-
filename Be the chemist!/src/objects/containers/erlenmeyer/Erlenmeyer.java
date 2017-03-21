@@ -15,6 +15,8 @@ import com.jme3.scene.Spatial;
 import objects.containers.Container;
 import objects.particleEmitter.ParticleEmitter;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import main.Main;
 import objects.solution.Solution;
 
@@ -83,7 +85,8 @@ public class Erlenmeyer extends Container implements Savable{
         erlenmeyer_phy=new RigidBodyControl(1f);
         bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
         
-        //particleEmitter=new ParticleEmitter();
+        particleEmitter=new ParticleEmitter(this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Erlenmeyer.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Highlight/Erlenmeyer_Highlight.j3o");
@@ -186,6 +189,20 @@ public class Erlenmeyer extends Container implements Savable{
     public double getMaxPressureClosed(){
         
         return maxPressureClosed;
+        
+    }
+    
+    public void startParticleEmission(){
+        
+        particleEmitter.begin();
+        isEmitting=true;
+        
+    }
+    
+    public void stopParticleEmission(){
+        
+        particleEmitter.stop();
+        isEmitting=false;
         
     }
     

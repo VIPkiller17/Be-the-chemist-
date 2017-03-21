@@ -11,9 +11,9 @@ import com.jme3.export.Savable;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.control.AbstractControl;
 import interfaces.Describable;
 import java.io.IOException;
+import main.Main;
 
 /**
  *
@@ -24,13 +24,17 @@ public abstract class PhysicalObject implements Savable, Describable{
     private Vector3f position;
     private Node node;
     
-    public PhysicalObject(Vector3f position){
+    private boolean insideFumeHood;
+    
+    public PhysicalObject(Main main,Vector3f position){
         
         this.position=position;
         
+        node=new Node();
+        
     }
     
-    public void setPos(Vector3f position){
+    public void setLogicPos(Vector3f position){
         
         this.position=position;
         
@@ -63,6 +67,18 @@ public abstract class PhysicalObject implements Savable, Describable{
     public void addPhysicsControl(RigidBodyControl control){
         
         node.addControl(control);
+        
+    }
+    
+    public void setInsideFumeHood(boolean insideFumeHood){
+        
+        this.insideFumeHood=insideFumeHood;
+        
+    }
+    
+    public boolean isInsideFumeHood(){
+        
+        return insideFumeHood;
         
     }
     

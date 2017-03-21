@@ -16,6 +16,7 @@ public class Solution {
     
     private ArrayList<Substance> substances;
     private double quantity;
+    private double temperature;
     private ColorRGBA liquidColor,solidColor;
     
     public Solution(Substance substance){

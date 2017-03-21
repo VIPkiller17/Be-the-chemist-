@@ -28,27 +28,30 @@ public class BeakerControl extends AbstractControl{
         
         //SET THE STATE OF THE CONTAINER
         
-        beaker.setTemperature(beaker.getSolution().getTemperature());
-        
+        //beaker.setTemperature(beaker.getSolution().getTemperature());
         
         //ACT BASED ON THE STATE OF THE CONTAINER
         
         //if container is rotated 45 degrees to one side, start particle emission
         if((spatial.getLocalRotation().getX()>=0.382f||spatial.getLocalRotation().getZ()>=0.382f)&&!beaker.isEmitting()){
             
-            beaker.startParticleEmission();
+            System.out.println("*Beaker starts emitting particles*");
+            
+            //beaker.startParticleEmission();
             
         }else if(spatial.getLocalRotation().getX()<0.382f&&spatial.getLocalRotation().getZ()<0.382f&&beaker.isEmitting()){
             //if neither of the angles are higher than 45 degrees, stop the particle emission
             
-            beaker.stopParticleEmission();
+            System.out.println("*Beaker stops emitting particles*");
+            
+            //beaker.stopParticleEmission();
             
         }
         
-        //if teh temperature of the container is too high
+        //if the temperature of the container is too high
         if(beaker.getTemperature()>beaker.getMaxTemperature()){
             
-            
+            beaker.meltDown();
             
         }
         

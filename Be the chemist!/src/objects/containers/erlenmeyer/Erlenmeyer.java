@@ -15,6 +15,7 @@ import com.jme3.scene.Spatial;
 import objects.containers.Container;
 import objects.particleEmitter.ParticleEmitter;
 import com.jme3.math.ColorRGBA;
+import main.Main;
 import objects.solution.Solution;
 
 /**
@@ -29,6 +30,7 @@ public class Erlenmeyer extends Container implements Savable{
     private Spatial spatial;
     private RigidBodyControl erlenmeyer_phy;
     private Node node;
+    private Main main;
     
     private boolean closeable;
     private double maxQuantity;
@@ -47,17 +49,17 @@ public class Erlenmeyer extends Container implements Savable{
     private Material solidModelMat;
     private ParticleEmitter particleEmitter;
     
-    public Erlenmeyer(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    public Erlenmeyer(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
-        super(position);
+        super(main,position);
         
         init(position,rootNode,assetManager,bulletAppState);
         
     }
     
-    public Erlenmeyer(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
+    public Erlenmeyer(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
         
-        super(position);
+        super(main,position);
         
         init(position,rootNode,assetManager,bulletAppState);
         
@@ -81,7 +83,7 @@ public class Erlenmeyer extends Container implements Savable{
         erlenmeyer_phy=new RigidBodyControl(1f);
         bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
         
-        particleEmitter=new ParticleEmitter();
+        //particleEmitter=new ParticleEmitter();
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Erlenmeyer.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Highlight/Erlenmeyer_Highlight.j3o");

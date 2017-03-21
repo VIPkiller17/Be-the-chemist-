@@ -17,16 +17,20 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Box;
-import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
 import java.util.ArrayList;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
-import jmevr.shadow.VRDirectionalLightShadowRenderer;
+import objects.PhysicalObject;
+import objects.apparatus.analyticalBalance.AnalyticalBalance;
+import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
+import objects.apparatus.fumeHood.FumeHood;
+import objects.apparatus.trashBin.TrashBin;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
+import objects.world.display.Display;
 
 //by Tommy
 public class Main extends VRApplication {
@@ -37,6 +41,11 @@ public class Main extends VRApplication {
     private CollisionResults collisionResults=new CollisionResults();
     
     private BulletAppState bulletAppState;
+    
+    private ArrayList<PhysicalObject> items;
+    
+    public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(0,255,0,0.7f);
+    public static final ColorRGBA HIGHLIGHT_INVISIBLE=new ColorRGBA(0,255,0,0);
     
     //Player
     Spatial observer;
@@ -54,6 +63,18 @@ public class Main extends VRApplication {
     //World
     private Room room;
     private Floor floor;
+    private AnalyticalBalance analyticalBalance;
+    private DistilledWaterContainer distilledWaterContainer;
+    private FumeHood fumeHood;
+    private TrashBin trashBin;
+    
+    private Display mainMenu;
+    private Display settingsMenu;
+    private Display substanceList;
+    private Display filters;
+    private Display keyBoard;
+    private Display materialList;
+    private Display periodicTable;
     
     //Objects
     
@@ -87,6 +108,9 @@ public class Main extends VRApplication {
     @Override
     public void simpleInitApp() {
         
+        //var init
+        items=new ArrayList<>();
+        
         //AmbientLight al = new AmbientLight();
         //al.setColor(ColorRGBA.White.mult(1.3f));
         //rootNode.addLight(al);
@@ -107,21 +131,23 @@ public class Main extends VRApplication {
         //OBSERVER INIT END
         
         //init playerObject
-        playerLogic=new Player(getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
+        playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
-        //TEST WORLD INIT START
+        //WORLD INIT START
         room=new Room(getAssetManager(),rootNode,bulletAppState);
         
         floor=new Floor(getAssetManager(),rootNode,bulletAppState);
-        //TEST WORLD INIT END
+        
+        fumeHood=new FumeHood(this,getAssetManager(),rootNode);
+        
+        mainMenu=new Display(getAssetManager(),rootNode,0);
+        substanceList=new Display(getAssetManager(),rootNode,1);
+        filters=new Display(getAssetManager(),rootNode,4);
+        keyBoard=new Display(getAssetManager(),rootNode,2);
+        materialList=new Display(getAssetManager(),rootNode,3);
+        //WORLD INIT END
         
         //OBJECTS INIT START
-        //collisionPrism0=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPrism.j3o");
-        //collisionPrism1=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0f,"Models/Testing/Collisions/ColPrismRightHand.j3o");
-        //collisionPrism2=new CustomTestObject(rootNode,getAssetManager(),describables,1f,0.5f,0.6f,"Models/Testing/Collisions/ColPrismLeftHand.j3o");
-        //collisionPlain0=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,-0.6f,"Models/Testing/Collisions/ColPlain.j3o");
-        //collisionPlain1=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0f,"Models/Testing/Collisions/ColPlainRightHand.j3o");
-        //collisionPlain2=new CustomTestObject(rootNode,getAssetManager(),describables,-1f,0.5f,0.6f,"Models/Testing/Collisions/ColPlainLeftHand.j3o");
         Box testBox=new Box(0.1f,0.1f,0.1f);
         testCube=new Geometry("Test cube",testBox);
         testCube.setShadowMode(ShadowMode.CastAndReceive);
@@ -339,6 +365,12 @@ public class Main extends VRApplication {
             
         }
         
+        
+    }
+    
+    public ArrayList<PhysicalObject> getItemsList(){
+        
+        return items;
         
     }
 

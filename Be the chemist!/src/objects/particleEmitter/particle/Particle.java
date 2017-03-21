@@ -5,7 +5,6 @@
 package objects.particleEmitter.particle;
 
 import com.jme3.scene.Spatial;
-import objects.containers.Container;
 import objects.particleEmitter.ParticleEmitter;
 import objects.solution.Solution;
 
@@ -21,13 +20,17 @@ public class Particle {
     
     private int state;
     
-    private Spatial model;
+    private Spatial spatial;
     
     public Particle(ParticleEmitter particleEmitter,String modelPath,int state){
         
+        this.state=state;
+        
         this.particleEmitter=particleEmitter;
         
+        spatial=particleEmitter.getAssetManager().loadModel(modelPath);
         
+        spatial.addControl(new ParticleControl(this));
         
     }
     

@@ -12,7 +12,7 @@ import objects.solution.Solution;
  */
 public class Substance {
     
-    private Solution parentSolution;
+    //private Solution parentSolution;
     
     private double quantity;
     private String stateString;
@@ -22,15 +22,15 @@ public class Substance {
     private double temperature;
     private double meltingPoint;
     private double boilingPoint;
+    private double sublimationPoint;
     private String type;
     private double aqueousConcentrationM;
     private double aqueousConcentrationPercent;
     private double densityGramPerML;
     private double molarMass;
     
-    public Substance(Solution parentSolution,String equation,String name,double quantity,String stateString,int stateInteger,double temperature,double meltingPoint,double boilingPoint,String type,double molarMass){
+    public Substance(String equation,String name,double quantity,String stateString,int stateInteger,double temperature,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double density){
         
-        this.parentSolution=parentSolution;
         this.equation=equation;
         this.name=name;
         this.quantity=quantity;
@@ -39,14 +39,14 @@ public class Substance {
         this.temperature=temperature;
         this.meltingPoint=meltingPoint;
         this.boilingPoint=boilingPoint;
+        this.sublimationPoint=sublimationPoint;
         this.type=type;
         this.molarMass=molarMass;
         
     }
     
-    public Substance(Solution parentSolution,String equation,String name,double quantity,String stateString,int stateInteger,double temperature,double meltingPoint,double boilingPoint,String type,double molarMass,double aqueousConcentrationM,double aqueousConcentrationPercent,double densityGramPerML){
+    public Substance(String equation,String name,double quantity,String stateString,int stateInteger,double temperature,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double aqueousConcentrationM,double aqueousConcentrationPercent,double densityGramPerML){
         
-        this.parentSolution=parentSolution;
         this.equation=equation;
         this.name=name;
         this.quantity=quantity;
@@ -55,6 +55,7 @@ public class Substance {
         this.temperature=temperature;
         this.meltingPoint=meltingPoint;
         this.boilingPoint=boilingPoint;
+        this.sublimationPoint=sublimationPoint;
         this.type=type;
         this.molarMass=molarMass;
         this.aqueousConcentrationM=aqueousConcentrationM;

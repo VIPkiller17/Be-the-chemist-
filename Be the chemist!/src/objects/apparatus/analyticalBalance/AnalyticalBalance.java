@@ -15,6 +15,7 @@ import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Quad;
+import main.Main;
 import objects.PhysicalObject;
 import objects.apparatus.Apparatus;
 
@@ -32,9 +33,9 @@ public class AnalyticalBalance extends Apparatus {
     private BitmapText text;
     private BitmapFont font;
     
-    public AnalyticalBalance(Node rootNode, AssetManager assetManager, Vector3f position) {
+    public AnalyticalBalance(Main main,Node rootNode, AssetManager assetManager, Vector3f position) {
         
-        super(position);
+        super(main,position);
         
         spatial=assetManager.loadModel("Models/Objects/Apparatus/AnalyticalBalance/AnalyticalBalance.j3o");
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
@@ -88,19 +89,13 @@ public class AnalyticalBalance extends Apparatus {
        
     }
     
-    public double getMass() {
+    public double getMeasuredMass() {
         
-        if (attachedObject.getMass == null)
-            return 0.0;
+        if (attachedObject==null)
+            return 0;
         else
             return attachedObject.getMass();
         
-        
-    }
-    
-    public AnalyticalBalanceDisplay getAnalyticalBalanceDisplay() {
-        
-        return analyticalBalanceDisplay;
         
     }
     
@@ -110,7 +105,7 @@ public class AnalyticalBalance extends Apparatus {
     
     @Override
     public String toString() {
-        return analyticalBalance;  
+        return "An analytical balance";  
     }
     
     @Override
@@ -120,6 +115,13 @@ public class AnalyticalBalance extends Apparatus {
             return spatial.getLocalTranslation().equals(((AnalyticalBalance) object).getSpatial().getLocalTranslation());
         else
             return false;
+    }
+
+    @Override
+    public String getDescription() {
+        
+        return "An analytical balance";
+        
     }
    
     

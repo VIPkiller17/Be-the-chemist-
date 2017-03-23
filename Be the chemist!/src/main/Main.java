@@ -31,6 +31,7 @@ import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
 import objects.world.display.Display;
+import objects.world.display.PeriodicTableDisplay;
 
 //by Tommy
 public class Main extends VRApplication {
@@ -74,7 +75,7 @@ public class Main extends VRApplication {
     private Display filters;
     private Display keyBoard;
     private Display materialList;
-    private Display periodicTable;
+    private PeriodicTableDisplay periodicTableDisplay;
     
     //Objects
     
@@ -145,6 +146,7 @@ public class Main extends VRApplication {
         filters=new Display(getAssetManager(),rootNode,4);
         keyBoard=new Display(getAssetManager(),rootNode,2);
         materialList=new Display(getAssetManager(),rootNode,3);
+        periodicTableDisplay=new PeriodicTableDisplay(getAssetManager(),rootNode);
         //WORLD INIT END
         
         //OBJECTS INIT START

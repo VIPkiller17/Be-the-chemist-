@@ -1,0 +1,3 @@
+1. Finish map with player interaction
+2. Fix indexOutOfBound exception when teleporting
+3. Fix description laser not moving when menu button is held

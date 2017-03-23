@@ -21,14 +21,29 @@ import main.Main;
  */
 public abstract class PhysicalObject implements Savable, Describable{
 
+    private Main main;
+    
     private Vector3f position;
     private Node node;
     
     private boolean insideFumeHood;
     
+    private double mass;
+    
     public PhysicalObject(Main main,Vector3f position){
         
         this.position=position;
+        this.main=main;
+        
+        node=new Node();
+        
+    }
+    
+    public PhysicalObject(Main main,Vector3f position, double mass){
+        
+        this.position=position;
+        this.mass=mass;
+        this.main=main;
         
         node=new Node();
         
@@ -79,6 +94,12 @@ public abstract class PhysicalObject implements Savable, Describable{
     public boolean isInsideFumeHood(){
         
         return insideFumeHood;
+        
+    }
+    
+    public double getMass(){
+        
+        return mass;
         
     }
     

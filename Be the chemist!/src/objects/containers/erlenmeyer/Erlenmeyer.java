@@ -35,6 +35,7 @@ public class Erlenmeyer extends Container implements Savable{
     private Main main;
     
     private boolean closeable;
+    private boolean isEmitting;
     private double maxQuantity;
     private double maxTemperature;
     private double maxPressureOpenned;
@@ -85,7 +86,7 @@ public class Erlenmeyer extends Container implements Savable{
         erlenmeyer_phy=new RigidBodyControl(1f);
         bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
         
-        particleEmitter=new ParticleEmitter(this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        particleEmitter=new ParticleEmitter(assetManager,this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
 
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Erlenmeyer.j3o");
@@ -203,6 +204,12 @@ public class Erlenmeyer extends Container implements Savable{
         
         particleEmitter.stop();
         isEmitting=false;
+        
+    }
+    
+    public boolean isEmitting(){
+        
+        return isEmitting;
         
     }
     

@@ -5,12 +5,15 @@
 package objects.apparatus.analyticalBalance;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.collision.CollisionResults;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -32,9 +35,13 @@ public class AnalyticalBalance extends Apparatus {
     
     private BitmapText text;
     private BitmapFont font;
+    private Spatial analyticalBalanceSurface;
     
-    public AnalyticalBalance(Main main,Node rootNode, AssetManager assetManager, Vector3f position) {
-        
+    private CollisionResults collisionResults;
+    
+    
+    public AnalyticalBalance(Main main,Node rootNode,CollisionResults collisionResults, AssetManager assetManager, Vector3f position) {
+       
         super(main,position);
         
         spatial=assetManager.loadModel("Models/Objects/Apparatus/AnalyticalBalance/AnalyticalBalance.j3o");
@@ -46,6 +53,15 @@ public class AnalyticalBalance extends Apparatus {
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         material.setColor("Color", ColorRGBA.Black);
         geom.setMaterial(material);
+       
+        analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalanceSurface/AnalyticalBalance_Surface.j3o");
+        Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0));
+        analyticalBalanceSurface.setMaterial(analyticalBalanceSurfaceMat);
+        analyticalBalanceSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
+        node.attachChild(analyticalBalanceSurface);
+        analyticalBalanceSurface.setLocalTranslation(8.25f, 0.90f, 5.60f);
         
         node.attachChild(geom);
         geom.setLocalTranslation(position); //*
@@ -58,6 +74,8 @@ public class AnalyticalBalance extends Apparatus {
         node.attachChild(spatial);
         
         rootNode.attachChild(node);
+        
+        this.collisionResults = collisionResults;
         
     }
     
@@ -103,9 +121,17 @@ public class AnalyticalBalance extends Apparatus {
         return spatial;
     }
     
+    public Spatial getSurface() {
+        return analyticalBalanceSurface;
+    }
+    
     @Override
     public String toString() {
         return "An analytical balance";  
+    }
+    
+    public BitmapText getDisplayText() {
+        return text;
     }
     
     @Override

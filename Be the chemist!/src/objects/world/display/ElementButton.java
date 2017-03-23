@@ -87,13 +87,13 @@ public class ElementButton implements Savable{
         nameText.setText(name);
         
         node.attachChild(this.massText);
-        massText.setLocalTranslation((quad.getWidth()/2)-(numberText.getLineWidth()/2),-quad.getHeight()+massText.getLineHeight()+0.01f, 0.01f);
+        massText.setLocalTranslation((quad.getWidth()/2)-(numberText.getLineWidth()/2)-0.05f,-quad.getHeight()+massText.getLineHeight(), 0.01f);
         node.attachChild(this.numberText);
         numberText.setLocalTranslation((quad.getWidth()/2)-(numberText.getLineWidth()/2),-0.01f, 0.01f);
         node.attachChild(this.symbolText);
-        symbolText.setLocalTranslation(quad.getWidth()/4,(-quad.getHeight()/2)+(massText.getLineHeight()/2), 0.01f);
+        symbolText.setLocalTranslation(quad.getWidth()/4,(-quad.getHeight()/2)+(massText.getLineHeight()/2)+0.05f,0.01f);
         node.attachChild(this.nameText);
-        nameText.setLocalTranslation(quad.getWidth()/4,(-quad.getHeight()/2)-(symbolText.getLineHeight()/2), 0.01f);
+        nameText.setLocalTranslation((quad.getWidth()/4)-0.05f,(-quad.getHeight()/2)-(symbolText.getLineHeight()/2)+0.04f, 0.01f);
         
         periodicTableDisplay.getNode().attachChild(node);
         

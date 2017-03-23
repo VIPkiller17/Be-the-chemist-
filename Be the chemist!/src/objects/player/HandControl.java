@@ -27,6 +27,8 @@ import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.world.Floor;
 import objects.world.display.Button;
 import objects.world.display.Display;
+import objects.world.display.ElementButton;
+import objects.world.display.PeriodicTableDisplay;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -67,6 +69,10 @@ public class HandControl extends AbstractControl{
     private Button presentPointedButton;
     private boolean pointingDisplay;
     private boolean pointingButton;
+    
+    private ElementButton presentPointedElementButton;
+    private boolean pointingPeriodicTableDisplay;
+    private boolean pointingElementButton;
     
     private static final Vector3f OUT_OF_MAP=new Vector3f(0,-1,0);
     private static final ColorRGBA GREEN_LASER=ColorRGBA.Green,RED_LASER=ColorRGBA.Red;
@@ -830,19 +836,30 @@ public class HandControl extends AbstractControl{
             //Now we check to see if that colision is a display or button
             if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof Button){
                 
+                if(presentPointedButton!=null&&!((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject")).equals(presentPointedButton)){
+                
+                    presentPointedButton.setPointed(false);
+                
+                }
+                
+                pointingElementButton=false;
+                pointingPeriodicTableDisplay=false;
                 pointingButton=true;
                 pointingDisplay=false;
                 
                 makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
                 
                 presentPointedButton=((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
+                presentPointedElementButton=null;
                 
                 presentPointedButton.setPointed(true);
                 
             }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof Display){
                 
-                pointingDisplay=true;
+                pointingElementButton=false;
+                pointingPeriodicTableDisplay=false;
                 pointingButton=false;
+                pointingDisplay=true;
                 
                 makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
                 
@@ -854,7 +871,35 @@ public class HandControl extends AbstractControl{
                 
                 }
                 
-            }else{
+                presentPointedElementButton=null;
+                
+            }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof ElementButton){
+                
+                pointingElementButton=true;
+                pointingPeriodicTableDisplay=false;
+                pointingButton=false;
+                pointingDisplay=false;
+                
+                makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                
+                presentPointedElementButton=((ElementButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
+                presentPointedButton=null;
+                
+            }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof PeriodicTableDisplay){
+                
+                pointingElementButton=false;
+                pointingPeriodicTableDisplay=true;
+                pointingButton=false;
+                pointingDisplay=false;
+                
+                makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
+                
+                presentPointedButton=null;
+                presentPointedElementButton=null;
+                
+            }
+            
+            else{
                 
                 pointingButton=false;
                 pointingDisplay=false;

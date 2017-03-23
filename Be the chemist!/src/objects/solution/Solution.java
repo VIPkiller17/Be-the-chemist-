@@ -21,6 +21,8 @@ public class Solution {
     
     public Solution(Substance substance){
         
+        substances=new ArrayList<Substance>();
+        
         this.substances.add(substance);
         
     }
@@ -175,6 +177,12 @@ public class Solution {
         
         return containedStates;
         
+        
+    }
+    
+    public double getTemperature(){
+        
+        return temperature;
         
     }
     

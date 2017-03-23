@@ -51,6 +51,7 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         spatial.setName("Fume hood");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
+        spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
         fumeHood.attachObject(spatial);
         
         handleHighlight=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor_Highlight.j3o");
@@ -63,7 +64,7 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         handleHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
         handleHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        handleHighlight.setQueueBucket(RenderQueue.Bucket.Transparent);
+        handleHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
         handleHighlight.setMaterial(handleHighlightMat);
         fumeHood.attachObject(handleHighlight);
         

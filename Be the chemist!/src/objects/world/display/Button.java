@@ -44,6 +44,9 @@ public class Button implements Savable{
     
     private boolean pointed;
     
+    private boolean isToggle;
+    private boolean toggleActivated;
+    
     private static final ColorRGBA POINTED_COLOR=new ColorRGBA(0,255,255,0.7f);
     private static final ColorRGBA NORMAL_COLOR=new ColorRGBA(0,0,255,0.7f);
     
@@ -125,32 +128,35 @@ public class Button implements Savable{
                 
             case 5:
                 
+                isToggle=true;
                 text.setSize(0.08f);
-                text.setText("Gases \u25A1");
+                text.setText("Gases");
                 createBackground(0.3f,0.02f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.85f,0.05f);
+                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.06f,0.05f);
                 break;
                 
             case 6:
                 
+                isToggle=true;
                 text.setSize(0.08f);
-                text.setText("Liquid \u25A1");
+                text.setText("Liquid");
                 createBackground(0.3f,0.02f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.85f,0.05f);
+                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.19f,0.05f);
                 break;
                 
             case 7:
                 
+                isToggle=true;
                 text.setSize(0.08f);
-                text.setText("Solid \u25A1");
+                text.setText("Solid");
                 createBackground(0.3f,0.02f+text.getLineHeight());
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.85f,0.05f);
+                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.32f,0.05f);
                 break;
                 
             case 8:
@@ -525,7 +531,13 @@ public class Button implements Savable{
                 
             case 45:
                 
-                
+                text.setSize(0.08f);
+                text.setText("\u2191");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.33f,0.05f);
+                break;
                 
             case 46:
                 
@@ -607,6 +619,61 @@ public class Button implements Savable{
                 node.setLocalTranslation(0,-0.85f,0.05f);
                 break;
                 
+            case 54:
+                
+                text.setSize(0.08f);
+                text.setText("\u2193");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.20f,0.05f);
+                break;
+                
+            case 55:
+                
+                text.setSize(0.08f);
+                text.setText("\u2191");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-(parentDisplay.getWidthDimension()/2)+(quad.getWidth()/2)+0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.33f,0.05f);
+                break;
+                
+            case 56:
+                
+                text.setSize(0.08f);
+                text.setText("\u2193");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-(parentDisplay.getWidthDimension()/2)+(quad.getWidth()/2)+0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.20f,0.05f);
+                break;
+                
+            case 57:
+                
+                text.setSize(0.05f);
+                text.setText("Type (None)");
+                createBackground(0.53f,0.02f+text.getLineHeight());
+                
+                //System.out.println("Type quad width: "+quad.getWidth());
+                
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.45f,0.05f);
+                break;
+                
+            case 58:
+                
+                text.setSize(0.05f);
+                text.setText("Class (None)");
+                createBackground(0.49f,0.02f+text.getLineHeight());
+                
+                //System.out.println("Class quad width: "+quad.getWidth());
+                
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(-(parentDisplay.getWidthDimension()/2)+(quad.getWidth()/2)+0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.06f,0.05f);
+                break;
             
         }
         
@@ -646,15 +713,35 @@ public class Button implements Savable{
         
         this.pointed=pointed;
         
-        if(pointed){
-            
-            backgroundMat.setColor("Color", POINTED_COLOR);
-            
-        }else{
-            
-            backgroundMat.setColor("Color", NORMAL_COLOR);
-            
-        }
+        if(!isToggle)
+        
+            if(pointed){
+
+                backgroundMat.setColor("Color", POINTED_COLOR);
+
+            }else{
+
+                backgroundMat.setColor("Color", NORMAL_COLOR);
+
+            }
+        
+    }
+    
+    public void setToggleActivated(boolean toggleActivated){
+        
+        this.toggleActivated=toggleActivated;
+        
+    }
+    
+    public boolean getToggleActivated(){
+        
+        return toggleActivated;
+        
+    }
+    
+    public boolean isToggle(){
+        
+        return isToggle;
         
     }
 

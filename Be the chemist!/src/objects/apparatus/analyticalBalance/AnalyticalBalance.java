@@ -11,6 +11,7 @@ import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -44,7 +45,9 @@ public class AnalyticalBalance extends Apparatus {
        
         super(main,position);
         
-        spatial=assetManager.loadModel("Models/Objects/Apparatus/AnalyticalBalance/AnalyticalBalance.j3o");
+        node = new Node();
+        
+        spatial=assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance.j3o");
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text = new BitmapText(font);
         
@@ -61,19 +64,19 @@ public class AnalyticalBalance extends Apparatus {
         analyticalBalanceSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(analyticalBalanceSurface);
-        analyticalBalanceSurface.setLocalTranslation(8.25f, 0.90f, 5.60f);
         
         node.attachChild(geom);
-        geom.setLocalTranslation(position); //*
+        
         geom.setLocalRotation(Quaternion.ZERO); //*
         
         spatial.setLocalRotation(Quaternion.ZERO); //*
-        spatial.setLocalTranslation(position); //*
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         node.attachChild(spatial);
         
+        node.setLocalTranslation(position);
         rootNode.attachChild(node);
+        node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI*3/4, Vector3f.UNIT_Y));
         
         this.collisionResults = collisionResults;
         

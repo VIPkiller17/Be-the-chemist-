@@ -141,6 +141,9 @@ public class Main extends VRApplication {
         
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         
+        analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(8.25f, .95f, 5.60f));
+        
+        
         mainMenu=new Display(getAssetManager(),rootNode,0);
         substanceList=new Display(getAssetManager(),rootNode,1);
         filters=new Display(getAssetManager(),rootNode,4);

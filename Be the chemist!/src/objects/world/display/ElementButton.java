@@ -62,17 +62,17 @@ public class ElementButton implements Savable{
         this.backgroundColor=backgroundColor;
         
         node=new Node();
-        font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
+        font=assetManager.loadFont("Interface/Fonts/Hack/Hack.fnt");
         
         createBackground(0.25f,0.25f);
         
         massText=new BitmapText(font);
-        massText.setSize(0.05f);
+        massText.setSize(0.04f);
         massText.setQueueBucket(RenderQueue.Bucket.Translucent);
         massText.setText(mass);
         
         numberText=new BitmapText(font);
-        numberText.setSize(0.05f);
+        numberText.setSize(0.04f);
         numberText.setQueueBucket(RenderQueue.Bucket.Translucent);
         numberText.setText(number+"");
         
@@ -82,18 +82,18 @@ public class ElementButton implements Savable{
         symbolText.setText(symbol);
         
         nameText=new BitmapText(font);
-        nameText.setSize(0.04f);
+        nameText.setSize(0.03f);
         nameText.setQueueBucket(RenderQueue.Bucket.Translucent);
         nameText.setText(name);
         
         node.attachChild(this.massText);
-        massText.setLocalTranslation((quad.getWidth()/2)-(numberText.getLineWidth()/2)-0.05f,-quad.getHeight()+massText.getLineHeight(), 0.01f);
+        massText.setLocalTranslation(0.02f,-quad.getHeight()+massText.getLineHeight()+0.01f, 0.01f);
         node.attachChild(this.numberText);
-        numberText.setLocalTranslation((quad.getWidth()/2)-(numberText.getLineWidth()/2),-0.01f, 0.01f);
+        numberText.setLocalTranslation(0.02f,-0.01f, 0.01f);
         node.attachChild(this.symbolText);
-        symbolText.setLocalTranslation(quad.getWidth()/4,(-quad.getHeight()/2)+(massText.getLineHeight()/2)+0.05f,0.01f);
+        symbolText.setLocalTranslation(0.02f,(-quad.getHeight()/2)+(massText.getLineHeight()/2)+0.06f,0.01f);
         node.attachChild(this.nameText);
-        nameText.setLocalTranslation((quad.getWidth()/4)-0.05f,(-quad.getHeight()/2)-(symbolText.getLineHeight()/2)+0.04f, 0.01f);
+        nameText.setLocalTranslation(0.02f,(-quad.getHeight()/2)-(symbolText.getLineHeight()/2)+0.03f, 0.01f);
         
         periodicTableDisplay.getNode().attachChild(node);
         

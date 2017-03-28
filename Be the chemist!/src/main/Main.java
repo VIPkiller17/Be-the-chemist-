@@ -8,28 +8,32 @@ import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import interfaces.Describable;
 import java.util.ArrayList;
+import java.util.Collections;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
 import objects.PhysicalObject;
 import objects.apparatus.analyticalBalance.AnalyticalBalance;
+import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHood;
 import objects.apparatus.trashBin.TrashBin;
+import objects.containers.beaker.Beaker;
+import objects.containers.erlenmeyer.Erlenmeyer;
+import objects.containers.funnel.Funnel;
+import objects.containers.gasSac.GasSac;
+import objects.containers.measuringCylinder.MeasuringCylinder;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
+import objects.world.Sink;
 import objects.world.display.Display;
 import objects.world.display.PeriodicTableDisplay;
 
@@ -45,7 +49,7 @@ public class Main extends VRApplication {
     
     private ArrayList<PhysicalObject> items;
     
-    public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(0,255,0,0.7f);
+    public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(0,255,0,0.5f);
     public static final ColorRGBA HIGHLIGHT_INVISIBLE=new ColorRGBA(0,255,0,0);
     
     //Player
@@ -60,6 +64,7 @@ public class Main extends VRApplication {
     private float controllerCountDispTPF;
     private float CommonTPF;
     private float controllerConnectionTPF;
+    private float testBeakerSpawnTPF;
     
     //World
     private Room room;
@@ -68,6 +73,8 @@ public class Main extends VRApplication {
     private DistilledWaterContainer distilledWaterContainer;
     private FumeHood fumeHood;
     private TrashBin trashBin;
+    private ChemicalWasteDisposalContainer chemicalWasteDisposalContainer;
+    private Sink sink0,sink1;
     
     private Display mainMenu;
     private Display settingsMenu;
@@ -78,10 +85,15 @@ public class Main extends VRApplication {
     private PeriodicTableDisplay periodicTableDisplay;
     
     //Objects
-    
     private ArrayList<Describable> describables=new ArrayList<Describable>();
+    //private Geometry testCube;
+    private Beaker beaker;
+    private Erlenmeyer erlenmeyer;
+    private Funnel funnel;
+    private GasSac gasSac;
+    private MeasuringCylinder measuringCylinder;
     
-    private Geometry testCube;
+    private ArrayList<Beaker> testBeakers;
 
     public static void main(String[] args) {
         
@@ -136,13 +148,13 @@ public class Main extends VRApplication {
         
         //WORLD INIT START
         room=new Room(getAssetManager(),rootNode,bulletAppState);
-        
         floor=new Floor(getAssetManager(),rootNode,bulletAppState);
-        
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
-        
         analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(8.25f, .95f, 5.60f));
-        
+        chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
+        distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
+        sink0=new Sink(this,getAssetManager(),rootNode,0);
+        sink1=new Sink(this,getAssetManager(),rootNode,1);
         
         mainMenu=new Display(getAssetManager(),rootNode,0);
         substanceList=new Display(getAssetManager(),rootNode,1);
@@ -153,6 +165,7 @@ public class Main extends VRApplication {
         //WORLD INIT END
         
         //OBJECTS INIT START
+        /*
         Box testBox=new Box(0.1f,0.1f,0.1f);
         testCube=new Geometry("Test cube",testBox);
         testCube.setShadowMode(ShadowMode.CastAndReceive);
@@ -160,6 +173,13 @@ public class Main extends VRApplication {
         testCubeMat.setColor("Color",ColorRGBA.Blue);
         testCube.setMaterial(testCubeMat);
         rootNode.attachChild(testCube);
+        */
+        
+        beaker=new Beaker(this,new Vector3f(0.5f,0.5f,0));
+        erlenmeyer=new Erlenmeyer(this,new Vector3f(0.7f,0.5f,0));
+        funnel=new Funnel(this,new Vector3f(0.2f,0.5f,0));
+        gasSac=new GasSac(this,new Vector3f(0.4f,0.5f,0));
+        measuringCylinder=new MeasuringCylinder(this,new Vector3f(0.9f,0.5f,0));
         //OBJECTS INIT END
         
         //LIGHT INIT START
@@ -173,6 +193,9 @@ public class Main extends VRApplication {
         //INIT THE INPUTS START
         initInputs();
         //INIT THE INPUTS END
+        
+        //TESTING SECTION
+        testBeakers=new ArrayList<Beaker>();
         
     }
 
@@ -211,27 +234,27 @@ public class Main extends VRApplication {
                     
                 }else if(name.equals("cubeNegativeZ")){
                     
-                    testCube.move(0,0,-0.1f);
+                    //testCube.move(0,0,-0.1f);
                     
                 }else if(name.equals("cubePositiveZ")){
                     
-                    testCube.move(0,0,0.1f);
+                    //testCube.move(0,0,0.1f);
                     
                 }else if(name.equals("cubeNegativeX")){
                     
-                    testCube.move(-0.1f,0,0);
+                    //testCube.move(-0.1f,0,0);
                     
                 }else if(name.equals("cubePositiveX")){
                     
-                    testCube.move(0.1f,0,0);
+                    //testCube.move(0.1f,0,0);
                     
                 }else if(name.equals("cubeNegativeY")){
                     
-                    testCube.move(0,-0.1f,0);
+                    //testCube.move(0,-0.1f,0);
                     
                 }else if(name.equals("cubePositiveY")){
                     
-                    testCube.move(0,0.1f,0);
+                    //testCube.move(0,0.1f,0);
                     
                 }
                 
@@ -378,11 +401,35 @@ public class Main extends VRApplication {
         return items;
         
     }
+    
+    public void removeItem(PhysicalObject item){
+        
+        items.remove(item);
+        
+        items.removeAll(Collections.singleton(null)); 
+        
+    }
+    
+    public BulletAppState getBulletAppState(){
+        
+        return bulletAppState;
+        
+    }
 
     @Override
     public void simpleUpdate(float tpf) {
         
         //TPF COUNTERS START
+        testBeakerSpawnTPF+=tpf;
+        
+        if(testBeakerSpawnTPF>5){
+            
+            //testBeakers.add(new Beaker(this,new Vector3f(0,0.5f,0)));
+            beaker.setPosition(new Vector3f(0,0.5f,0));
+            
+            testBeakerSpawnTPF=0;
+            
+        }
         
         //every second check if a controller is detected and create it
         //if one of the hands isn't created

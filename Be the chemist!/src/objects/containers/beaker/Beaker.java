@@ -9,14 +9,16 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import objects.containers.Container;
 import objects.particleEmitter.ParticleEmitter;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
+import interfaces.Grabbable;
 import main.Main;
 import objects.solution.Solution;
 
@@ -39,10 +41,6 @@ public class Beaker extends Container implements Savable{
     private double maxPressureClosed;
     private Spatial highlightModel;
     private Material highlightModelMat;
-    private Spatial stopperModel;
-    private Material stopperModelMat;
-    private Spatial holedStopperModel;
-    private Material holedStopperModelMat;
     private Spatial liquidModel;
     private Material liquidModelMat;
     private Spatial solidModel;
@@ -51,92 +49,105 @@ public class Beaker extends Container implements Savable{
     
     private boolean isEmitting;
     
-    public Beaker(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    private Vector3f particleEmitterPosition;
+    private Spatial openningSurface;
+    private Material openningSurfaceMat;
+    
+    private Node node;
+    
+    public Beaker(Main main,Vector3f position){
         
         super(main,position);
         
-        init(position,rootNode,assetManager,bulletAppState);
+        init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
     }
     
-    public Beaker(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
+    public Beaker(Main main,Vector3f position,Solution solution,double quantity){
         
         super(main,position,solution,quantity);
         
-        init(position,rootNode,assetManager,bulletAppState);
+        init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
-        liquidModelMat.setColor("Ambient",solution.getLiquidColor()); 
-        liquidModelMat.setColor("Diffuse",solution.getLiquidColor());
+        liquidModelMat.setColor("Color",solution.getLiquidColor()); 
         
-        solidModelMat.setColor("Ambient",solution.getSolidColor()); 
-        solidModelMat.setColor("Diffuse",solution.getSolidColor());
+        solidModelMat.setColor("Color",solution.getSolidColor());
         
     }
     
-    public void init(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    public void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
-        closeable=true;
+        node=new Node();
+        
+        closeable=false;
         maxQuantity=1;
         maxTemperature=1773;
         maxPressureOpenned=6;
         maxPressureClosed=3;
         
-        addPhysicsControl(beaker_phy);
         beaker_phy=new RigidBodyControl(1f);
+        node.addControl(beaker_phy);
         bulletAppState.getPhysicsSpace().add(beaker_phy);
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Beaker/Beaker.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Highlight/Beaker_Highlight.j3o");
         liquidModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Liquid/Beaker_Liquid.j3o");
         solidModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Solid/Beaker_Solid.j3o");
+        openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
         
         this.beakerControl=new BeakerControl(this);
         spatial.addControl(beakerControl);
         
-        highlightModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        highlightModelMat.setBoolean("UseMaterialColors", true); 
-        highlightModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        highlightModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
-        highlightModel.setMaterial(highlightModelMat);
-        highlightModel.setLocalTranslation(position);
-        highlightModel.setName("Beaker #"+index+"'s highlight");
-        highlightModel.setUserData("correctCollision", true);
-        highlightModel.setUserData("correspondingObject", this);
-        attachObject(highlightModel);
+        openningSurface.setName("Beaker #"+index+"'s openning");
+        openningSurfaceMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        openningSurfaceMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+        openningSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        openningSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
+        openningSurface.setMaterial(openningSurfaceMat);
+        node.attachChild(openningSurface);
+        openningSurface.setLocalTranslation(0,0.12f,0);
+        openningSurface.scale(4);
         
-        liquidModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        liquidModelMat.setBoolean("UseMaterialColors", true); 
-        liquidModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        liquidModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
+        highlightModel.setName("Beaker #"+index+"'s highlight");
+        highlightModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        highlightModelMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        highlightModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        highlightModel.setQueueBucket(RenderQueue.Bucket.Transparent);
+        highlightModel.setMaterial(highlightModelMat);
+        node.attachChild(highlightModel);
+        highlightModel.setLocalTranslation(0,-50,0);
+        
+        liquidModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        liquidModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         liquidModel.setMaterial(liquidModelMat);
-        liquidModel.setLocalTranslation(position);
         liquidModel.setName("Beaker #"+index+"'s liquid");
         liquidModel.setUserData("correctCollision", true);
         liquidModel.setUserData("correspondingObject", this);
-        attachObject(liquidModel);
+        liquidModel.setQueueBucket(RenderQueue.Bucket.Transparent);
+        node.attachChild(liquidModel);
         
-        solidModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        solidModelMat.setBoolean("UseMaterialColors", true); 
-        solidModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        solidModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
+        solidModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         solidModel.setMaterial(solidModelMat);
-        solidModel.setLocalTranslation(position);
         solidModel.setName("Beaker #"+index+"'s solid");
         solidModel.setUserData("correctCollision", true);
         solidModel.setUserData("correspondingObject", this);
-        attachObject(solidModel);
+        node.attachChild(solidModel);
         
-        spatial.scale(1f,1f,1f);
-        spatial.rotate(0.0f, 0.0f, 0.0f);
-        spatial.setLocalTranslation(position);
         spatial.setName("Beaker #"+index++);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        attachObject(spatial);
+        spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
+        node.attachChild(spatial);
         
-        rootNode.attachChild(getNode());
+        rootNode.attachChild(node);
         
-        particleEmitter=new ParticleEmitter(assetManager,this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        node.setLocalTranslation(position);
+        
+        main.getItemsList().add(this);
+        
+        particleEmitterPosition=new Vector3f(0.05f,0,0);
+        
+        particleEmitter=new ParticleEmitter(assetManager,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
     }
     
@@ -212,6 +223,35 @@ public class Beaker extends Container implements Savable{
     public String getDescription() {
         
         return "Beaker:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        
+    }
+
+    @Override
+    public Vector3f getGrabbablePosition() {
+        
+        return node.getWorldTranslation();
+        
+    }
+
+    @Override
+    public void highlightVisible(boolean highlightVisible) {
+        
+        this.highlightVisible=highlightVisible;
+        
+        if(highlightVisible)
+            
+            highlightModel.setLocalTranslation(0,0,0);
+        
+        else
+            
+            highlightModel.setLocalTranslation(0,-50,0);
+        
+    }
+    
+    @Override
+    public void setPosition(Vector3f position){
+        
+        node.setLocalTranslation(position);
         
     }
     

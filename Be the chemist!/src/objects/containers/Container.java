@@ -5,6 +5,7 @@
 package objects.containers;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 import interfaces.Grabbable;
 import main.Main;
 import objects.PhysicalObject;
@@ -24,7 +25,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     private double temperature;
     private double pressure;
     
-    private boolean isHighlightVisible;
+    protected boolean highlightVisible;
     
     public Container(Main main,Vector3f position){
         
@@ -146,21 +147,18 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     }
     
     @Override
-    public void highlightVisible(boolean isHighlightVisible) {
-        
-        this.isHighlightVisible=isHighlightVisible;
-        //TODO: MAKE THE HIGHLIGHT VISIBLE OR DECIDE IF WE CONTROL THAT IN THE CONTROL DEPENDING ON THE VALUE OF THE VARIABLE
-        
-    }
+    public abstract void highlightVisible(boolean isHighlightVisible);
 
     @Override
     public boolean isHighlightVisible() {
         
-        return isHighlightVisible;
+        return highlightVisible;
         
     }
     
     @Override
     public abstract String getDescription();
+    
+    public abstract void setPosition(Vector3f position);
     
 }

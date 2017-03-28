@@ -10,6 +10,7 @@ import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import objects.PhysicalObject;
 import objects.containers.Container;
+import objects.particleEmitter.particle.Particle;
 
 /**
  *
@@ -34,11 +35,13 @@ public class ParticleEmitter {
     private Vector3f randomAccelerationOffset;
     private String gasParticleModelPath,liquidParticleModelPath,solidParticleModelPath;
     
-    public boolean emitting;
+    private boolean emitting;
     
-    public Node node;
+    private ParticleEmitterControl control;
     
-    public ParticleEmitter(AssetManager assetManager,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,double initialSpeed,double randomInitialSpeedOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
+    private Node node;
+    
+    public ParticleEmitter(AssetManager assetManager,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocitydOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
         
         this.parentObject=parentObject;
         this.position=position;
@@ -57,7 +60,11 @@ public class ParticleEmitter {
         liquidParticleModelPath="Models/Particles/Liquid/Liquid.j3o";
         solidParticleModelPath="Models/Particles/Solid/Solid.j3o";
         
-        node.addControl(new ParticleEmitterControl(this));
+        node=new Node();
+        
+        control=new ParticleEmitterControl(this);
+        
+        node.addControl(control);
         
         parentObject.attachObject(node);
         
@@ -243,6 +250,34 @@ public class ParticleEmitter {
         
     }
     
+    public boolean isEmitting(){
+        
+        return emitting;
+        
+    }
+    
+    public void emit(){
+        
+        if(parentObject instanceof Container){
+                
+                boolean[] possibleStates=((Container)parentObject).getSolution().containsStates();
+                
+                if(possibleStates[0])
+                    
+                    control.getActiveParticles().add(new Particle(this,"Models/Particles/Gas/Gas.j3o",0));
+                
+                if(possibleStates[1])
+                    
+                    control.getActiveParticles().add(new Particle(this,"Models/Particles/Liquid/Liquid.j3o",1));
+                
+                if(possibleStates[2])
+                    
+                    control.getActiveParticles().add(new Particle(this,"Models/Particles/Solid/Solid.j3o",2));
+                
+        }
+        
+    }
+    
     public PhysicalObject getParentObject(){
         
         return parentObject;
@@ -264,6 +299,12 @@ public class ParticleEmitter {
     public AssetManager getAssetManager(){
         
         return assetManager;
+        
+    }
+    
+    public ParticleEmitterControl getControl(){
+        
+        return control;
         
     }
     

@@ -17,7 +17,7 @@ public class Solution {
     private ArrayList<Substance> substances;
     private double quantity;
     private double temperature;
-    private ColorRGBA liquidColor,solidColor;
+    private ColorRGBA liquidColor,solidColor,gasColor;
     
     public Solution(Substance substance){
         
@@ -86,6 +86,12 @@ public class Solution {
     public ColorRGBA getSolidColor(){
         
         return solidColor;
+        
+    }
+    
+    public ColorRGBA getGasColor(){
+        
+        return gasColor;
         
     }
     

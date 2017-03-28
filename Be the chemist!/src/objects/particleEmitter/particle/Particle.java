@@ -34,4 +34,14 @@ public class Particle {
         
     }
     
+    public void destroy(){
+        
+        spatial.scale(0);
+        
+        spatial=null;
+        
+        particleEmitter.getControl().removeParticle(this);
+        
+    }
+    
 }

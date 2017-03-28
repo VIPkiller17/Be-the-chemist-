@@ -7,6 +7,8 @@ package objects.particleEmitter;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
+import java.util.ArrayList;
+import java.util.Collections;
 import objects.containers.Container;
 import objects.particleEmitter.particle.Particle;
 
@@ -16,6 +18,8 @@ import objects.particleEmitter.particle.Particle;
  */
 public class ParticleEmitterControl extends AbstractControl{
 
+    private ArrayList<Particle> activeParticles;
+    
     private ParticleEmitter particleEmitter;
     
     private float timer;
@@ -28,6 +32,8 @@ public class ParticleEmitterControl extends AbstractControl{
         
         this.particleEmitter=particleEmitter;
         
+        activeParticles=new ArrayList<Particle>();
+        
     }
     
     @Override
@@ -35,21 +41,27 @@ public class ParticleEmitterControl extends AbstractControl{
         
         timer+=tpf;
         
-        if(timer>particleEmitter.getDelay()){
+        if(timer>particleEmitter.getDelay()&&particleEmitter.isEmitting()){
             
-            Container presentParent=particleEmitter.ifParentObjectContainerGetIt();
-            
-            if(presentParent!=null){
+            if(particleEmitter.getParentObject() instanceof Container){
                 
-                boolean[] possibleStates=presentParent.getSolution().containsStates();
+                boolean[] possibleStates=((Container)particleEmitter.getParentObject()).getSolution().containsStates();
                 
-                if(gasEmissionCounter<=liquidEmissionCounter&&gasEmissionCounter<=solidEmissionCounter){
+                if(possibleStates[0])
                     
-                    lastParticle=new Particle(particleEmitter,particleEmitter.getGasParticleModelPath(),0);
+                    activeParticles.add(new Particle(particleEmitter,"Models/Particles/Gas/Gas.j3o",0));
+                
+                if(possibleStates[1])
                     
-                }
+                    activeParticles.add(new Particle(particleEmitter,"Models/Particles/Liquid/Liquid.j3o",1));
+                
+                if(possibleStates[2])
+                    
+                    activeParticles.add(new Particle(particleEmitter,"Models/Particles/Solid/Solid.j3o",2));
                 
             }
+            
+            timer=0;
             
         }
         
@@ -62,6 +74,18 @@ public class ParticleEmitterControl extends AbstractControl{
         
     }
     
+    public ArrayList<Particle> getActiveParticles(){
+        
+        return activeParticles;
+        
+    }
     
+    public void removeParticle(Particle particle){
+        
+        activeParticles.remove(particle);
+        
+        activeParticles.removeAll(Collections.singleton(null)); 
+        
+    }
     
 }

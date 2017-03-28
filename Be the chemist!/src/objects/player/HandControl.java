@@ -23,7 +23,9 @@ import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
 import main.Main;
 import objects.PhysicalObject;
+import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHoodDoor;
+import objects.containers.beaker.Beaker;
 import objects.world.Floor;
 import objects.world.display.Button;
 import objects.world.display.Display;
@@ -347,11 +349,20 @@ public class HandControl extends AbstractControl{
         
         //if the distance between the possibble to grab item is now more than 15cm, set the possible to grab item to null
         //also set its highliahgt model to invisible
-        if(possibleItemToGrab!=null&&possibleItemToGrab.getPos().distance(hand.getWorldTranslation())>0.15f){
+        if(possibleItemToGrab!=null&&((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation())>0.15f){
             
             ((Grabbable)possibleItemToGrab).highlightVisible(false);
             
             possibleItemToGrab=null;
+            
+        }
+        
+        //if the distance between the held item is now more than 15cm, set the held item to null
+        if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())>0.15f){
+            
+            hand.setStaticHold(false);
+            
+            hand.setHeldObject(null);
             
         }
         
@@ -365,7 +376,7 @@ public class HandControl extends AbstractControl{
             //check if the item is grabbable
             //check if the item's distance compared to the hand is less than 15cm
             //check if the last grabbable item is null or if the item's distance compared to the hand is less than the last grabbable item
-            if(p instanceof Grabbable&&p.getPos().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||p.getPos().distance(hand.getWorldTranslation())<possibleItemToGrab.getPos().distance(hand.getWorldTranslation()))){
+            if(p instanceof Grabbable&&((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation()))){
 
                 //System.out.println("Found new better grabbable item");
                 
@@ -864,6 +875,20 @@ public class HandControl extends AbstractControl{
             System.out.println("Held ojbject is not null, it is a fume hood door, the hand's Y position is less or equal to 2 and higher or equal to 1.02");
             
             ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getSpatial().getLocalTranslation().getY(),10.18f));
+            
+        }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof DistilledWaterContainer){
+            
+            System.out.println("Held object is not null, it is a distilled water container");
+            
+            ((DistilledWaterContainer)hand.getHeldObject()).toggle();
+            
+            ((DistilledWaterContainer)hand.getHeldObject()).highlightVisible(true);
+            
+            hand.setHeldObject(null);
+            
+        }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
+            
+            ((Beaker)hand.getHeldObject()).getNode().setLocalTranslation(hand.getWorldTranslation());
             
         }
         

@@ -59,7 +59,9 @@ public class BeakerControl extends AbstractControl{
 
     @Override
     protected void controlRender(RenderManager rm, ViewPort vp) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
+        
+        
     }
     
     

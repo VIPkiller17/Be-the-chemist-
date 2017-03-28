@@ -64,7 +64,7 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         handleHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
         handleHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        handleHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
+        handleHighlight.setQueueBucket(RenderQueue.Bucket.Transparent);
         handleHighlight.setMaterial(handleHighlightMat);
         fumeHood.attachObject(handleHighlight);
         
@@ -115,6 +115,13 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     public boolean isHighlightVisible() {
         
         return isHighlightVisible;
+        
+    }
+
+    @Override
+    public Vector3f getGrabbablePosition() {
+        
+        return spatial.getLocalTranslation();
         
     }
     

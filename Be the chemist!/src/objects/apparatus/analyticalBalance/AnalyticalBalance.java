@@ -57,7 +57,7 @@ public class AnalyticalBalance extends Apparatus {
         material.setColor("Color", ColorRGBA.Black);
         geom.setMaterial(material);
        
-        analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalanceSurface/AnalyticalBalance_Surface.j3o");
+        analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0));
         analyticalBalanceSurface.setMaterial(analyticalBalanceSurfaceMat);

@@ -4,13 +4,17 @@
  */
 package interfaces;
 
+import com.jme3.math.Vector3f;
+
 /**
  *
  * @author VIPkiller17
  */
 public interface Grabbable {
     
-    void highlightVisible(boolean isHighlightVisible);
+    void highlightVisible(boolean highlightVisible);
+    
+    Vector3f getGrabbablePosition();
     
     boolean isHighlightVisible();
     

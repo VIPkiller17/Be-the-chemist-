@@ -8,6 +8,7 @@ import com.jme3.asset.AssetManager;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import java.util.ArrayList;
@@ -41,6 +42,9 @@ public class DescDisplay {
         
         //init the description text
         description=new BitmapText(font,false);
+        
+        //Sest the text to translucent
+        description.setQueueBucket(RenderQueue.Bucket.Translucent);
         
         //set the initial size of the etxt to 0.05 times its orginal
         description.setSize(0.035f);

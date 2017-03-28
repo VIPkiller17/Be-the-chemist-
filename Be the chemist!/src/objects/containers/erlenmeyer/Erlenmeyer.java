@@ -9,6 +9,7 @@ import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
+import com.jme3.material.RenderState;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -17,6 +18,7 @@ import objects.particleEmitter.ParticleEmitter;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
+import com.jme3.renderer.queue.RenderQueue;
 import main.Main;
 import objects.solution.Solution;
 
@@ -52,42 +54,43 @@ public class Erlenmeyer extends Container implements Savable{
     private Material solidModelMat;
     private ParticleEmitter particleEmitter;
     
-    public Erlenmeyer(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    private Vector3f particleEmitterPosition;
+    private Spatial openningSurface;
+    private Material openningSurfaceMat;
+    
+    public Erlenmeyer(Main main,Vector3f position){
         
         super(main,position);
         
-        init(position,rootNode,assetManager,bulletAppState);
+        init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
     }
     
-    public Erlenmeyer(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState,Solution solution,double quantity){
+    public Erlenmeyer(Main main,Vector3f position,Solution solution,double quantity){
         
         super(main,position);
         
-        init(position,rootNode,assetManager,bulletAppState);
+        init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
-        liquidModelMat.setColor("Ambient",solution.getLiquidColor()); 
-        liquidModelMat.setColor("Diffuse",solution.getLiquidColor());
+        liquidModelMat.setColor("Color",solution.getLiquidColor());
         
-        solidModelMat.setColor("Ambient",solution.getSolidColor()); 
-        solidModelMat.setColor("Diffuse",solution.getSolidColor());
+        solidModelMat.setColor("Color",solution.getSolidColor());
         
     }
     
-    public void init(Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    public void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
         closeable=true;
         maxQuantity=1;
         maxTemperature=1773;
-        maxPressureOpenned=6;
+        maxPressureOpenned=4;
         maxPressureClosed=3;
         
-        node.addControl(erlenmeyer_phy);
-        erlenmeyer_phy=new RigidBodyControl(1f);
-        bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
+        node=new Node();
         
-        particleEmitter=new ParticleEmitter(assetManager,this,getPos(),spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,0.1,0.005,0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
-
+        erlenmeyer_phy=new RigidBodyControl(1f);
+        node.addControl(erlenmeyer_phy);
+        bulletAppState.getPhysicsSpace().add(erlenmeyer_phy);
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Erlenmeyer.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Highlight/Erlenmeyer_Highlight.j3o");
@@ -95,71 +98,75 @@ public class Erlenmeyer extends Container implements Savable{
         holedStopperModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Stopper/Erlenmeyer_Holed_Stopper.j3o");
         liquidModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Liquid/Erlenmeyer_Liquid.j3o");
         solidModel=assetManager.loadModel("Models/Objects/Containers/Erlenmeyer/Solid/Erlenmeyer_Solid.j3o");
+        openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
         
-        highlightModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        highlightModelMat.setBoolean("UseMaterialColors", true); 
-        highlightModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        highlightModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
-        highlightModel.setMaterial(highlightModelMat);
-        highlightModel.setLocalTranslation(position);
+        openningSurface.setName("Erlenmeyer #"+index+"'s openning");
+        openningSurfaceMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        openningSurfaceMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+        openningSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        openningSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
+        openningSurface.setMaterial(openningSurfaceMat);
+        node.attachChild(openningSurface);
+        openningSurface.setLocalTranslation(0,0.15f,0);
+        
         highlightModel.setName("Erlenmeyer #"+index+"'s highlight");
-        highlightModel.setUserData("correctCollision", true);
-        highlightModel.setUserData("correspondingObject", this);
+        highlightModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        highlightModelMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        highlightModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        highlightModel.setQueueBucket(RenderQueue.Bucket.Transparent);
+        highlightModel.setMaterial(highlightModelMat);
         node.attachChild(highlightModel);
+        highlightModel.setLocalTranslation(0,-50,0);
         
-        stopperModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        stopperModelMat.setBoolean("UseMaterialColors", true); 
-        stopperModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        stopperModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
+        stopperModel.setName("Erlenmeyer #"+index+"'s stopper");
+        stopperModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        stopperModelMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        stopperModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        stopperModel.setQueueBucket(RenderQueue.Bucket.Transparent);
         stopperModel.setMaterial(stopperModelMat);
-        stopperModel.setLocalTranslation(position);
-        stopperModel.setName("Erlenmeyer #"+index+"'s normal stopper");
-        stopperModel.setUserData("correctCollision", true);
-        stopperModel.setUserData("correspondingObject", this);
         node.attachChild(stopperModel);
+        stopperModel.setLocalTranslation(0,-50,0);
         
-        holedStopperModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        holedStopperModelMat.setBoolean("UseMaterialColors", true); 
-        holedStopperModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        holedStopperModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
-        holedStopperModel.setMaterial(holedStopperModelMat);
-        holedStopperModel.setLocalTranslation(position);
         holedStopperModel.setName("Erlenmeyer #"+index+"'s holed stopper");
-        holedStopperModel.setUserData("correctCollision", true);
-        holedStopperModel.setUserData("correspondingObject", this);
+        holedStopperModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        holedStopperModelMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        holedStopperModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        holedStopperModel.setQueueBucket(RenderQueue.Bucket.Transparent);
+        holedStopperModel.setMaterial(holedStopperModelMat);
         node.attachChild(holedStopperModel);
+        holedStopperModel.setLocalTranslation(0,-50,0);
         
-        liquidModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        liquidModelMat.setBoolean("UseMaterialColors", true); 
-        liquidModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        liquidModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
+        liquidModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        liquidModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         liquidModel.setMaterial(liquidModelMat);
-        liquidModel.setLocalTranslation(position);
         liquidModel.setName("Erlenmeyer #"+index+"'s liquid");
         liquidModel.setUserData("correctCollision", true);
         liquidModel.setUserData("correspondingObject", this);
+        liquidModel.setQueueBucket(RenderQueue.Bucket.Transparent);
         node.attachChild(liquidModel);
         
-        solidModelMat=new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        solidModelMat.setBoolean("UseMaterialColors", true); 
-        solidModelMat.setColor("Ambient",new ColorRGBA(0,0,0,0)); 
-        solidModelMat.setColor("Diffuse",new ColorRGBA(0,0,0,0));
+        solidModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         solidModel.setMaterial(solidModelMat);
-        solidModel.setLocalTranslation(position);
         solidModel.setName("Erlenmeyer #"+index+"'s solid");
         solidModel.setUserData("correctCollision", true);
         solidModel.setUserData("correspondingObject", this);
         node.attachChild(solidModel);
         
-        spatial.scale(1f,1f,1f);
-        spatial.rotate(0.0f, 0.0f, 0.0f);
-        spatial.setLocalTranslation(position);
         spatial.setName("Erlenmeyer #"+index++);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
+        spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
         node.attachChild(spatial);
         
         rootNode.attachChild(node);
+        
+        node.setLocalTranslation(position);
+
+        main.getItemsList().add(this);
+
+        particleEmitterPosition = new Vector3f(0, 0.15f, 0);
+        
+        particleEmitter=new ParticleEmitter(assetManager,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
     }
     
@@ -217,6 +224,35 @@ public class Erlenmeyer extends Container implements Savable{
     public String getDescription() {
         
         return "Erlenmeyer:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        
+    }
+
+    @Override
+    public Vector3f getGrabbablePosition() {
+        
+        return node.getLocalTranslation();
+        
+    }
+
+    @Override
+    public void highlightVisible(boolean highlightVisible) {
+        
+        this.highlightVisible=highlightVisible;
+        
+        if(highlightVisible)
+            
+            highlightModel.setLocalTranslation(0,0,0);
+        
+        else
+            
+            highlightModel.setLocalTranslation(0,-50,0);
+        
+    }
+    
+    @Override
+    public void setPosition(Vector3f position){
+        
+        node.setLocalTranslation(position);
         
     }
     

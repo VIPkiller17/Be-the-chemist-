@@ -128,13 +128,13 @@ public class AnalyticalBalance extends Apparatus {
         return analyticalBalanceSurface;
     }
     
+    public BitmapText getDisplayText() {
+        return text;
+    }
+    
     @Override
     public String toString() {
         return "An analytical balance";  
-    }
-    
-    public BitmapText getDisplayText() {
-        return text;
     }
     
     @Override

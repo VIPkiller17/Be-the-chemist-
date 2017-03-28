@@ -25,6 +25,35 @@ public class GasSacControl extends AbstractControl{
     @Override
     protected void controlUpdate(float f) {
         
+        //SET THE STATE OF THE CONTAINER
+        
+        //gasSac.setTemperature(beaker.getSolution().getTemperature());
+        
+        //ACT BASED ON THE STATE OF THE CONTAINER
+        
+        //if container is rotated 45 degrees to one side, start particle emission
+        if((spatial.getLocalRotation().getX()>=0.382f||spatial.getLocalRotation().getZ()>=0.382f)&&!gasSac.isEmitting()){
+            
+            System.out.println("*Beaker starts emitting particles*");
+            
+            //gasSac.startParticleEmission();
+            
+        }else if(spatial.getLocalRotation().getX()<0.382f&&spatial.getLocalRotation().getZ()<0.382f&&gasSac.isEmitting()){
+            //if neither of the angles are higher than 45 degrees, stop the particle emission
+            
+            System.out.println("*Gas Sac stops emitting particles*");
+            
+            //gasSac.stopParticleEmission();
+            
+        }
+        
+        //if the temperature of the container is too high
+        if(gasSac.getTemperature()>gasSac.getMaxTemperature()){
+            
+            gasSac.meltDown();
+            
+        }
+        
         
         
     }

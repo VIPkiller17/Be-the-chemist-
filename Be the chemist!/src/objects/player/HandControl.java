@@ -202,7 +202,9 @@ public class HandControl extends AbstractControl{
             hand.setLaserMaterialColor("Color", ColorRGBA.Green);
             
             //Set location tp hexagon
-            hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint().add(0,0.001f,0));
+            if(foundPresentCorrectCollision)
+            
+                hand.setTeleportMarkerLocation(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint().add(0,0.001f,0));
 
             teleportationPrimed=true;
 
@@ -227,7 +229,7 @@ public class HandControl extends AbstractControl{
             if(!teleLaserMovedOut){
 
                 //if not already out of sight, move laser out of sight
-                hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+                makeLaserDisappear();
 
                 hand.setTeleportMarkerLocation(new Vector3f(0f,-1f,0f));
 
@@ -254,6 +256,12 @@ public class HandControl extends AbstractControl{
     
     private void setupHandForFrame(){
         
+        //Update location of Geom
+        hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
+
+        //Update Rotation of Geom
+        hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
+        
         //System.out.println("Updating ray position...");
         
         //Put the ray to correct position and direction
@@ -265,7 +273,7 @@ public class HandControl extends AbstractControl{
 
             //if it does clear it because there could be left-overs from last loop
             collisionResults.clear();
-
+        
         //System.out.println("Processing collisions between ray and world...");
         //find the collisions between the ray and other geoms
         rootNode.collideWith(hand.getRay(),collisionResults);
@@ -275,16 +283,10 @@ public class HandControl extends AbstractControl{
         /*
         for(int i=0;i<collisionResults.size();i++){
 
-            System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
+            //System.out.println(i+".: "+collisionResults.getCollision(i).getGeometry().getName());
             
         }
         */
-        
-        //Update location of Geom
-        hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
-
-        //Update Rotation of Geom
-        hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
         
         //System.out.println("HAND ROTATION: "+hand.getRotation());
         
@@ -351,6 +353,8 @@ public class HandControl extends AbstractControl{
         //also set its highliahgt model to invisible
         if(possibleItemToGrab!=null&&((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation())>0.15f){
             
+            //System.out.println("Distance between hand and grabbale object is now more than 15 cm, setting grabbable object to null and its highlight to invisible");
+            
             ((Grabbable)possibleItemToGrab).highlightVisible(false);
             
             possibleItemToGrab=null;
@@ -360,6 +364,21 @@ public class HandControl extends AbstractControl{
         //if the distance between the held item is now more than 15cm, set the held item to null
         if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())>0.15f){
             
+            System.out.println("Distance between hand and held object is now more than 15 cm, setting held object to null and static hold to false");
+            
+            //Do an initial action on the object being too distant to be grabbing
+            if(hand.getHeldObject() instanceof Beaker){
+                
+                //((Beaker)hand.getHeldObject()).setEnabled(true);
+                
+            }
+            
+            if(((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())<0.15f){
+                        
+                ((Grabbable)hand.getHeldObject()).highlightVisible(true);
+                        
+            }
+            
             hand.setStaticHold(false);
             
             hand.setHeldObject(null);
@@ -368,8 +387,12 @@ public class HandControl extends AbstractControl{
         
         //System.out.println("Grab process method called with main item list size: "+main.getItemsList().size());
         
+        //System.out.println("Searching for grabbable object in hand's vicinity...");
+        
         //for each item in the item list
         for(PhysicalObject p: main.getItemsList()){
+            
+            //System.out.println("Object: "+p);
             
             //System.out.println("Grabbable: "+(p instanceof Grabbable)+", its pos: "+p.getPos()+", Hand pos: "+hand.getWorldTranslation()+", distance: "+p.getPos().distance(hand.getWorldTranslation()));
                 
@@ -377,8 +400,8 @@ public class HandControl extends AbstractControl{
             //check if the item's distance compared to the hand is less than 15cm
             //check if the last grabbable item is null or if the item's distance compared to the hand is less than the last grabbable item
             if(p instanceof Grabbable&&((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation()))){
-
-                //System.out.println("Found new better grabbable item");
+                
+                System.out.println("This is the new better grabbable item");
                 
                 //set the last grabbable item's highlight to invisible
                 //set the grabbable item to the item
@@ -390,6 +413,8 @@ public class HandControl extends AbstractControl{
                 possibleItemToGrab=p;
                 
                 ((Grabbable)p).highlightVisible(true);
+                
+                System.out.println("Item's highlight set to visible");
 
             }
 
@@ -421,12 +446,20 @@ public class HandControl extends AbstractControl{
                     
                     System.out.println("The trigger has just started being pressed");
                     
-                    //if there is an item possible to grab
-                    if(possibleItemToGrab!=null){
+                    if(!pointingDisplay&&!pointingButton&&!pointingElementButton&&!pointingPeriodicTableDisplay){
                         
-                        System.out.println("Item prossible to grab not null, calling method to grab...");
-                    
-                        grabGrabbableItem();
+                        hand.setOpenned(false);
+                        
+                        System.out.println("Hand set to closed");
+                        
+                        //if there is an item possible to grab
+                        if(possibleItemToGrab!=null){
+
+                            System.out.println("Item prossible to grab not null, calling method to grab...");
+
+                            grabGrabbableItem();
+
+                        }
                         
                     }
                     
@@ -442,18 +475,28 @@ public class HandControl extends AbstractControl{
 
             if(triggerWasPressed){
                 
-                System.out.println("The trigger has just been released");
+                //System.out.println("The trigger has just been released");
                 
-                if(!hand.hasStaticHold())
+                if(!hand.hasStaticHold()){
+                    
+                    if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())<0.15f){
+                        
+                        ((Grabbable)hand.getHeldObject()).highlightVisible(true);
+                        
+                    }
                 
                     hand.setHeldObject(null);
+                    
+                }
+                
+                hand.setOpenned(true);
 
                 //add what happens when the player releases the trigger
                 //if the player was holding an object and if statichold is not currently active, make them drop the item
 
             }else{//trigger was not being pressed
                 
-                System.out.println("The trigger is still not being pressed");
+                //System.out.println("The trigger is still not being pressed");
 
                 //add what happens when the player is still not pressing the trigger
 
@@ -485,7 +528,7 @@ public class HandControl extends AbstractControl{
 
                 descriptionMovedOut=false;
 
-            }else if(!hand.isHoldingObject()&&laserMovedOut){
+            }else if(!hand.isHoldingObject()){
 
                 //System.out.println("Updating laser position...");
 
@@ -562,7 +605,7 @@ public class HandControl extends AbstractControl{
                 if(!laserMovedOut){
 
                     //if not already out of sight, move laser out of sight
-                    hand.setLaserCoords(new Vector3f(0f,-1f,0f),new Vector3f(0f,-1f,0f));
+                    makeLaserDisappear();
 
                     //set laserMovedOut to true once the laser has been moved out
                     laserMovedOut=true;
@@ -812,12 +855,12 @@ public class HandControl extends AbstractControl{
                     presentPointedButton=null;
                     presentPointedElementButton=null;
 
-                }
-
-                else{
+                }else{
 
                     pointingButton=false;
                     pointingDisplay=false;
+                    pointingElementButton=false;
+                    pointingPeriodicTableDisplay=false;
 
                     if(presentPointedButton!=null){
 
@@ -859,6 +902,15 @@ public class HandControl extends AbstractControl{
         
         hand.setHeldObject(possibleItemToGrab);
         
+        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
+        
+        //Do an initial action on the grabbed object
+        if(hand.getHeldObject() instanceof Beaker){
+            
+            //((Beaker)hand.getHeldObject()).setEnabled(false);
+            
+        }
+        
         System.out.println("calling method to inittially position grabebd item...");
         
         setGrabbedItemPosition();
@@ -867,18 +919,20 @@ public class HandControl extends AbstractControl{
     
     private void setGrabbedItemPosition(){
         
+        System.out.println("Present held item: "+hand.getHeldObject());
+        
         System.out.println("setting the item's position depending on what it is...");
         
         //for the exceptional case that the held object is the fume hood door
-        if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof FumeHoodDoor&&hand.getSpatial().getLocalTranslation().getY()<=2&&hand.getSpatial().getLocalTranslation().getY()>=1.02f){
+        if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof FumeHoodDoor&&hand.getWorldTranslation().getY()<=2&&hand.getWorldTranslation().getY()>=1.02f){
             
-            System.out.println("Held ojbject is not null, it is a fume hood door, the hand's Y position is less or equal to 2 and higher or equal to 1.02");
+            //System.out.println("Held ojbject is not null, it is a fume hood door, the hand's Y position is less or equal to 2 and higher or equal to 1.02");
             
-            ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getSpatial().getLocalTranslation().getY(),10.18f));
+            ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getWorldTranslation().getY(),10.18f));
             
         }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof DistilledWaterContainer){
             
-            System.out.println("Held object is not null, it is a distilled water container");
+            //System.out.println("Held object is not null, it is a distilled water container");
             
             ((DistilledWaterContainer)hand.getHeldObject()).toggle();
             
@@ -888,7 +942,15 @@ public class HandControl extends AbstractControl{
             
         }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
             
-            ((Beaker)hand.getHeldObject()).getNode().setLocalTranslation(hand.getWorldTranslation());
+            System.out.println("Object is a beaker, setting its position to hand position: "+hand.getWorldTranslation()+" and rotation to hand rotation: "+hand.getRotation());
+            
+            ((Beaker)hand.getHeldObject()).setPosition(hand.getWorldTranslation());
+            ((Beaker)hand.getHeldObject()).setRotation(hand.getRotation());
+            
+            //((Beaker)hand.getHeldObject()).clearForces(); Doesnt remove the velocity of the object
+            ((Beaker)hand.getHeldObject()).clearVelocity();
+            
+            System.out.println("All forces have been cleared on beaker being held");
             
         }
         

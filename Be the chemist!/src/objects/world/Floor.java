@@ -5,55 +5,43 @@
 package objects.world;
 
 import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.PlaneCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
-import com.jme3.material.Material;
-import com.jme3.math.ColorRGBA;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
+import com.jme3.math.Plane;
+import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
+import main.Main;
 //by Tommy
 public class Floor implements Savable{
     
-    private AssetManager assetManager;
-    private Node rootNode;
-    
     private Spatial spatial;
-    private Material mat;
     private RigidBodyControl floor_phy;
     
-    public Floor(AssetManager assetManager,Node rootNode,BulletAppState bulletAppState){
+    private Plane plane;
+    private PlaneCollisionShape collisionShape;
+    
+    public Floor(Main main){
         
-        this.assetManager=assetManager;
-        this.rootNode=rootNode;
-        
-        spatial = assetManager.loadModel("Models/Static/Floor/Floor.j3o");
-        spatial.scale(1f,1f,1f);
-        spatial.rotate(0.0f, 0.0f, 0.0f);
-        spatial.setLocalTranslation(0f,0f,0f);
+        spatial = main.getAssetManager().loadModel("Models/Static/Floor/Floor.j3o");
         spatial.setName("Floor");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        spatial.setShadowMode(ShadowMode.Receive);
         
-        //See room to know why material is a comment
-        /*
-        mat = new Material(assetManager, "Common/MatDefs/Light/Lighting.j3md");
-        mat.setColor("Diffuse", ColorRGBA.White);
-        mat.setColor("Specular", ColorRGBA.White);
-        mat.setBoolean("UseMaterialColors", true);
-        spatial.setMaterial(mat);
-        */
-        floor_phy=new RigidBodyControl(0);
+        plane=new Plane(new Vector3f(0,1,0),0);
+        collisionShape=new PlaneCollisionShape(plane);
+        System.out.println(collisionShape.getScale());
+        
+        floor_phy=new RigidBodyControl(collisionShape,0);
         spatial.addControl(floor_phy);
-        bulletAppState.getPhysicsSpace().add(floor_phy);
+        main.getBulletAppState().getPhysicsSpace().add(floor_phy);
         
-        rootNode.attachChild(spatial);
+        main.getRootNode().attachChild(spatial);
         
     }
     

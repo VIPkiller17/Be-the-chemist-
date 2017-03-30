@@ -30,6 +30,8 @@ import objects.containers.erlenmeyer.Erlenmeyer;
 import objects.containers.funnel.Funnel;
 import objects.containers.gasSac.GasSac;
 import objects.containers.measuringCylinder.MeasuringCylinder;
+import objects.containers.pipette.Pipette;
+import objects.containers.volumetricFlask.VolumetricFlask;
 import objects.player.Player;
 import objects.world.Floor;
 import objects.world.Room;
@@ -92,6 +94,8 @@ public class Main extends VRApplication {
     private Funnel funnel;
     private GasSac gasSac;
     private MeasuringCylinder measuringCylinder;
+    private Pipette pipette;
+    //private VolumetricFlask volumetricFlask;
     
     private ArrayList<Beaker> testBeakers;
 
@@ -147,8 +151,8 @@ public class Main extends VRApplication {
         playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
         
         //WORLD INIT START
-        room=new Room(getAssetManager(),rootNode,bulletAppState);
-        floor=new Floor(getAssetManager(),rootNode,bulletAppState);
+        room=new Room(this);
+        floor=new Floor(this);
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(8.25f, .95f, 5.60f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
@@ -175,11 +179,13 @@ public class Main extends VRApplication {
         rootNode.attachChild(testCube);
         */
         
-        beaker=new Beaker(this,new Vector3f(0.5f,0.5f,0));
+        beaker=new Beaker(this,new Vector3f(0f,0.061f,0));
         erlenmeyer=new Erlenmeyer(this,new Vector3f(0.7f,0.5f,0));
         funnel=new Funnel(this,new Vector3f(0.2f,0.5f,0));
         gasSac=new GasSac(this,new Vector3f(0.4f,0.5f,0));
         measuringCylinder=new MeasuringCylinder(this,new Vector3f(0.9f,0.5f,0));
+        pipette=new Pipette(this,new Vector3f(0.11f,0.5f,0));
+        //volumetricFlask=new VolumetricFlask(this,new Vector3f(0.13f,0.5f,0));
         //OBJECTS INIT END
         
         //LIGHT INIT START
@@ -196,6 +202,8 @@ public class Main extends VRApplication {
         
         //TESTING SECTION
         testBeakers=new ArrayList<Beaker>();
+        
+        bulletAppState.setDebugEnabled(true);
         
     }
 
@@ -420,16 +428,6 @@ public class Main extends VRApplication {
     public void simpleUpdate(float tpf) {
         
         //TPF COUNTERS START
-        testBeakerSpawnTPF+=tpf;
-        
-        if(testBeakerSpawnTPF>5){
-            
-            //testBeakers.add(new Beaker(this,new Vector3f(0,0.5f,0)));
-            beaker.setPosition(new Vector3f(0,0.5f,0));
-            
-            testBeakerSpawnTPF=0;
-            
-        }
         
         //every second check if a controller is detected and create it
         //if one of the hands isn't created

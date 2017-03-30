@@ -320,4 +320,10 @@ public class Beaker extends Container implements Savable{
         
     }
     
+    public void setVelocity(Vector3f velocity){
+        
+        spatial.getControl(RigidBodyControl.class).setLinearVelocity(velocity);
+        
+    }
+    
 }

@@ -366,10 +366,10 @@ public class HandControl extends AbstractControl{
             
             System.out.println("Distance between hand and held object is now more than 15 cm, setting held object to null and static hold to false");
             
-            //Do an initial action on the object being too distant to be grabbing
+            //Do a final action on the object being forcible dropped
             if(hand.getHeldObject() instanceof Beaker){
-                
-                //((Beaker)hand.getHeldObject()).setEnabled(true);
+                        
+                ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide));
                 
             }
             
@@ -482,6 +482,13 @@ public class HandControl extends AbstractControl{
                     if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())<0.15f){
                         
                         ((Grabbable)hand.getHeldObject()).highlightVisible(true);
+                        
+                    }
+                    
+                    //Do a final action on the held object before it is dropped by the player
+                    if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
+                        
+                        ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide));
                         
                     }
                 

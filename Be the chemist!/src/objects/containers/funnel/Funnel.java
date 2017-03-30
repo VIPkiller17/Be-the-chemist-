@@ -129,7 +129,7 @@ public class Funnel extends Container implements Savable{
         
         rootNode.attachChild(node);
         
-        node.setLocalTranslation(position);
+        node.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         
         main.getItemsList().add(this);
         
@@ -239,7 +239,7 @@ public class Funnel extends Container implements Savable{
     @Override
     public void setPosition(Vector3f position){
         
-        node.setLocalTranslation(position);
+        node.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         
     }
     

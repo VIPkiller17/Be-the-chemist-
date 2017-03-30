@@ -11,6 +11,7 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
@@ -36,8 +37,12 @@ public class Hand implements Describable,Savable{
     private Node rootNode;
     
     private Spatial spatial;
+    private Spatial closedModel;
+    private Spatial spatialToUpdate;
     private int side;
     private boolean staticHold;
+    
+    private boolean openned;
     
     private Ray ray;//ray
     private Laser laser;//spatial
@@ -77,7 +82,20 @@ public class Hand implements Describable,Savable{
         ray=new Ray();
         
         //create hand model, scale it, rotate it and move it then attach it to the hand node
-        spatial = side==0 ? assetManager.loadModel("Models/Player/RightHand/RightHand.j3o") : assetManager.loadModel("Models/Player/LeftHand/LeftHand.j3o");
+        if(side==0){
+            
+            spatial=assetManager.loadModel("Models/Player/RightHand/Hand_Right_Openned.j3o");
+            closedModel=assetManager.loadModel("Models/Player/RightHand/Hand_Right_Closed.j3o");
+            
+        }else if(side==1){
+            
+            spatial=assetManager.loadModel("Models/Player/LeftHand/Hand_Left_Openned.j3o");
+            closedModel=assetManager.loadModel("Models/Player/LeftHand/Hand_Left_Closed.j3o");
+            
+        }
+        
+        spatialToUpdate=spatial;
+        //spatial = side==0 ? assetManager.loadModel("Models/Player/RightHand/Hand_Right_Openned.j3o") : assetManager.loadModel("Models/Player/LeftHand/Hand_Left_Openned.j3o");
         //spatial.scale(0.1f,0.1f,0.1f);
         
         //setup the hand spatial
@@ -88,6 +106,14 @@ public class Hand implements Describable,Savable{
         spatial.setUserData("correspondingObject", this);
         spatial.setShadowMode(ShadowMode.CastAndReceive);
         handNode.attachChild(spatial);
+        
+        closedModel.setLocalTranslation(0f,-50f,0f);
+        closedModel.setName(side==0 ? "RightHand" : "LeftHand");
+        closedModel.setCullHint(Spatial.CullHint.Never);
+        closedModel.setUserData("correctCollision", true);
+        closedModel.setUserData("correspondingObject", this);
+        closedModel.setShadowMode(ShadowMode.CastAndReceive);
+        handNode.attachChild(closedModel);
         
         //System.out.println("Created hand model spatial with name "+spatial.getName());
         
@@ -147,6 +173,30 @@ public class Hand implements Describable,Savable{
         
     }
     
+    public void setOpenned(boolean openned){
+        
+        this.openned=openned;
+        
+        if(openned){
+            
+            spatialToUpdate=spatial;
+            setLocation(VRHardware.getVRinput().getPosition(side));
+            setRotation(VRHardware.getVRinput().getOrientation(side));
+            closedModel.setLocalTranslation(0,-50,0);
+            
+        }else{
+            
+            spatialToUpdate=closedModel;
+            setLocation(VRHardware.getVRinput().getPosition(side));
+            setRotation(VRHardware.getVRinput().getOrientation(side));
+            spatial.setLocalTranslation(0,-50,0);
+            
+            
+            
+        }
+        
+    }
+    
     //side of hand, right=0 left=1
     public int getSide(){
         
@@ -183,31 +233,31 @@ public class Hand implements Describable,Savable{
     //location and space/rotational details of physical hand object
     public void setLocation(Vector3f location){
         
-        spatial.setLocalTranslation(location);
+        spatialToUpdate.setLocalTranslation(location);
         
     }
     
     public Vector3f getLocalTranslation(){
         
-        return spatial.getLocalTranslation();
+        return spatialToUpdate.getLocalTranslation();
         
     }
     
     public Vector3f getWorldTranslation(){
         
-        return spatial.getWorldTranslation();
+        return spatialToUpdate.getWorldTranslation();
         
     }
     
     public void setRotation(Quaternion rotation){
         
-        spatial.setLocalRotation(rotation);
+        spatialToUpdate.setLocalRotation(rotation);
         
     }
     
     public Quaternion getRotation(){
         
-        return spatial.getLocalRotation();
+        return spatialToUpdate.getLocalRotation();
         
     }
     

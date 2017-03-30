@@ -5,13 +5,17 @@
 package objects.apparatus.analyticalBalance;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.collision.CollisionResults;
+import com.jme3.export.Savable;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -27,7 +31,7 @@ import objects.apparatus.Apparatus;
  *
  * @author VIPkiller17
  */
-public class AnalyticalBalance extends Apparatus {
+public class AnalyticalBalance extends Apparatus implements Savable{
     
     private AnalyticalBalanceControl analyticalBalanceControl;
     private PhysicalObject attachedObject;
@@ -37,8 +41,15 @@ public class AnalyticalBalance extends Apparatus {
     private BitmapText text;
     private BitmapFont font;
     private Spatial analyticalBalanceSurface;
+    private Spatial highlightModel;
+    
+    private Vector3f presentPosition;
+    private Quaternion presentRotation;
     
     private CollisionResults collisionResults;
+    
+    private CollisionShape analyticalBalanceCollisionShape;
+    private RigidBodyControl analyticalBalance_phy;
     
     
     public AnalyticalBalance(Main main,Node rootNode,CollisionResults collisionResults, AssetManager assetManager, Vector3f position) {
@@ -54,8 +65,14 @@ public class AnalyticalBalance extends Apparatus {
         Quad display = new Quad(0.05f, 0.02f);
         Geometry geom = new Geometry("Analytical Balance Display", display);
         Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        material.setColor("Color", ColorRGBA.Black);
+        geom.setUserData("correctCollision",true);
+        geom.setUserData("correspondingObject", this);
+        material.setColor("Color", ColorRGBA.Green);
+        material.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+        geom.setQueueBucket(RenderQueue.Bucket.Transparent);
         geom.setMaterial(material);
+        
+        geom.setLocalTranslation(-0.1f, 0.5f, 0);
        
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -73,12 +90,16 @@ public class AnalyticalBalance extends Apparatus {
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         node.attachChild(spatial);
-        
         node.setLocalTranslation(position);
-        rootNode.attachChild(node);
-        node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI*3/4, Vector3f.UNIT_Y));
         
+        //Collision 
+        analyticalBalanceCollisionShape=CollisionShapeFactory.createMeshShape(spatial);
+        analyticalBalance_phy=new RigidBodyControl(analyticalBalanceCollisionShape, 0f);
+        spatial.addControl(analyticalBalance_phy);
+        main.getBulletAppState().getPhysicsSpace().add(analyticalBalance_phy);
         this.collisionResults = collisionResults;
+        
+        rootNode.attachChild(node);
         
     }
     
@@ -152,6 +173,41 @@ public class AnalyticalBalance extends Apparatus {
         return "An analytical balance";
         
     }
+    
+    public void setPosition(Vector3f position){
+        
+        spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
+        node.setLocalTranslation(position);
+        
+        System.out.println("Analytical Balance position set to "+position);
+        
+        presentPosition=position;
+        
+    }
+    
+    public Vector3f getPosition(){
+        
+        return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
+        
+    }
+    
+    public void setRotation(Quaternion rotation){
+        
+        spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
+        node.setLocalRotation(rotation);
+        
+        System.out.println("Analytical Balance rotation set to "+rotation);
+        
+    }
+    
+    public Spatial getAnalyticalBalance(){
+        
+        return spatial;
+        
+    }
+   
+    
+    
    
     
 }

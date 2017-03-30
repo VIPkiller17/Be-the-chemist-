@@ -18,4 +18,5 @@ public abstract class Apparatus extends PhysicalObject{
         super(main,position);
     }
     
+    
 }

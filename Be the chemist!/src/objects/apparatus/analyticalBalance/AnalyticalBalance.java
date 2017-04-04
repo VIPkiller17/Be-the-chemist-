@@ -16,6 +16,7 @@ import com.jme3.material.Material;
 import com.jme3.material.RenderState;
 import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -64,51 +65,30 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         //Analytical Balance Surface
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        analyticalBalanceSurfaceMat.setColor("Color", ColorRGBA.Yellow); //new ColorRGBA(0, 0, 0, 0)
+        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0)); //new ColorRGBA(0, 0, 0, 0)
         analyticalBalanceSurface.setMaterial(analyticalBalanceSurfaceMat);
         analyticalBalanceSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(analyticalBalanceSurface);
         
-        /* quad=new Quad(width,height);
-        background=new Geometry("Element button background",quad);
-        background.setUserData("correctCollision",true);
-        background.setUserData("correspondingObject", this);
-        backgroundMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
-        backgroundMat.setColor("Color",backgroundColor);
-        backgroundMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        background.setQueueBucket(RenderQueue.Bucket.Transparent);
-        background.setMaterial(backgroundMat);
-        
-        node.attachChild(background);
-        
-        background.setLocalTranslation(0,-height,0);*/
-        
         //Analytical Balance Display
-        Quad display = new Quad(1f, 2f); //0.05f, 0.02f
+        Quad display = new Quad(0.1f, 0.05f); 
         Geometry displayGeom = new Geometry("Analytical Balance Display", display);
         Material displayMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         displayMat.setColor("Color", ColorRGBA.Red);
         displayGeom.setMaterial(displayMat);
         displayMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-        displayGeom.setQueueBucket(RenderQueue.Bucket.Translucent);//Transpare
+        displayGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
         
-        /*displayGeom.setUserData("correctCollision",true);
-        displayGeom.setUserData("correspondingObject", this);*/
-        displayGeom.setLocalTranslation(0, 0, 0);
+        //Test
+        displayGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        displayGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        displayGeom.setUserData("correctCollision",true);
+        displayGeom.setUserData("correspondingObject", this);
+        displayGeom.setLocalTranslation(-0.1f, 0.05f, -0.1f);
         
-        rootNode.attachChild(displayGeom);
-        System.out.println("display attached to root node");
-        
-        //node.attachChild(displayGeom);
-        
-        //node.attachChild(geom);
-        //rootNode.attachChild(geom);
-        //geom.setLocalTranslation(0.0f, 0.0f, 0);
-        //node.attachChild(geom);
-        //geom.setLocalRotation(Quaternion.ZERO); //*
-        
-        spatial.setLocalRotation(Quaternion.ZERO); //*
+        node.attachChild(displayGeom);
+        spatial.setLocalRotation(Quaternion.ZERO); 
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         node.attachChild(spatial);

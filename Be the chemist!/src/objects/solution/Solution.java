@@ -6,6 +6,7 @@ package objects.solution;
 
 import com.jme3.math.ColorRGBA;
 import java.util.ArrayList;
+import objects.ion.Ion;
 import objects.substance.Substance;
 
 /**
@@ -14,10 +15,20 @@ import objects.substance.Substance;
  */
 public class Solution {
     
-    private ArrayList<Substance> substances;
     private double quantity;
     private double temperature;
     private ColorRGBA liquidColor,solidColor,gasColor;
+    
+    private ArrayList<Ion> ions;//updated every loop depending on substances and their volumes
+    private double PH;//modified every loop depending on ions
+    private double volume;//modified every loop depending on volumes
+    private ArrayList<Substance> substances;
+    private ArrayList<Double> volumes;
+    
+    private ArrayList<Substance> presentStateList;
+    
+    private Substance presentMergingSubstance;
+    private boolean foundSubstance;
     
     public Solution(Substance substance){
         
@@ -42,12 +53,6 @@ public class Solution {
     public Substance getSubstance(int index){
         
         return substances.get(index);
-        
-    }
-    
-    public void addSubstance(Substance substance){
-        
-        substances.add(substance);
         
     }
     
@@ -189,6 +194,63 @@ public class Solution {
     public double getTemperature(){
         
         return temperature;
+        
+    }
+    
+    public void merge(Solution solution){
+        
+        for(int i=0;i<solution.getSubstances().size();i++){
+            
+            foundSubstance=false;
+            
+            presentMergingSubstance=solution.getSubstances().get(i);
+            
+            for(int j=0;j<substances.size();j++){
+                
+                if(presentMergingSubstance.equals(substances.get(j))){
+                    
+                    volumes.set(j,solution.getVolumes().get(j));
+                    
+                }else{
+                    
+                    substances.add(presentMergingSubstance);
+                    volumes.add(solution.getVolumes().get(i));
+                    
+                }
+                
+            }
+            
+        }
+        
+    }
+    
+    public void addQuantity(double quantity){
+        
+        setQuantity(getQuantity()+quantity);
+        
+    }
+    
+    public ArrayList<Substance> getStateList(int state){
+        
+        if(!presentStateList.isEmpty())
+            
+            presentStateList.clear();
+        
+        for(int i=0;i<substances.size();i++){
+            
+            if(substances.get(i).getStateInteger()==state)
+            
+                presentStateList.add(substances.get(i));
+            
+        }
+        
+        return presentStateList;
+        
+    }
+    
+    public ArrayList<Double> getVolumes(){
+        
+        return volumes;
         
     }
     

@@ -152,6 +152,20 @@ public class AnalyticalBalance extends Apparatus {
         return "An analytical balance";
         
     }
+
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
+
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
    
     
 }

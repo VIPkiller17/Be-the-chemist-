@@ -79,7 +79,19 @@ public class BunsenBurner extends Apparatus implements Grabbable{
         return highlightVisible;
         
     }
+
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
     
-    
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
     
 }

@@ -5,6 +5,7 @@
 package objects.containers;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import interfaces.Grabbable;
 import main.Main;
@@ -33,12 +34,12 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
     }
     
-    public Container(Main main,Vector3f position,Solution solution,double quantity){
+    public Container(Main main,Vector3f position,Solution solution){
         
         super(main,position);
         
         this.solution=solution;
-        this.quantity=quantity;
+        this.quantity=solution.getQuantity();
         
     }
     
@@ -98,7 +99,13 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     
     public double getQuantity(){
         
-        return quantity;
+        if(solution!=null)
+        
+            return solution.getQuantity();
+        
+        else
+            
+            return 0;
         
     }
     
@@ -123,6 +130,18 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     public double getPressure(){
         
         return pressure;
+        
+    }
+    
+    public void mergeSolution(Solution solution){
+        
+        if(this.solution!=null)
+            
+            this.solution.merge(solution);
+        
+        else
+            
+            this.solution=solution;
         
     }
     
@@ -159,6 +178,12 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     @Override
     public abstract String getDescription();
     
-    public abstract void setPosition(Vector3f position);
+    @Override
+    public abstract void setPos(Vector3f position);
+    
+    @Override
+    public abstract Node getNode();
+    
+    public abstract boolean canContain(int state);
     
 }

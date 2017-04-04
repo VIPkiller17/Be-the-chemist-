@@ -30,7 +30,7 @@ public class BeakerControl extends AbstractControl{
         
         //TESTING
         
-        System.out.println("Beaker's position: "+beaker.getPosition()+"\nBeaker's velocity: "+beaker.getBeaker().getControl(RigidBodyControl.class).getLinearVelocity());
+        //System.out.println("Beaker's position: "+beaker.getPosition()+"\nBeaker's velocity: "+beaker.getBeaker().getControl(RigidBodyControl.class).getLinearVelocity());
         
         //SET THE STATE OF THE CONTAINER
         
@@ -43,14 +43,14 @@ public class BeakerControl extends AbstractControl{
         //if container is rotated 45 degrees to one side, start particle emission
         if((spatial.getLocalRotation().getX()>=0.382f||spatial.getLocalRotation().getZ()>=0.382f)&&!beaker.isEmitting()){
             
-            System.out.println("*Beaker is now emitting particles*");
+            //System.out.println("*Beaker is now emitting particles*");
             
             //beaker.startParticleEmission();
             
         }else if(spatial.getLocalRotation().getX()<0.382f&&spatial.getLocalRotation().getZ()<0.382f&&beaker.isEmitting()){
             //if neither of the angles are higher than 45 degrees, stop the particle emission
             
-            System.out.println("*Beaker is not emitting particles*");
+            //System.out.println("*Beaker is not emitting particles*");
             
             //beaker.stopParticleEmission();
             

@@ -119,4 +119,18 @@ public class ReagentBottleTop extends PhysicalObject implements Grabbable {
         
     }
     
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
+    
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
+    
 }

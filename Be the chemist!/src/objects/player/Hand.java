@@ -61,7 +61,7 @@ public class Hand implements Describable,Savable{
     
     private Main main;
     
-    public Hand(Main main,AssetManager assetManager,Node rootNode,VRAPI newVRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,int side,Spatial newObserver,Node playerNode,Player player){
+    public Hand(Main main,AssetManager assetManager,Node rootNode,VRAPI newVRHardware,CollisionResults collisionResults,int side,Spatial newObserver,Node playerNode,Player player){
         
         this.main=main;
         
@@ -125,11 +125,8 @@ public class Hand implements Describable,Savable{
         laserGeom.setMaterial(laserMat);
         rootNode.attachChild(laserGeom);
         
-        //add the hand object to the describables list in Main
-        describables.add(this);
-        
         //create and add the hand control to the hand spatial
-        this.handControl=new HandControl(main,rootNode,assetManager,describables,collisionResults,this,observer,player);
+        this.handControl=new HandControl(main,rootNode,assetManager,collisionResults,this,observer,player);
         spatial.addControl(handControl);
         
         //create descriptionDisplay and add its control
@@ -298,6 +295,10 @@ public class Hand implements Describable,Savable{
     public void setHeldObject(PhysicalObject possibleItemToGrab){
         
         heldObject=possibleItemToGrab;
+        
+        if(heldObject!=null)
+            
+            setOpenned(false);
         
     }
     

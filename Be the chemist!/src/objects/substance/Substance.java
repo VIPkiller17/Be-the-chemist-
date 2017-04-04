@@ -4,140 +4,45 @@
  */
 package objects.substance;
 
-import objects.solution.Solution;
+import com.jme3.math.ColorRGBA;
+import java.util.ArrayList;
+import objects.ion.Ion;
 
 /**
  *
  * @author VIPkiller17
  */
-public class Substance {
+public class Substance{
     
     //private Solution parentSolution;
     
-    private double quantity;
-    private String stateString;
-    private int stateInteger;
     private String equation;
     private String name;
-    private double temperature;
     private double meltingPoint;
     private double boilingPoint;
     private double sublimationPoint;
     private String type;
-    private double aqueousConcentrationM;
-    private double aqueousConcentrationPercent;
-    private double densityGramPerML;
     private double molarMass;
+    private double density;
+    private ColorRGBA color;
+    private ArrayList<Ion> ions;
+    private ArrayList<Integer> ionCounts;
+    private boolean soluble;
     
-    public Substance(String equation,String name,double quantity,String stateString,int stateInteger,double temperature,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double density){
+    public Substance(String equation,String name,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double density,ColorRGBA color,ArrayList<Ion> ions,ArrayList<Integer> ionCounts,boolean soluble){
         
         this.equation=equation;
         this.name=name;
-        this.quantity=quantity;
-        this.stateString=stateString;
-        this.stateInteger=stateInteger;
-        this.temperature=temperature;
         this.meltingPoint=meltingPoint;
         this.boilingPoint=boilingPoint;
         this.sublimationPoint=sublimationPoint;
         this.type=type;
         this.molarMass=molarMass;
-        
-    }
-    
-    public Substance(String equation,String name,double quantity,String stateString,int stateInteger,double temperature,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double aqueousConcentrationM,double aqueousConcentrationPercent,double densityGramPerML){
-        
-        this.equation=equation;
-        this.name=name;
-        this.quantity=quantity;
-        this.stateString=stateString;
-        this.stateInteger=stateInteger;
-        this.temperature=temperature;
-        this.meltingPoint=meltingPoint;
-        this.boilingPoint=boilingPoint;
-        this.sublimationPoint=sublimationPoint;
-        this.type=type;
-        this.molarMass=molarMass;
-        this.aqueousConcentrationM=aqueousConcentrationM;
-        this.aqueousConcentrationPercent=aqueousConcentrationPercent;
-        this.densityGramPerML=densityGramPerML;
-        
-    }
-    
-    public void setQuantity(double quantity){
-        
-        this.quantity=quantity;
-        
-    }
-    
-    public double getQuantity(){
-        
-        return quantity;
-        
-    }
-    
-    public void setState(String state){
-        
-        if(state.equalsIgnoreCase("Gas")){
-            
-            stateInteger=0;
-            stateString=state;
-        
-        }else if(state.equalsIgnoreCase("Liquid")){
-            
-            stateInteger=1;
-            stateString=state;
-        
-        }else if(state.equalsIgnoreCase("Solid")){
-            
-            stateInteger=2;
-            stateString=state;
-        
-        }else{
-            
-            System.out.println("ERROR: State "+state+" set to substance: "+name+", is not valid");
-            
-            stateInteger=-1;
-            stateString="Invalid";
-            
-        }
-        
-    }
-    
-    public void setState(int state){
-        
-        switch(state){
-            
-            case 0:
-                stateString="Gas";
-                stateInteger=state;
-                break;
-            case 1:
-                stateString="Liquid";
-                stateInteger=state;
-                break;
-            case 2:
-                stateString="Solid";
-                stateInteger=state;
-                break;
-            default:
-                System.out.println("ERROR: Integer state "+state+" set to substance: "+name+", is not valid");
-                stateString="Invalid";
-                stateInteger=-1;
-            
-        }
-        
-    }
-    
-    public String getStateString(){
-        
-        return stateString;
-        
-    }
-    
-    public int getStateInteger(){
-        
-        return stateInteger;
+        this.density=density;
+        this.color=color;
+        this.ions=ions;
+        this.ionCounts=ionCounts;
+        this.soluble=soluble;
         
     }
     
@@ -165,38 +70,57 @@ public class Substance {
         
     }
     
-    public void setAqueousConcentrationM(double aqueousConcentrationM){
+    public double getSublimationPoint(){
         
-        this.aqueousConcentrationM=aqueousConcentrationM;
-        
-        aqueousConcentrationPercent=aqueousConcentrationM*100*(molarMass/densityGramPerML);
+        return sublimationPoint;
         
     }
     
-    public double getAqueousConcentrationM(){
+    public String getType(){
         
-        return aqueousConcentrationM;
-        
-    }
-    
-    public void setAqueousConcentrationPercent(double aqueousConcentrationPercent){
-        
-        this.aqueousConcentrationPercent=aqueousConcentrationPercent;
-        
-        /*old way, need to test if both give the same thing
-        double massPerLiterOfSolution=(1000*densityGramPerML);
-        double massOfSubstancePerLiterOfSolution=(massPerLiterOfSolution*aqueousConcentrationPercent)/100;
-        double molesOfSubstancePerLiterOfSolution=massOfSubstancePerLiterOfSolution/molarMass;
-        aqueousConcentrationM=molesOfSubstancePerLiterOfSolution/quantity;
-        */
-        
-        aqueousConcentrationM=aqueousConcentrationPercent*(densityGramPerML/(100*molarMass));
+        return type;
         
     }
     
-    public double getAqueousConcentrationPercent(){
+    public double getMolarMass(){
         
-        return aqueousConcentrationPercent;
+        return molarMass;
+        
+    }
+    
+    public double getDensity(){
+        
+        return density;
+        
+    }
+    
+    public ColorRGBA getColor(){
+        
+        return color;
+        
+    }
+    
+    public ArrayList<Ion> getIons(){
+        
+        return ions;
+        
+    }
+    
+    public ArrayList<Integer> getIonCounts(){
+        
+        return ionCounts;
+        
+    }
+    
+    public boolean isSoluble(){
+        
+        return soluble;
+        
+    }
+    
+    public int getStateInteger(double kelvin){
+        
+        if()
         
     }
     

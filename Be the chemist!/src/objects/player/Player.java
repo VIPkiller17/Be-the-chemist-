@@ -20,7 +20,6 @@ public class Player {
     private Node rootNode;
     private VRAPI VRHardware;
     private CollisionResults collisionResults;
-    private ArrayList<Describable> describables;
     
     private Spatial observer;
     private Hand rightHand,leftHand;
@@ -37,7 +36,6 @@ public class Player {
         this.rootNode=rootNode;
         this.VRHardware=VRHardware;
         this.collisionResults=collisionResults;
-        this.describables=describables;
         this.observer=observer;       
         playerNode=new Node();
         
@@ -51,11 +49,11 @@ public class Player {
         
         if(side==0){
             
-            rightHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,describables,0,observer,playerNode,this);
+            rightHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,0,observer,playerNode,this);
         
         }else if(side==1){
             
-            leftHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,describables,1,observer,playerNode,this);
+            leftHand=new Hand(main,assetManager,rootNode,VRHardware,collisionResults,1,observer,playerNode,this);
         
         }else
             
@@ -104,6 +102,27 @@ public class Player {
         }else{
             
             System.out.println("Direction code \""+direction+"\" invalid.");
+            
+        }
+        
+    }
+    
+    public Hand getHand(int index){
+        
+        switch(index){
+            
+            case 0:
+                
+                return rightHand;
+                
+            case 1:
+                
+                return leftHand;
+                
+            default:
+                
+                System.out.println("ERROR: Invalid hand index given to player's getHand()");
+                return null;
             
         }
         

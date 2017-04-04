@@ -38,9 +38,13 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     private Material handleHighlightMat;
     private boolean isHighlightVisible;
     
+    private Node node;
+    
     public FumeHoodDoor(Main main,FumeHood fumeHood,AssetManager assetManager,Node rootNode){
         
         super(main,new Vector3f(6.72f,1.02f,10.18f));
+        
+        node=new Node();
         
         this.fumeHood=fumeHood;
         
@@ -52,7 +56,7 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
-        fumeHood.attachObject(spatial);
+        node.attachChild(spatial);
         
         handleHighlight=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor_Highlight.j3o");
         //spatial.scale(1f,1f,1f);
@@ -66,18 +70,11 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         handleHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         handleHighlight.setQueueBucket(RenderQueue.Bucket.Transparent);
         handleHighlight.setMaterial(handleHighlightMat);
-        fumeHood.attachObject(handleHighlight);
+        node.attachChild(handleHighlight);
+        
+        fumeHood.getNode().attachChild(node);
         
         main.getItemsList().add(this);
-        
-    }
-    
-    public void setPosition(Vector3f position){
-        
-        spatial.setLocalTranslation(position);
-        handleHighlight.setLocalTranslation(position);
-        
-        setLogicPos(position);
         
     }
 
@@ -121,7 +118,21 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     @Override
     public Vector3f getGrabbablePosition() {
         
-        return spatial.getLocalTranslation();
+        return node.getLocalTranslation();
+        
+    }
+    
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
+    
+    @Override
+    public Node getNode() {
+        
+        return node;
         
     }
     

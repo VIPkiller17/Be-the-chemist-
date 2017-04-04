@@ -48,17 +48,6 @@ public class VolumetricFlaskControl extends AbstractControl {
         //ACT BASED ON THE STATE OF THE CONTAINER
         
         //if container is rotated 45 degrees to one side, start particle emission and if not closed
-        if((spatial.getLocalRotation().getX()>=0.382f||spatial.getLocalRotation().getZ()>=0.382f)&&!volumetricFlask.isEmitting() && !volumetricFlask.isClosed()) {
-            
-            volumetricFlask.startParticleEmission();
-            
-            
-        }else if(spatial.getLocalRotation().getX()<0.382f&&spatial.getLocalRotation().getZ()<0.382f&&volumetricFlask.isEmitting()){
-            //if neither of the angles are higher than 45 degrees, stop the particle emission
-            
-            volumetricFlask.stopParticleEmission();
-            
-        }
         
         //if the temperature of the container is too high
         if(volumetricFlask.getTemperature()>volumetricFlask.getMaxTemperature()){

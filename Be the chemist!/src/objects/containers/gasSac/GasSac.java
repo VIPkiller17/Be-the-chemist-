@@ -6,6 +6,8 @@ package objects.containers.gasSac;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
@@ -19,7 +21,6 @@ import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import main.Main;
-import objects.containers.gasSac.GasSacControl;
 import objects.solution.Solution;
 
 /**
@@ -29,6 +30,8 @@ import objects.solution.Solution;
 public class GasSac extends Container implements Savable{
 
     private static int index;
+    
+    private Main main;
     
     private GasSacControl gasSacControl;
     private Spatial spatial;
@@ -43,17 +46,22 @@ public class GasSac extends Container implements Savable{
     private Material highlightModelMat;
     private Spatial gasModel;
     private Material gasModelMat;
+    private Spatial valveClosed,valveOpenned;
     private ParticleEmitter particleEmitter;
     
     private boolean isEmitting;
+    private boolean openned;
     
     private Vector3f particleEmitterPosition;
     private Spatial openningSurface;
     private Material openningSurfaceMat;
     
-    private GasSacValve gasSacValve;
+    private BoxCollisionShape collisionShape;
     
     private Node node;
+    
+    private Vector3f presentPosition;
+    private Quaternion presentRotation;
     
     public GasSac(Main main,Vector3f position){
         
@@ -63,21 +71,21 @@ public class GasSac extends Container implements Savable{
         
     }
     
-    public GasSac(Main main,Vector3f position,Solution solution,double quantity){
+    public GasSac(Main main,Vector3f position,Solution solution){
         
-        super(main,position,solution,quantity);
+        super(main,position,solution);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
-        gasModelMat.setColor("Color",solution.getGasColor());
+        //gasModelMat.setColor("Color",solution.getGasColor());
         
     }
     
     public void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
-        node=new Node();
+        this.main=main;
         
-        gasSacValve=new GasSacValve(main,this);
+        node=new Node();
         
         closeable=true;
         maxQuantity=1;
@@ -85,14 +93,12 @@ public class GasSac extends Container implements Savable{
         maxPressureOpenned=2.5;
         maxPressureClosed=2;
         
-        gasSac_phy=new RigidBodyControl(1f);
-        node.addControl(gasSac_phy);
-        bulletAppState.getPhysicsSpace().add(gasSac_phy);
-        
         spatial=assetManager.loadModel("Models/Objects/Containers/GasSac/GasSac.j3o");
         highlightModel=assetManager.loadModel("Models/Objects/Containers/GasSac/Highlight/GasSac_Highlight.j3o");
         gasModel=assetManager.loadModel("Models/Objects/Containers/GasSac/Gas/GasSac_Gas.j3o");
         openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
+        valveClosed=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Closed.j3o");
+        valveOpenned=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Openned.j3o");
         
         this.gasSacControl=new GasSacControl(this);
         spatial.addControl(gasSacControl);
@@ -104,8 +110,8 @@ public class GasSac extends Container implements Savable{
         openningSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         openningSurface.setMaterial(openningSurfaceMat);
         node.attachChild(openningSurface);
-        openningSurface.setLocalTranslation(0,0,0);
-        openningSurface.scale(0);
+        openningSurface.setLocalTranslation(-0.02f,0.13f,0);
+        openningSurface.scale(0.002f);
         
         highlightModel.setName("GasSac #"+index+"'s highlight");
         highlightModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -124,22 +130,39 @@ public class GasSac extends Container implements Savable{
         gasModel.setUserData("correspondingObject", this);
         gasModel.setQueueBucket(RenderQueue.Bucket.Transparent);
         node.attachChild(gasModel);
+        gasModel.setLocalTranslation(0,-50,0);
+        
+        valveClosed.setName("Gas sac closed valve");
+        valveClosed.setUserData("correctCollision", true);
+        valveClosed.setUserData("correspondingObject", this);
+        node.attachChild(valveClosed);
+        
+        valveOpenned.setName("Gas sac openned valve");
+        valveOpenned.setUserData("correctCollision", true);
+        valveOpenned.setUserData("correspondingObject", this);
+        node.attachChild(valveOpenned);
+        valveOpenned.setLocalTranslation(new Vector3f(0,-50,0));
         
         spatial.setName("GasSac #"+index++);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
-        node.attachChild(spatial);
+        collisionShape=new BoxCollisionShape(new Vector3f(0.18f,0.26f,0.03f));
+        
+        gasSac_phy=new RigidBodyControl(collisionShape,1f);
+        spatial.addControl(gasSac_phy);
+        bulletAppState.getPhysicsSpace().add(gasSac_phy);
         
         rootNode.attachChild(node);
-        
-        node.getControl(RigidBodyControl.class).setPhysicsLocation(position);
+        rootNode.attachChild(spatial);
         
         main.getItemsList().add(this);
         
-        particleEmitterPosition=new Vector3f(-0.02f,0.22f,0);
+        particleEmitterPosition=new Vector3f(-0.03f,0.17f,0);
         
-        particleEmitter=new ParticleEmitter(assetManager,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        
+        setPos(position);
         
     }
     
@@ -247,10 +270,127 @@ public class GasSac extends Container implements Savable{
     }
     
     @Override
-    public void setPosition(Vector3f position){
+    public void setPos(Vector3f position){
         
-        node.getControl(RigidBodyControl.class).setPhysicsLocation(position);
+        spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
+        node.setLocalTranslation(position);
+        
+        System.out.println("Gas sac position set to "+position);
+        
+        presentPosition=position;
         
     }
+    
+    public Vector3f getPosition(){
+        
+        return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
+        
+    }
+    
+    public void setRotation(Quaternion rotation){
+        
+        spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
+        node.setLocalRotation(rotation);
+        
+        System.out.println("Gas sac rotation set to "+rotation);
+        
+    }
+    
+    public void updateNodeState(){
+        
+        node.setLocalTranslation(spatial.getControl(RigidBodyControl.class).getPhysicsLocation());
+            
+        node.setLocalRotation(spatial.getControl(RigidBodyControl.class).getPhysicsRotation());
+        
+    }
+    
+    public Spatial getBeaker(){
+        
+        return spatial;
+        
+    }
+    
+    public void setEnabled(boolean enabled){
+            
+        spatial.getControl(RigidBodyControl.class).setEnabled(enabled);
+        
+    }
+    
+    public void clearForces(){
+        
+        spatial.getControl(RigidBodyControl.class).clearForces();
+        
+    }
+    
+    public void clearVelocity(){
+        
+        spatial.getControl(RigidBodyControl.class).setLinearVelocity(Vector3f.ZERO);
+        
+    }
+    
+    public void setVelocity(Vector3f velocity){
+        
+        spatial.getControl(RigidBodyControl.class).setLinearVelocity(velocity);
+        
+    }
+    
+    @Override
+    public Node getNode(){
+        
+        return node;
+        
+    }
+    
+    @Override
+    public boolean canContain(int state){
+        
+        switch(state){
+            
+            case 0:
+                
+                return true;
+                
+            case 1:
+                
+                return false;
+                
+            case 2:
+                
+                return false;
+                
+            default:
+                
+                System.out.println("Invalid state passed to canContain()");
+                return false;
+            
+        }
+        
+    }
+    public void toggle(){
+        
+        if(openned){
+            
+            valveOpenned.setLocalTranslation(0,-50,0);
+            
+            valveClosed.setLocalTranslation(0,0,0);
+            
+            openned=false;
+            
+            particleEmitter.stop();
+            
+        }else{
+            
+            valveClosed.setLocalTranslation(0,-50,0);
+            
+            valveOpenned.setLocalTranslation(0,0,0);
+            
+            openned=true;
+            
+            particleEmitter.begin();
+            
+        }
+        
+    }
+    
     
 }

@@ -8,9 +8,12 @@ import com.jme3.asset.AssetManager;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
+import java.util.ArrayList;
+import main.Main;
 import objects.PhysicalObject;
 import objects.containers.Container;
 import objects.particleEmitter.particle.Particle;
+import objects.substance.Substance;
 
 /**
  *
@@ -27,13 +30,15 @@ public class ParticleEmitter {
     private Quaternion randomOutDirectionOffset;
     private double randomHorizontalOutputOffset;
     private double randomVerticalOutputOffset;
-    private double initialSpeed;
-    private double randomInitialSpeedOffset;
+    private Vector3f initialVelocity;
+    private Vector3f randomInitialVelocityOffset;
     private double delay;
     private double randomDelayOffset;
     private Vector3f acceleration;
     private Vector3f randomAccelerationOffset;
     private String gasParticleModelPath,liquidParticleModelPath,solidParticleModelPath;
+    
+    private ArrayList<Substance> newParticleSubstances;
     
     private boolean emitting;
     
@@ -41,7 +46,7 @@ public class ParticleEmitter {
     
     private Node node;
     
-    public ParticleEmitter(AssetManager assetManager,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocitydOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
+    public ParticleEmitter(Main main,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocityOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
         
         this.parentObject=parentObject;
         this.position=position;
@@ -49,12 +54,13 @@ public class ParticleEmitter {
         this.randomOutDirectionOffset=randomOutDirectionOffset;
         this.randomHorizontalOutputOffset=randomHorizontalOutputOffset;
         this.randomVerticalOutputOffset=randomVerticalOutputOffset;
-        this.initialSpeed=initialSpeed;
-        this.randomInitialSpeedOffset=randomInitialSpeedOffset;
+        this.initialVelocity=initialVelocity;
+        this.randomInitialVelocityOffset=randomInitialVelocityOffset;
         this.delay=delay;
         this.randomDelayOffset=randomDelayOffset;
         this.acceleration=acceleration;
         this.randomAccelerationOffset=randomAccelerationOffset;
+        this.assetManager=main.getAssetManager();
         
         gasParticleModelPath="Models/Particles/Gas/Gas.j3o";
         liquidParticleModelPath="Models/Particles/Liquid/Liquid.j3o";
@@ -66,7 +72,9 @@ public class ParticleEmitter {
         
         node.addControl(control);
         
-        parentObject.attachObject(node);
+        parentObject.getNode().attachChild(node);
+        
+        node.setLocalTranslation(position);
         
     }
     
@@ -130,27 +138,27 @@ public class ParticleEmitter {
         
     }
     
-    public void setInitialSpeed(double initialSpeed){
+    public void setInitialVelocity(Vector3f initialVelocity){
         
-        this.initialSpeed=initialSpeed;
-        
-    }
-    
-    public double getInitialSpeed(){
-        
-        return initialSpeed;
+        this.initialVelocity=initialVelocity;
         
     }
     
-    public void setRandomInitialSpeedOffset(double randomInitialSpeedOffset){
+    public Vector3f getInitialVelocity(){
         
-        this.randomInitialSpeedOffset=randomInitialSpeedOffset;
+        return initialVelocity;
         
     }
     
-    public double getRandomInitialSpeedOffset(){
+    public void setRandomInitialVelocityOffset(Vector3f randomInitialVelocityOffset){
         
-        return randomInitialSpeedOffset;
+        this.randomInitialVelocityOffset=randomInitialVelocityOffset;
+        
+    }
+    
+    public Vector3f getRandomInitialVelocityOffset(){
+        
+        return randomInitialVelocityOffset;
         
     }
     
@@ -242,11 +250,15 @@ public class ParticleEmitter {
         
         emitting=true;
         
+        System.out.println("Emitting set to true");
+        
     }
     
     public void stop(){
         
         emitting=false;
+        
+        System.out.println("Emitting set to false");
         
     }
     
@@ -258,21 +270,33 @@ public class ParticleEmitter {
     
     public void emit(){
         
-        if(parentObject instanceof Container){
+        if(parentObject instanceof Container&&((Container)parentObject).getSolution()!=null){
+
+            boolean[] possibleStates=((Container)parentObject).getSolution().containsStates();
+
+            if(possibleStates[0]){
+
+                System.out.println("New gas particle created");
+
+                control.getActiveParticles().add(new Particle(this,"Models/Particles/Gas/Gas.j3o",0,((Container)parentObject).getSolution().getStateList(0)));
+
+            }
+            
+            if(possibleStates[1]){
+
+                System.out.println("New liquid particle created");
+
+                control.getActiveParticles().add(new Particle(this,"Models/Particles/Liquid/Liquid.j3o",1,((Container)parentObject).getSolution().getStateList(1)));
+
+            }
+            
+            if(possibleStates[2]){
+
+                System.out.println("New solid particle created");
+
+                control.getActiveParticles().add(new Particle(this,"Models/Particles/Solid/Solid.j3o",2,((Container)parentObject).getSolution().getStateList(2)));
                 
-                boolean[] possibleStates=((Container)parentObject).getSolution().containsStates();
-                
-                if(possibleStates[0])
-                    
-                    control.getActiveParticles().add(new Particle(this,"Models/Particles/Gas/Gas.j3o",0));
-                
-                if(possibleStates[1])
-                    
-                    control.getActiveParticles().add(new Particle(this,"Models/Particles/Liquid/Liquid.j3o",1));
-                
-                if(possibleStates[2])
-                    
-                    control.getActiveParticles().add(new Particle(this,"Models/Particles/Solid/Solid.j3o",2));
+            }
                 
         }
         

@@ -24,6 +24,8 @@ import com.jme3.scene.shape.Quad;
 import interfaces.Pointable;
 import java.io.IOException;
 import java.util.ArrayList;
+import main.Main;
+import objects.player.Hand;
 
 /**
  *
@@ -47,14 +49,20 @@ public class Display implements Pointable,Savable{
     private Node node;
     private Node rootNode;
     
+    private Main main;
+    
     public static final int MAIN_MENU=0,SUBSTANCE_LIST=1,KEYBOARD=2,MATERIAL_LIST=3,PERIODIC_TABLE=4,SETTINGS_MENU=5;
     
     private static boolean keyBoardIsInCaps;
     
-    public Display(AssetManager assetManager,Node rootNode,int preset){
+    private static SubstanceButton selectedSubstanceButton;
+    private static MaterialButton selectedMaterialButton;
+    
+    public Display(Main main,int preset){
         
-        this.assetManager=assetManager;
-        this.rootNode=rootNode;
+        this.main=main;
+        this.assetManager=main.getAssetManager();
+        this.rootNode=main.getRootNode();
         
         this.preset=preset;
         
@@ -131,6 +139,8 @@ public class Display implements Pointable,Savable{
                 texts.get(texts.size()-1).setText("");
                 texts.get(texts.size()-1).setLocalTranslation(-0.40f,0.60f,0.055f);
                 texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
+                
+                addSubstances();
                 
                 break;
                 
@@ -300,6 +310,44 @@ public class Display implements Pointable,Savable{
             //ALSO FILTER THE LIST
             
         }
+        
+    }
+    
+    private void addSubstances(){
+        
+        for(int i=0;i<main.getSubstances().size();i++){
+            
+            
+            
+        }
+        
+    }
+    
+    public SubstanceButton setSelectedSubstanceButton(){
+        
+        return selectedSubstanceButton;
+        
+    }
+    
+    public void setSelectedSubstanceButton(SubstanceButton substanceButton){
+        
+        selectedSubstanceButton=substanceButton;        
+    }
+    
+    public MaterialButton setSelectedMaterialButton(){
+        
+        return selectedMaterialButton;
+        
+    }
+    
+    public void setSelectedMaterialButton(MaterialButton materialButton){
+        
+        selectedMaterialButton=materialButton;        
+    }
+    
+    private void getSelectedItem(int index,Hand hand){
+        
+        
         
     }
 

@@ -33,22 +33,6 @@ public class ReagentBottleControl extends AbstractControl{
         
         //ACT BASED ON THE STATE OF THE CONTAINER
         
-        //if container is rotated 45 degrees to one side, start particle emission
-        if((spatial.getLocalRotation().getX()>=0.382f||spatial.getLocalRotation().getZ()>=0.382f)&&!reagentBottle.isEmitting()){
-            
-            System.out.println("*Reagent Bottle starts emitting particles*");
-            
-            //reagentBottle.startParticleEmission();
-            
-        }else if(spatial.getLocalRotation().getX()<0.382f&&spatial.getLocalRotation().getZ()<0.382f&&reagentBottle.isEmitting()){
-            //if neither of the angles are higher than 45 degrees, stop the particle emission
-            
-            System.out.println("*Reagent Bottle stops emitting particles*");
-            
-            //reagentBottle.stopParticleEmission();
-            
-        }
-        
         //if the temperature of the container is too high
         if(reagentBottle.getTemperature()>reagentBottle.getMaxTemperature()){
             

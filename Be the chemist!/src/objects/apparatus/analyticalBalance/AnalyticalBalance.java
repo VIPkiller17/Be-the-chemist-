@@ -51,7 +51,6 @@ public class AnalyticalBalance extends Apparatus implements Savable{
     private CollisionShape analyticalBalanceCollisionShape;
     private RigidBodyControl analyticalBalance_phy;
     
-    
     public AnalyticalBalance(Main main,Node rootNode,CollisionResults collisionResults, AssetManager assetManager, Vector3f position) {
        
         super(main,position);
@@ -61,30 +60,53 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         spatial=assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance.j3o");
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text = new BitmapText(font);
-        
-        Quad display = new Quad(0.05f, 0.02f);
-        Geometry geom = new Geometry("Analytical Balance Display", display);
-        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        geom.setUserData("correctCollision",true);
-        geom.setUserData("correspondingObject", this);
-        material.setColor("Color", ColorRGBA.Green);
-        material.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-        geom.setQueueBucket(RenderQueue.Bucket.Transparent);
-        geom.setMaterial(material);
-        
-        geom.setLocalTranslation(-0.1f, 0.5f, 0);
        
+        //Analytical Balance Surface
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0));
+        analyticalBalanceSurfaceMat.setColor("Color", ColorRGBA.Yellow); //new ColorRGBA(0, 0, 0, 0)
         analyticalBalanceSurface.setMaterial(analyticalBalanceSurfaceMat);
         analyticalBalanceSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(analyticalBalanceSurface);
         
-        node.attachChild(geom);
+        /* quad=new Quad(width,height);
+        background=new Geometry("Element button background",quad);
+        background.setUserData("correctCollision",true);
+        background.setUserData("correspondingObject", this);
+        backgroundMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
+        backgroundMat.setColor("Color",backgroundColor);
+        backgroundMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        background.setQueueBucket(RenderQueue.Bucket.Transparent);
+        background.setMaterial(backgroundMat);
         
-        geom.setLocalRotation(Quaternion.ZERO); //*
+        node.attachChild(background);
+        
+        background.setLocalTranslation(0,-height,0);*/
+        
+        //Analytical Balance Display
+        Quad display = new Quad(1f, 2f); //0.05f, 0.02f
+        Geometry displayGeom = new Geometry("Analytical Balance Display", display);
+        Material displayMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        displayMat.setColor("Color", ColorRGBA.Red);
+        displayGeom.setMaterial(displayMat);
+        displayMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+        displayGeom.setQueueBucket(RenderQueue.Bucket.Translucent);//Transpare
+        
+        /*displayGeom.setUserData("correctCollision",true);
+        displayGeom.setUserData("correspondingObject", this);*/
+        displayGeom.setLocalTranslation(0, 0, 0);
+        
+        rootNode.attachChild(displayGeom);
+        System.out.println("display attached to root node");
+        
+        //node.attachChild(displayGeom);
+        
+        //node.attachChild(geom);
+        //rootNode.attachChild(geom);
+        //geom.setLocalTranslation(0.0f, 0.0f, 0);
+        //node.attachChild(geom);
+        //geom.setLocalRotation(Quaternion.ZERO); //*
         
         spatial.setLocalRotation(Quaternion.ZERO); //*
         spatial.setUserData("correctCollision", true);
@@ -165,6 +187,12 @@ public class AnalyticalBalance extends Apparatus implements Savable{
             return spatial.getLocalTranslation().equals(((AnalyticalBalance) object).getSpatial().getLocalTranslation());
         else
             return false;
+    }
+    
+    public Node getNode(){
+        
+        return node;
+        
     }
 
     @Override

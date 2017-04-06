@@ -6,6 +6,7 @@ package objects.apparatus.bunsenBurner;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
+import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
@@ -22,6 +23,8 @@ public class BunsenBurner extends Apparatus implements Grabbable{
     private Main main;
     private AssetManager assetManager;
     private Node rootNode;
+    
+    private Ray ray;
     
     private Spatial bunsenBurner,bunsenBurnerHighlight;
     
@@ -50,6 +53,24 @@ public class BunsenBurner extends Apparatus implements Grabbable{
         
         main.getItemsList().add(this);
         
+    }
+    
+    //ray
+    public void setRayCoords(Vector3f origin,Vector3f direction){
+        
+        ray.setOrigin(origin);
+        ray.setDirection(direction);
+        
+    }
+    
+    public Vector3f getLocalTranslation() {
+        
+        return node.getLocalTranslation();
+       
+    }
+    
+    public Ray getRay() {
+        return ray;
     }
     
     @Override

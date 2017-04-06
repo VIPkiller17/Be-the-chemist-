@@ -40,6 +40,7 @@ public class AnalyticalBalance extends Apparatus implements Savable{
     private Node node;
     
     private BitmapText text;
+    private BitmapText tareText;
     private BitmapFont font;
     private Spatial analyticalBalanceSurface;
     private Spatial highlightModel;
@@ -61,6 +62,7 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         spatial=assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance.j3o");
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text = new BitmapText(font);
+        tareText = new BitmapText(font);
        
         //Analytical Balance Surface
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
@@ -71,23 +73,40 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(analyticalBalanceSurface);
         
-        //Analytical Balance Display
-        Quad display = new Quad(0.1f, 0.05f); 
-        Geometry displayGeom = new Geometry("Analytical Balance Display", display);
-        Material displayMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        displayMat.setColor("Color", ColorRGBA.Red);
-        displayGeom.setMaterial(displayMat);
-        displayMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
-        displayGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
+        //Analytical Balance tare button
+        Quad tareButton = new Quad(0.03f, 0.03f); 
+        Geometry tareButtonGeom = new Geometry("Analytical Balance Display", tareButton);
+        Material tareButtonMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        tareButtonMat.setColor("Color", ColorRGBA.Gray);
+        tareButtonGeom.setMaterial(tareButtonMat);
+        tareButtonMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+        tareButtonGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
+        tareButtonGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        tareButtonGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        tareButtonGeom.setUserData("correctCollision",true);
+        tareButtonGeom.setUserData("correspondingObject", this);
+        tareButtonGeom.setLocalTranslation(-0.115f, 0.025f, 0.055f);
         
-        //Test
-        displayGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
-        displayGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
-        displayGeom.setUserData("correctCollision",true);
-        displayGeom.setUserData("correspondingObject", this);
-        displayGeom.setLocalTranslation(-0.1f, 0.05f, -0.1f);
+        //Analytical tare button text
+        tareText.setText("Tare");
+        tareText.setSize(0.01f);
+        tareText.setColor(ColorRGBA.Black);
+        tareText.setLocalTranslation(-0.105f, 0.045f, 0.045f);
+        tareText.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        tareText.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        tareText.setQueueBucket(RenderQueue.Bucket.Translucent);
+        node.attachChild(tareText);
         
-        node.attachChild(displayGeom);
+        //Text initial text to Zero
+        text.setText(0.0+"");
+        text.setSize(0.02f);
+        text.setColor(ColorRGBA.Red);
+        text.setLocalTranslation(-0.09f, 0.037f, -0.085f);
+        text.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        text.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        node.attachChild(text);
+        
+        node.attachChild(tareButtonGeom);
         spatial.setLocalRotation(Quaternion.ZERO); 
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);

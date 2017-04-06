@@ -42,7 +42,6 @@ public class AnalyticalBalanceControl extends AbstractControl{
            
     }
     
-    //Coding in Progress
     @Override
     protected void controlUpdate(float f) {
         
@@ -60,7 +59,11 @@ public class AnalyticalBalanceControl extends AbstractControl{
                 
         }
         
-        analyticalBalance.getDisplayText().setText(mass + "");
+        //Format values to be displayed by balance
+        String massNumber = String.valueOf(4567.1234567678587658765765);
+        int pointIndex = massNumber.indexOf(".");
+        String massNumberFormatted = massNumber.substring(0, pointIndex + 4);
+        analyticalBalance.getDisplayText().setText(massNumberFormatted + "");
         
     }
     

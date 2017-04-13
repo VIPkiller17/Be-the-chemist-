@@ -221,7 +221,7 @@ public class MeasuringCylinder extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "MeasuringCylinder:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "MeasuringCylinder:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -284,6 +284,13 @@ public class MeasuringCylinder extends Container implements Savable{
     public Node getNode() {
         
         return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Measuring cylinder";
         
     }
     

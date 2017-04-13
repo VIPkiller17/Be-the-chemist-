@@ -136,4 +136,11 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Fume hood door";
+        
+    }
+    
 }

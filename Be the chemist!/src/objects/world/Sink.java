@@ -89,4 +89,11 @@ public class Sink extends PhysicalObject{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Sink";
+        
+    }
+    
 }

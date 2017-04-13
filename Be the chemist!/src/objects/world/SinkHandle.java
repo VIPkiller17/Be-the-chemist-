@@ -161,4 +161,11 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Sink handle";
+        
+    }
+    
 }

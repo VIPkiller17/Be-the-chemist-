@@ -212,7 +212,7 @@ public class Pipette extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Pipette:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "Pipette:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -275,6 +275,13 @@ public class Pipette extends Container implements Savable{
     public Node getNode() {
         
         return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Pipette";
         
     }
     

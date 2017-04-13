@@ -190,4 +190,11 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Gas sac valve";
+        
+    }
+    
 }

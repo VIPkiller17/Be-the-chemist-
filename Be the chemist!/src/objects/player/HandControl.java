@@ -18,7 +18,6 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.shape.Box;
 import interfaces.Describable;
 import interfaces.Grabbable;
-import java.util.ArrayList;
 import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
 import main.Main;
@@ -32,7 +31,9 @@ import objects.world.Floor;
 import objects.world.display.Button;
 import objects.world.display.Display;
 import objects.world.display.ElementButton;
+import objects.world.display.MaterialButton;
 import objects.world.display.PeriodicTableDisplay;
+import objects.world.display.SubstanceButton;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -78,6 +79,12 @@ public class HandControl extends AbstractControl{
     private ElementButton presentPointedElementButton;
     private boolean pointingPeriodicTableDisplay;
     private boolean pointingElementButton;
+    
+    private SubstanceButton presentPointedSubstanceButton;
+    private boolean pointingSubstanceButton;
+    
+    private MaterialButton presentPointedMaterialButton;
+    private boolean pointingMaterialButton;
     
     private static final Vector3f OUT_OF_MAP=new Vector3f(0,-1,0);
     private static final ColorRGBA GREEN_LASER=ColorRGBA.Green,RED_LASER=ColorRGBA.Red;
@@ -458,7 +465,7 @@ public class HandControl extends AbstractControl{
                     
                     //System.out.println("The trigger has just started being pressed");
                     
-                    if(!pointingDisplay&&!pointingButton&&!pointingElementButton&&!pointingPeriodicTableDisplay){
+                    if(!pointingDisplay&&!pointingButton&&!pointingElementButton&&!pointingPeriodicTableDisplay&&!pointingSubstanceButton&&!pointingMaterialButton){
                         
                         hand.setOpenned(false);
                         
@@ -476,6 +483,18 @@ public class HandControl extends AbstractControl{
                     }else if(pointingElementButton){
                         
                         presentPointedElementButton.activate(hand);
+                        
+                    }else if(pointingSubstanceButton){
+                        
+                        presentPointedSubstanceButton.activate();
+                        
+                    }else if(pointingMaterialButton){
+                        
+                        presentPointedMaterialButton.activate();
+                        
+                    }else if (pointingButton){
+                        
+                        presentPointedButton.activate(hand);
                         
                     }
                     
@@ -870,7 +889,7 @@ public class HandControl extends AbstractControl{
     
     private void updateLaser(){
         
-        System.out.println(laserMovedOut);
+        //System.out.println(laserMovedOut);
         
         //check if laser is being used
         //if it isn't check if player is pointing a display
@@ -894,11 +913,15 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=false;
                     pointingButton=true;
                     pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
 
                     presentPointedButton=((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
 
                     presentPointedButton.setPointed(true);
                     
@@ -910,6 +933,8 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=false;
                     pointingButton=false;
                     pointingDisplay=true;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
 
@@ -922,6 +947,8 @@ public class HandControl extends AbstractControl{
                     }
 
                     presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
                     
                     //laserActivatedByDisplay=true;
 
@@ -931,11 +958,15 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=false;
                     pointingButton=false;
                     pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
 
                     presentPointedElementButton=((ElementButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     presentPointedButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
                     
                     //laserActivatedByDisplay=true;
 
@@ -945,12 +976,64 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=true;
                     pointingButton=false;
                     pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
 
                     presentPointedButton=null;
                     presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
                     
+                    //laserActivatedByDisplay=true;
+
+                }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof SubstanceButton){
+
+                    pointingElementButton=false;
+                    pointingPeriodicTableDisplay=false;
+                    pointingButton=false;
+                    pointingDisplay=false;
+                    pointingSubstanceButton=true;
+                    pointingMaterialButton=false;
+
+                    makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    
+                    if(presentPointedButton!=null){
+
+                        presentPointedButton.setPointed(false);
+
+                        presentPointedButton=null;
+
+                    }
+
+                    presentPointedElementButton=null;
+                    presentPointedSubstanceButton=((SubstanceButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
+                    presentPointedMaterialButton=null;
+                    //laserActivatedByDisplay=true;
+
+                }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof MaterialButton){
+
+                    pointingElementButton=false;
+                    pointingPeriodicTableDisplay=false;
+                    pointingButton=false;
+                    pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=true;
+
+                    makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    
+                    if(presentPointedButton!=null){
+
+                        presentPointedButton.setPointed(false);
+
+                        presentPointedButton=null;
+
+                    }
+
+                    presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=((MaterialButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     //laserActivatedByDisplay=true;
 
                 }else{
@@ -959,6 +1042,8 @@ public class HandControl extends AbstractControl{
                     pointingDisplay=false;
                     pointingElementButton=false;
                     pointingPeriodicTableDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     if(presentPointedButton!=null){
 
@@ -967,6 +1052,10 @@ public class HandControl extends AbstractControl{
                         presentPointedButton=null;
 
                     }
+                    
+                    presentPointedSubstanceButton=null;
+                    presentPointedElementButton=null;
+                    presentPointedMaterialButton=null;
                     
                     //laserActivatedByDisplay=false;
 
@@ -980,7 +1069,7 @@ public class HandControl extends AbstractControl{
     
     private void makeLaserAppear(Vector3f endPoint,ColorRGBA color){
         
-        System.out.println("makeLaserAppear has been called");
+        //System.out.println("makeLaserAppear has been called");
         
         hand.setLaserMaterialColor("Color",color);
         

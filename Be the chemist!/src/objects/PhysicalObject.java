@@ -128,4 +128,6 @@ public abstract class PhysicalObject implements Savable, Describable{
     @Override
     public abstract String getDescription();
     
+    public abstract String getName();
+    
 }

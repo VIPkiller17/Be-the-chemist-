@@ -94,4 +94,11 @@ public class BunsenBurner extends Apparatus implements Grabbable{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Bunsen burner";
+        
+    }
+    
 }

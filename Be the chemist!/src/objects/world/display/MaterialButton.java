@@ -28,13 +28,12 @@ import objects.containers.beaker.Beaker;
 import objects.containers.gasSac.GasSac;
 import objects.player.Hand;
 import objects.solution.Solution;
-import objects.substance.Substance;
 
 /**
  *
  * @author VIPkiller17
  */
-public class SubstanceButton implements Savable{
+public class MaterialButton implements Savable{
     
     private static final ColorRGBA SELECTED_COLOR=new ColorRGBA(0,255,255,1f);
     private static final ColorRGBA NORMAL_COLOR=new ColorRGBA(0,0,255,1f);
@@ -42,9 +41,7 @@ public class SubstanceButton implements Savable{
     private AssetManager assetManager;
     private Main main;
     
-    private Display substanceList;
-    
-    private Substance substance;
+    private Display materialList;
     
     private BitmapText text;
     
@@ -61,19 +58,21 @@ public class SubstanceButton implements Savable{
     
     private boolean selected;
     
+    private String name;
     
-    public SubstanceButton(Main main,Display substanceList,Substance substance,Vector3f upperLeftPosition){
+    
+    public MaterialButton(Main main,Display materialList,String name,Vector3f upperLeftPosition){
         
         this.main=main;
         this.assetManager=main.getAssetManager();
-        this.substanceList=substanceList;
-        this.substance=substance;
+        this.materialList=materialList;
+        this.name=name;
         
         node=new Node();
         font=assetManager.loadFont("Interface/Fonts/Hack/Hack.fnt");
         
         text=new BitmapText(font);
-        text.setText(substance.getName());
+        text.setText(name);
         text.setSize(0.05f);
         text.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(text);
@@ -81,7 +80,7 @@ public class SubstanceButton implements Savable{
         
         createBackground(0.70f,0.15f);
         
-        substanceList.getNode().attachChild(node);
+        materialList.getNode().attachChild(node);
         
         node.setLocalTranslation(upperLeftPosition);
         
@@ -90,7 +89,7 @@ public class SubstanceButton implements Savable{
     private void createBackground(float width,float height){
         
         quad=new Quad(width,height);
-        background=new Geometry("Substance button background",quad);
+        background=new Geometry("Material button background",quad);
         background.setUserData("correctCollision",true);
         background.setUserData("correspondingObject", this);
         backgroundMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
@@ -105,7 +104,7 @@ public class SubstanceButton implements Savable{
     
     public void activate(){
         
-        System.out.println("Substance button acitavted");
+        System.out.println("Material button acitavted");
         
         setSelected(!selected);
         
@@ -115,13 +114,13 @@ public class SubstanceButton implements Savable{
         
         this.selected=selected;
         
-        System.out.println("Substance button selected set to: "+selected);
+        System.out.println("Material button selected set to: "+selected);
         
         if(selected){
             
             backgroundMat.setColor("Color", SELECTED_COLOR);
             
-            for(SubstanceButton b: substanceList.getSubstanceButtonList()){
+            for(MaterialButton b: materialList.getMaterialButtonList()){
                 
                 if(!b.equals(this)){
                     
@@ -131,21 +130,15 @@ public class SubstanceButton implements Savable{
                 
             }
             
-            substanceList.setSelectedSubstanceButton(this);
+            materialList.setSelectedMaterialButton(this);
             
         }else{
             
             backgroundMat.setColor("Color", NORMAL_COLOR);
             
-            substanceList.setSelectedSubstanceButton(null);
+            materialList.setSelectedMaterialButton(null);
             
         }
-        
-    }
-    
-    public Substance getSubstance(){
-        
-        return substance;
         
     }
     
@@ -164,7 +157,34 @@ public class SubstanceButton implements Savable{
                 node.setLocalTranslation(-0.35f,0.5f-positionIndex*0.2f,0.05f);
                 break;
             default:
-                System.out.println("ERROR: invalid position index:"+positionIndex+", sent to setPosition() of SubstanceButton");
+                System.out.println("ERROR: invalid position index:"+positionIndex+", sent to setPosition() of MaterialButton");
+            
+        }
+        
+    }
+    
+    public String getTextText(){
+        
+        return text.getText();
+        
+    }
+    
+    public String getName(){
+        
+        return name;
+        
+    }
+    
+    public int getClassInteger(){
+        
+        switch(name){
+            
+            case "Beaker":
+                return 1;
+            case "Gas sac":
+                return 1;
+            default:
+                return 0;
             
         }
         
@@ -179,11 +199,11 @@ public class SubstanceButton implements Savable{
     }
     
     @Override
-    public boolean equals(Object otherSubstanceButton){
+    public boolean equals(Object otherMaterialButton){
         
-        if(otherSubstanceButton instanceof SubstanceButton){
+        if(otherMaterialButton instanceof MaterialButton){
             
-            return ((SubstanceButton)otherSubstanceButton).getSubstance().equals(substance);
+            return ((MaterialButton)otherMaterialButton).getTextText().equals(getTextText());
             
         }else{
             

@@ -243,7 +243,7 @@ public class GasSac extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Gas sac:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "Gas sac:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -392,5 +392,11 @@ public class GasSac extends Container implements Savable{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Gas sac";
+        
+    }
     
 }

@@ -22,7 +22,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     private boolean full;
     private boolean closed;
     private boolean contains;
-    private double quantity;
+    private double volume;
     private double temperature;
     private double pressure;
     
@@ -39,7 +39,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         super(main,position);
         
         this.solution=solution;
-        this.quantity=solution.getQuantity();
+        this.volume=solution.getVolume();
         
     }
     
@@ -91,17 +91,17 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
     }
     
-    public void setQuantity(double quantity){
+    public void setVolume(double volume){
         
-        this.quantity=quantity;
+        this.volume=volume;
         
     }
     
-    public double getQuantity(){
+    public double getVolume(){
         
         if(solution!=null)
         
-            return solution.getQuantity();
+            return solution.getVolume();
         
         else
             
@@ -150,7 +150,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
         if(otherContainer instanceof Container)
             
-            return ((Container)otherContainer).getQuantity()==quantity&&((Container)otherContainer).getTemperature()==temperature&&((Container)otherContainer).getPressure()==pressure;
+            return ((Container)otherContainer).getVolume()==volume&&((Container)otherContainer).getTemperature()==temperature&&((Container)otherContainer).getPressure()==pressure;
         
         else
             
@@ -161,7 +161,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     @Override
     public String toString(){
         
-        return "Container containing "+quantity+" liters of "+solution+" with temperature "+temperature+" and pressure "+pressure;
+        return "Container containing "+volume+" liters of "+solution+" with temperature "+temperature+" and pressure "+pressure;
         
     }
     

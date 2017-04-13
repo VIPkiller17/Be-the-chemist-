@@ -231,7 +231,7 @@ public class ReagentBottle extends Container implements Savable {
     @Override
     public String getDescription() {
         
-        return "ReagentBottle:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "ReagentBottle:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -287,6 +287,13 @@ public class ReagentBottle extends Container implements Savable {
                 return false;
             
         }
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Reagent bottle";
         
     }
     

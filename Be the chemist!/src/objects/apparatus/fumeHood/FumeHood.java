@@ -76,4 +76,11 @@ public class FumeHood extends Apparatus{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Fume hood";
+        
+    }
+    
 }

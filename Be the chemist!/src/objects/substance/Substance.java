@@ -118,9 +118,90 @@ public class Substance{
         
     }
     
-    public int getStateInteger(double kelvin){
+    public int getStateInteger(double temperature){
         
-        if()
+        if(meltingPoint==-1&&boilingPoint==-1){
+            
+            if(temperature<sublimationPoint){
+                
+                return 2;//solid
+                
+            }else if(temperature>sublimationPoint){
+                
+                return 0;//gas
+                
+            }
+            
+        }else if(meltingPoint!=-1&&boilingPoint!=-1){
+            
+            if(temperature<meltingPoint){
+                
+                return 2;//solid
+                
+            }else if(temperature>meltingPoint&&temperature<boilingPoint){
+                
+                return 1;//liquid
+                
+            }else if(temperature>boilingPoint){
+                
+                return 0;//gas
+                
+            }
+            
+        }else if(meltingPoint==-1&&boilingPoint==-1&&sublimationPoint==-1){
+            
+            //for specific exceptions
+            if(name.contains("phosphorus")||name.contains("Phosphorus")){
+                
+                return 2;//solid
+                
+            }
+            
+        }
+        
+        //the following, for soem reason could not be put as an else statement
+            
+        System.out.println("Invalid return value from getStateInteger("+temperature+") on substance: "+name);
+
+        return -1;
+        
+    }
+    
+    public int getTypeInteger(){
+        
+        if(type.contains("None")){
+            
+            return 0;
+            
+        }else if(type.contains("Acid")){
+            
+            return 1;
+            
+        }else if(type.contains("Base")){
+            
+            return 2;
+            
+        }else if(type.contains("Halogen")){
+            
+            return 3;
+            
+        }else if(type.contains("Salt")){
+            
+            return 4;
+            
+        }else if(type.contains("Metal")){
+            
+            return 5;
+            
+        }else if(type.contains("Other")){
+            
+            return 6;
+            
+        }else{
+            
+            return -1;
+            
+        }
         
     }
     

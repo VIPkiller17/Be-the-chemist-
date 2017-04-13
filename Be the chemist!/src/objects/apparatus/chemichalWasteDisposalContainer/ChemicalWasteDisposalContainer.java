@@ -64,4 +64,11 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Chemical waste disposal container";
+        
+    }
+    
 }

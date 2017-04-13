@@ -16,6 +16,8 @@ public class SolutionControl extends AbstractControl{
 
     private Solution solution;
     
+    private double presentVolume;
+    
     public SolutionControl(Solution solution){
         
         this.solution=solution;
@@ -25,9 +27,13 @@ public class SolutionControl extends AbstractControl{
     @Override
     protected void controlUpdate(float f) {
         
-        for(int i=0;i<solution.getSubstances().size();i++){
+        //account for H2O2 decomposition 
+        
+        presentVolume=0;
+        
+        for(int i=0;i<solution.getVolumes().size();i++){
             
-            solution.addQuantity(solution.getSubstances().get(i).getQuantity());
+            presentVolume+=solution.getVolumes().get(i);
             
         }
         

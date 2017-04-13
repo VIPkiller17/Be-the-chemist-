@@ -223,7 +223,7 @@ public class VolumetricFlask extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Volumetric lask:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "Volumetric lask:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -289,5 +289,11 @@ public class VolumetricFlask extends Container implements Savable{
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Volumetric flask";
+        
+    }
     
 }

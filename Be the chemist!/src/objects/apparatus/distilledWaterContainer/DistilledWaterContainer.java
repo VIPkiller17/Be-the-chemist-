@@ -211,4 +211,11 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Distilled water container";
+        
+    }
+    
 }

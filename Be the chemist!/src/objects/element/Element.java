@@ -11,11 +11,17 @@ package objects.element;
  */
 public class Element {
     
-    private double electronegativity;
-    private double molarMass;
+    private final String name;
+    private final String symbol;
+    private final int number;
+    private final double electronegativity;
+    private final double molarMass;
     
-    public Element(double electronegativity,double molarMass){
+    public Element(int number,String name,String symbol,double electronegativity,double molarMass){
         
+        this.number=number;
+        this.name=name;
+        this.symbol=symbol;
         this.electronegativity=electronegativity;
         this.molarMass=molarMass;
         
@@ -30,6 +36,24 @@ public class Element {
     public double getMolarMass(){
         
         return molarMass;
+        
+    }
+    
+    public String getName(){
+        
+        return name;
+        
+    }
+    
+    public int getNumber(){
+        
+        return number;
+        
+    }
+    
+    public String getSymbol(){
+        
+        return symbol;
         
     }
     

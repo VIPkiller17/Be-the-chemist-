@@ -237,7 +237,7 @@ public class Beaker extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Beaker:\n  Contains: "+this.getSolution()+"\n  Quantity: "+getQuantity();
+        return "Beaker:\n  Contains: "+this.getSolution()+"\n  Quantity: "+getVolume();
         
     }
 
@@ -358,6 +358,13 @@ public class Beaker extends Container implements Savable{
     public Node getNode() {
         
         return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Beaker";
         
     }
     

@@ -14,15 +14,29 @@ import objects.element.Element;
  */
 public class Ion{
     
-    private int charge;
-    private int sign;
-    private ArrayList<Element> elements;
+    private final int charge;
+    private final int sign;
+    private final ArrayList<Element> elements;
+    private final ArrayList<Integer> counts;
     
-    public Ion(int charge,int sign,ArrayList<Element> elements){
+    public Ion(int charge,int sign,ArrayList<Element> elements,ArrayList<Integer> counts){
         
         this.charge=charge;
         this.sign=sign;
         this.elements=elements;
+        this.counts=counts;
+        
+    }
+    
+    public Ion(int charge,int sign,Element element,int count){
+        
+        elements=new ArrayList<>();
+        counts=new ArrayList<>();
+        
+        this.charge=charge;
+        this.sign=sign;
+        elements.add(element);
+        counts.add(count);
         
     }
     

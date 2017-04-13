@@ -133,4 +133,11 @@ public class ReagentBottleTop extends PhysicalObject implements Grabbable {
         
     }
     
+    @Override
+    public String getName() {
+        
+        return "Reagent bottle top";
+        
+    }
+    
 }

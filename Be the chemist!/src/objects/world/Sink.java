@@ -47,12 +47,12 @@ public class Sink extends PhysicalObject{
         if(index==0){
             
             node.setLocalTranslation(4.155f,0.92f,5.14f);
-            particleEmitter=new ParticleEmitter(assetManager,this,node.getLocalTranslation().add(new Vector3f(0.12f,0.21f,0)),new Vector3f(0,-1,0),new Quaternion(0,0,0,0),0,0,new Vector3f(0,0,0),new Vector3f(0,0,0),0.1,0.01,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
+            particleEmitter=new ParticleEmitter(main,this,node.getLocalTranslation().add(new Vector3f(0.12f,0.21f,0)),new Vector3f(0,-1,0),new Quaternion(0,0,0,0),0,0,new Vector3f(0,0,0),new Vector3f(0,0,0),0.1,0.01,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
         
         }else if(index==1){
             
             node.setLocalTranslation(5.345f,0.92f,5.14f);
-            particleEmitter=new ParticleEmitter(assetManager,this,node.getLocalTranslation().add(new Vector3f(1.07f,0.21f,0)),new Vector3f(0,-1,0),new Quaternion(0,0,0,0),0,0,new Vector3f(0,0,0),new Vector3f(0,0,0),0.1,0.01,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
+            particleEmitter=new ParticleEmitter(main,this,node.getLocalTranslation().add(new Vector3f(1.07f,0.21f,0)),new Vector3f(0,-1,0),new Quaternion(0,0,0,0),0,0,new Vector3f(0,0,0),new Vector3f(0,0,0),0.1,0.01,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
         
         }
         
@@ -79,6 +79,20 @@ public class Sink extends PhysicalObject{
     public String getDescription() {
         
         return "";
+        
+    }
+    
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Sink";
         
     }
     

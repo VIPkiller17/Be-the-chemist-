@@ -5,8 +5,9 @@
 package objects.particleEmitter.particle;
 
 import com.jme3.scene.Spatial;
+import java.util.ArrayList;
 import objects.particleEmitter.ParticleEmitter;
-import objects.solution.Solution;
+import objects.substance.Substance;
 
 /**
  *
@@ -16,13 +17,15 @@ public class Particle {
     
     private ParticleEmitter particleEmitter;
     
-    private Solution solution;
+    private ArrayList<Substance> substances;
     
     private int state;
     
     private Spatial spatial;
     
-    public Particle(ParticleEmitter particleEmitter,String modelPath,int state){
+    public Particle(ParticleEmitter particleEmitter,String modelPath,int state,ArrayList<Substance> substances){
+        
+        this.substances=substances;
         
         this.state=state;
         

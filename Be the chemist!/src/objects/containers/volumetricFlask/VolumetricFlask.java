@@ -166,7 +166,7 @@ public class VolumetricFlask extends Container implements Savable{
 
         particleEmitterPosition = new Vector3f(0, 0.15f, 0);
         
-        particleEmitter=new ParticleEmitter(assetManager,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
     }
     
@@ -223,7 +223,7 @@ public class VolumetricFlask extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Volumetric lask:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "Volumetric lask:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -250,9 +250,49 @@ public class VolumetricFlask extends Container implements Savable{
     }
     
     @Override
-    public void setPosition(Vector3f position){
+    public void setPos(Vector3f position){
         
         node.getControl(RigidBodyControl.class).setPhysicsLocation(position);
+        
+    }
+    
+    @Override
+    public boolean canContain(int state){
+        
+        switch(state){
+            
+            case 0:
+                
+                return true;
+                
+            case 1:
+                
+                return true;
+                
+            case 2:
+                
+                return true;
+                
+            default:
+                
+                System.out.println("Invalid state passed to canContain()");
+                return false;
+            
+        }
+        
+    }
+    
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Volumetric flask";
         
     }
     

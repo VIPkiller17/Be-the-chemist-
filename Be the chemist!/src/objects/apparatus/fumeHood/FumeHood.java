@@ -31,6 +31,8 @@ public class FumeHood extends Apparatus{
         
         super(main,Vector3f.ZERO);
         
+        node=new Node();
+        
         spatial=assetManager.loadModel("Models/Static/FumeHood/FumeHood.j3o");
         //spatial.scale(1f,1f,1f);
         //spatial.rotate(0.0f, 0.0f, 0.0f);
@@ -38,11 +40,11 @@ public class FumeHood extends Apparatus{
         spatial.setName("Fume hood");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        attachObject(spatial);
+        node.attachChild(spatial);
         
         fumeHoodDoor=new FumeHoodDoor(main,this,assetManager,rootNode);
         
-        rootNode.attachChild(getNode());
+        rootNode.attachChild(node);
         
     }
     
@@ -50,6 +52,34 @@ public class FumeHood extends Apparatus{
     public String getDescription() {
         
         return "The fume hood.";
+        
+    }
+
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
+    
+    @Override
+    public void attachObject(Spatial object){
+        
+        node.attachChild(object);
+        
+    }
+    
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Fume hood";
         
     }
     

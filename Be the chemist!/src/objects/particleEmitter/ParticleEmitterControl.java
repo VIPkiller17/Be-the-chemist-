@@ -41,24 +41,18 @@ public class ParticleEmitterControl extends AbstractControl{
         
         timer+=tpf;
         
-        if(timer>particleEmitter.getDelay()&&particleEmitter.isEmitting()){
+        //System.out.println("Particlemitter timer now at "+timer+", and particle emitter delay is at "+particleEmitter.getDelay());
+        
+        if(timer>particleEmitter.getDelay()){
             
-            if(particleEmitter.getParentObject() instanceof Container){
+            //System.out.println("Particlemitter timer higher than delay, emitting particle if particle emitter is emitting: "+particleEmitter.isEmitting());
+            
+            if(particleEmitter.isEmitting()){
                 
-                boolean[] possibleStates=((Container)particleEmitter.getParentObject()).getSolution().containsStates();
-                
-                if(possibleStates[0])
-                    
-                    activeParticles.add(new Particle(particleEmitter,"Models/Particles/Gas/Gas.j3o",0));
-                
-                if(possibleStates[1])
-                    
-                    activeParticles.add(new Particle(particleEmitter,"Models/Particles/Liquid/Liquid.j3o",1));
-                
-                if(possibleStates[2])
-                    
-                    activeParticles.add(new Particle(particleEmitter,"Models/Particles/Solid/Solid.j3o",2));
-                
+                //System.out.println("Particlemitter is emitting, emitting partcile if parent object of emitter is a container: "+(particleEmitter.getParentObject() instanceof Container)+" and if it has a solution: "+((Container)particleEmitter.getParentObject()).getSolution());
+            
+                particleEmitter.emit();
+            
             }
             
             timer=0;

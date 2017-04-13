@@ -68,19 +68,21 @@ public class Beaker extends Container implements Savable{
         
     }
     
-    public Beaker(Main main,Vector3f position,Solution solution,double quantity){
+    public Beaker(Main main,Vector3f position,Solution solution){
         
-        super(main,position,solution,quantity);
+        super(main,position,solution);
+        
+        System.out.println("TEST: creating beaker with main: "+main);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
-        liquidModelMat.setColor("Color",solution.getLiquidColor()); 
+        //liquidModelMat.setColor("Color",solution.getLiquidColor()); 
         
-        solidModelMat.setColor("Color",solution.getSolidColor());
+        //solidModelMat.setColor("Color",solution.getSolidColor());
         
     }
     
-    public void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
+    private void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
         node=new Node();
         
@@ -115,7 +117,7 @@ public class Beaker extends Container implements Savable{
         highlightModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         highlightModelMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
         highlightModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        highlightModel.setQueueBucket(RenderQueue.Bucket.Transparent);
+        highlightModel.setQueueBucket(RenderQueue.Bucket.Translucent);
         highlightModel.setMaterial(highlightModelMat);
         node.attachChild(highlightModel);
         highlightModel.setLocalTranslation(0,-50,0);
@@ -158,9 +160,9 @@ public class Beaker extends Container implements Savable{
         
         particleEmitterPosition=position.add(0.05f,0,0);
         
-        particleEmitter=new ParticleEmitter(assetManager,this,particleEmitterPosition,spatial.getControl(RigidBodyControl.class).getPhysicsRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getControl(RigidBodyControl.class).getPhysicsRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
-        setPosition(position);
+        setPos(position);
         
     }
     
@@ -235,7 +237,7 @@ public class Beaker extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Beaker:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "Beaker:\n  Contains: "+this.getSolution()+"\n  Quantity: "+getVolume();
         
     }
 
@@ -262,7 +264,7 @@ public class Beaker extends Container implements Savable{
     }
     
     @Override
-    public void setPosition(Vector3f position){
+    public void setPos(Vector3f position){
         
         spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         node.setLocalTranslation(position);
@@ -323,6 +325,46 @@ public class Beaker extends Container implements Savable{
     public void setVelocity(Vector3f velocity){
         
         spatial.getControl(RigidBodyControl.class).setLinearVelocity(velocity);
+        
+    }
+    
+    @Override
+    public boolean canContain(int state){
+        
+        switch(state){
+            
+            case 0:
+                
+                return true;
+                
+            case 1:
+                
+                return true;
+                
+            case 2:
+                
+                return true;
+                
+            default:
+                
+                System.out.println("Invalid state passed to canContain()");
+                return false;
+            
+        }
+        
+    }
+    
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Beaker";
         
     }
     

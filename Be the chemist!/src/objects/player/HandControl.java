@@ -18,7 +18,6 @@ import com.jme3.scene.control.AbstractControl;
 import com.jme3.scene.shape.Box;
 import interfaces.Describable;
 import interfaces.Grabbable;
-import java.util.ArrayList;
 import jmevr.input.OpenVRInput;
 import jmevr.input.VRAPI;
 import main.Main;
@@ -26,11 +25,15 @@ import objects.PhysicalObject;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.containers.beaker.Beaker;
+import objects.containers.gasSac.GasSac;
+import objects.containers.gasSac.GasSacValve;
 import objects.world.Floor;
 import objects.world.display.Button;
 import objects.world.display.Display;
 import objects.world.display.ElementButton;
+import objects.world.display.MaterialButton;
 import objects.world.display.PeriodicTableDisplay;
+import objects.world.display.SubstanceButton;
 //by Tommy
 public class HandControl extends AbstractControl{
     
@@ -38,7 +41,6 @@ public class HandControl extends AbstractControl{
     private static CollisionResults collisionResults;
     private static int controllerCount;
     private static Node rootNode;
-    private static ArrayList<Describable> describables;
     private static int presentCorrectCollisionIndex;
     private static Spatial observer;
     
@@ -58,6 +60,7 @@ public class HandControl extends AbstractControl{
     
     private boolean laserMovedOut,laserPointingAtDescribable;
     private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;
+    private boolean touchPadPressedDown,touchPadPressedUp,touchPadPressedRight,touchPadPressedLeft;
     private boolean menuPressed,touchpadPressed,triggerPressed,gripPressed;
     private boolean menuWasPressed,touchPadWasPressed,triggerWasPressed,gripWasPressed;
     private boolean laserActivatedByTeleportation,laserActivatedByDescription,laserActivatedByDisplay,laserActivated;
@@ -77,6 +80,12 @@ public class HandControl extends AbstractControl{
     private boolean pointingPeriodicTableDisplay;
     private boolean pointingElementButton;
     
+    private SubstanceButton presentPointedSubstanceButton;
+    private boolean pointingSubstanceButton;
+    
+    private MaterialButton presentPointedMaterialButton;
+    private boolean pointingMaterialButton;
+    
     private static final Vector3f OUT_OF_MAP=new Vector3f(0,-1,0);
     private static final ColorRGBA GREEN_LASER=ColorRGBA.Green,RED_LASER=ColorRGBA.Red;
     
@@ -84,7 +93,7 @@ public class HandControl extends AbstractControl{
     
     private Main main;
     
-    public HandControl(Main main,Node newRootNode,AssetManager assetManager,ArrayList<Describable> newDescribables,CollisionResults newCollisionResults,Hand hand,Spatial newObserver,Player player){
+    public HandControl(Main main,Node newRootNode,AssetManager assetManager,CollisionResults newCollisionResults,Hand hand,Spatial newObserver,Player player){
         
         this.main=main;
         
@@ -95,7 +104,6 @@ public class HandControl extends AbstractControl{
         rootNode=newRootNode;
         VRHardware=Hand.VRHardware;
         handSide=hand.getSide();
-        describables=newDescribables;
         collisionResults=newCollisionResults;
         
         collisionToExclude=handSide==0 ? "RightHand" : "LeftHand";
@@ -305,7 +313,7 @@ public class HandControl extends AbstractControl{
 
                 //System.out.println("\t\t\tCollision geom has correctCollision userData, checking if its name "+collisionResults.getCollision(i).getGeometry().getName()+" contains "+collisionToExclude);
 
-                if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)){
+                if(!collisionResults.getCollision(i).getGeometry().getName().contains(collisionToExclude)&&!collisionResults.getCollision(i).getGeometry().getUserData("correspondingObject").equals(hand.getHeldObject())){
                     
                     foundPresentCorrectCollision=true;
 
@@ -323,7 +331,7 @@ public class HandControl extends AbstractControl{
 
                 //System.out.println("\t\t\tCollision geom does not have correctCollision userData but parent does, checking if the collision geom's parent's name: "+collisionResults.getCollision(i).getGeometry().getParent().getName()+" contains "+collisionToExclude);
 
-                if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)){
+                if(!collisionResults.getCollision(i).getGeometry().getParent().getName().contains(collisionToExclude)&&!collisionResults.getCollision(i).getGeometry().getParent().getUserData("correspondingObject").equals(hand.getHeldObject())){
                     
                     foundPresentCorrectCollision=true;
 
@@ -364,12 +372,15 @@ public class HandControl extends AbstractControl{
         //if the distance between the held item is now more than 15cm, set the held item to null
         if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())>0.15f){
             
-            System.out.println("Distance between hand and held object is now more than 15 cm, setting held object to null and static hold to false");
+            //System.out.println("Distance between hand and held object is now more than 15 cm, setting held object to null and static hold to false");
             
             //Do a final action on the object being forcible dropped
             if(hand.getHeldObject() instanceof Beaker){
+                
+                System.out.println("Original velocity to apply to thrown object: "+VRHardware.getVRinput().getVelocity(handSide));
+                System.out.println("Modified velocity to apply to thrown object: "+VRHardware.getVRinput().getVelocity(handSide).multLocal(new Vector3f(-1,1,-1)));
                         
-                ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide));
+                ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(new Vector3f(-1,1,-1)));
                 
             }
             
@@ -389,36 +400,44 @@ public class HandControl extends AbstractControl{
         
         //System.out.println("Searching for grabbable object in hand's vicinity...");
         
-        //for each item in the item list
-        for(PhysicalObject p: main.getItemsList()){
-            
-            //System.out.println("Object: "+p);
-            
-            //System.out.println("Grabbable: "+(p instanceof Grabbable)+", its pos: "+p.getPos()+", Hand pos: "+hand.getWorldTranslation()+", distance: "+p.getPos().distance(hand.getWorldTranslation()));
-                
-            //check if the item is grabbable
-            //check if the item's distance compared to the hand is less than 15cm
-            //check if the last grabbable item is null or if the item's distance compared to the hand is less than the last grabbable item
-            if(p instanceof Grabbable&&((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation()))){
-                
-                System.out.println("This is the new better grabbable item");
-                
-                //set the last grabbable item's highlight to invisible
-                //set the grabbable item to the item
-                //set the grabbable item's highlight to visible
-                if(possibleItemToGrab!=null)
-                
-                    ((Grabbable)possibleItemToGrab).highlightVisible(false);
-                
-                possibleItemToGrab=p;
-                
-                ((Grabbable)p).highlightVisible(true);
-                
-                System.out.println("Item's highlight set to visible");
+        if(hand.getHeldObject()==null)
+        
+            //for each item in the item list
+            for(PhysicalObject p: main.getItemsList()){
+
+                //System.out.println("Object: "+p);
+
+                //System.out.println("Grabbable: "+(p instanceof Grabbable)+", its pos: "+p.getPos()+", Hand pos: "+hand.getWorldTranslation()+", distance: "+p.getPos().distance(hand.getWorldTranslation()));
+
+                //check if the item is grabbable
+                //check if the item's distance compared to the hand is less than 15cm
+                //check if the last grabbable item is null or if the item's distance compared to the hand is less than the last grabbable item
+                if(p instanceof Grabbable&&((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation()))){
+
+                    //System.out.println("This is the new better grabbable item");
+                    
+                    if(p instanceof GasSacValve){
+                        
+                        System.out.println("possible to grab object is gas sac valve");
+                        
+                    }
+
+                    //set the last grabbable item's highlight to invisible
+                    //set the grabbable item to the item
+                    //set the grabbable item's highlight to visible
+                    if(possibleItemToGrab!=null)
+
+                        ((Grabbable)possibleItemToGrab).highlightVisible(false);
+
+                    possibleItemToGrab=p;
+
+                    ((Grabbable)p).highlightVisible(true);
+
+                    //System.out.println("Item's highlight set to visible");
+
+                }
 
             }
-
-        }
         
     }
     
@@ -438,28 +457,44 @@ public class HandControl extends AbstractControl{
                     
                     //add what happens when the player continues to hold the trigger
                     
-                    System.out.println("The trigger is still being pressed");
+                    //System.out.println("The trigger is still being pressed");
                     
                     setGrabbedItemPosition();
                     
                 }else{//trigger was not being pressed
                     
-                    System.out.println("The trigger has just started being pressed");
+                    //System.out.println("The trigger has just started being pressed");
                     
-                    if(!pointingDisplay&&!pointingButton&&!pointingElementButton&&!pointingPeriodicTableDisplay){
+                    if(!pointingDisplay&&!pointingButton&&!pointingElementButton&&!pointingPeriodicTableDisplay&&!pointingSubstanceButton&&!pointingMaterialButton){
                         
                         hand.setOpenned(false);
                         
-                        System.out.println("Hand set to closed");
+                        //System.out.println("Hand set to closed");
                         
                         //if there is an item possible to grab
                         if(possibleItemToGrab!=null){
 
-                            System.out.println("Item prossible to grab not null, calling method to grab...");
+                            //System.out.println("Item prossible to grab not null, calling method to grab...");
 
                             grabGrabbableItem();
 
                         }
+                        
+                    }else if(pointingElementButton){
+                        
+                        presentPointedElementButton.activate(hand);
+                        
+                    }else if(pointingSubstanceButton){
+                        
+                        presentPointedSubstanceButton.activate();
+                        
+                    }else if(pointingMaterialButton){
+                        
+                        presentPointedMaterialButton.activate();
+                        
+                    }else if (pointingButton){
+                        
+                        presentPointedButton.activate(hand);
                         
                     }
                     
@@ -488,15 +523,15 @@ public class HandControl extends AbstractControl{
                     //Do a final action on the held object before it is dropped by the player
                     if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
                         
-                        ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide));
+                        ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
                         
                     }
                 
                     hand.setHeldObject(null);
                     
+                    hand.setOpenned(true);
+                    
                 }
-                
-                hand.setOpenned(true);
 
                 //add what happens when the player releases the trigger
                 //if the player was holding an object and if statichold is not currently active, make them drop the item
@@ -510,6 +545,12 @@ public class HandControl extends AbstractControl{
             }
 
             triggerWasPressed=false;
+            
+            if(!hand.hasStaticHold()){
+                    
+                hand.setOpenned(true);
+                    
+            }
 
         }
         
@@ -691,6 +732,10 @@ public class HandControl extends AbstractControl{
                 if(degTouchPadXAngle>45){//Touchpad being pressed UP 
 
                     //System.out.println("\t\tTouchPad: UP");
+                    touchPadPressedUp=true;
+                    touchPadPressedDown=false;
+                    touchPadPressedRight=false;
+                    touchPadPressedLeft=false;
 
                     conditionalMoveTeleLaserOut();
 
@@ -699,6 +744,10 @@ public class HandControl extends AbstractControl{
                 }else{//Touchpad being pressed RIGHT
 
                     //System.out.println("\t\tTouchPad: RIGHT");
+                    touchPadPressedUp=false;
+                    touchPadPressedDown=false;
+                    touchPadPressedRight=true;
+                    touchPadPressedLeft=false;
 
                     conditionalMoveTeleLaserOut();
 
@@ -711,6 +760,10 @@ public class HandControl extends AbstractControl{
                 if(degTouchPadXAngle>45){//Touchpad being pressed UP
 
                     //System.out.println("\t\tTouchPad: UP");
+                    touchPadPressedUp=true;
+                    touchPadPressedDown=false;
+                    touchPadPressedRight=false;
+                    touchPadPressedLeft=false;
 
                     conditionalMoveTeleLaserOut();
 
@@ -720,6 +773,10 @@ public class HandControl extends AbstractControl{
                 }else{//Touchpad being pressed LEFT
 
                     //System.out.println("\t\tTouchPad: LEFT");
+                    touchPadPressedUp=false;
+                    touchPadPressedDown=false;
+                    touchPadPressedRight=false;
+                    touchPadPressedLeft=true;
 
                     conditionalMoveTeleLaserOut();
 
@@ -732,12 +789,20 @@ public class HandControl extends AbstractControl{
                 if(degTouchPadXAngle>45){//Touchpad being presse DOWN
 
                     //System.out.println("\t\tTouchPad: DOWN");
+                    touchPadPressedUp=false;
+                    touchPadPressedDown=true;
+                    touchPadPressedRight=false;
+                    touchPadPressedLeft=false;
 
                     processTeleportation();
 
                 }else{//Touchpad being pressed LEFT
 
                     //System.out.println("\t\tTouchPad: LEFT");
+                    touchPadPressedUp=false;
+                    touchPadPressedDown=false;
+                    touchPadPressedRight=false;
+                    touchPadPressedLeft=true;
 
                     conditionalMoveTeleLaserOut();
 
@@ -750,12 +815,20 @@ public class HandControl extends AbstractControl{
                 if(degTouchPadXAngle>45){//Touchpad being pressed DOWN
 
                     //System.out.println("\t\tTouchPad: DOWN");
+                    touchPadPressedUp=false;
+                    touchPadPressedDown=true;
+                    touchPadPressedRight=false;
+                    touchPadPressedLeft=false;
 
                     processTeleportation();
 
                 }else{//Touchpad being pressed RIGHT
 
                     //System.out.println("\t\tTouchPad: RIGHT");
+                    touchPadPressedUp=false;
+                    touchPadPressedDown=false;
+                    touchPadPressedRight=true;
+                    touchPadPressedLeft=false;
 
                     conditionalMoveTeleLaserOut();
 
@@ -772,14 +845,41 @@ public class HandControl extends AbstractControl{
         if(touchPadDown&&!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis)){
 
             //System.out.println("Touchpad released");
+            if(touchPadPressedUp){
+                
+                if(hand.isHoldingObject()&&hand.getHeldObject() instanceof GasSac){
+                    
+                    ((GasSac)hand.getHeldObject()).toggle();
+                    
+                }
+                
+            }else if(touchPadPressedDown){
 
-            if(teleportationPrimed){
+                if(teleportationPrimed){
 
-                player.teleportArea(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+                    if(player.getHand(0)!=null&&player.getHand(0).getHeldObject()!=null)
 
+                        player.getHand(0).getHeldObject().setPos(player.getHand(0).getWorldTranslation());
+
+                    if(player.getHand(1)!=null&&player.getHand(1).getHeldObject()!=null)
+
+                        player.getHand(1).getHeldObject().setPos(player.getHand(1).getWorldTranslation());
+
+                    player.teleportArea(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
+
+                }
+
+                conditionalMoveTeleLaserOut();
+                    
+            }else if(touchPadPressedRight){
+                
+                
+                
+            }else if(touchPadPressedLeft){
+                
+                
+                
             }
-
-            conditionalMoveTeleLaserOut();
 
             touchPadDown=false;
 
@@ -789,9 +889,11 @@ public class HandControl extends AbstractControl{
     
     private void updateLaser(){
         
+        //System.out.println(laserMovedOut);
+        
         //check if laser is being used
         //if it isn't check if player is pointing a display
-        if(laserMovedOut){
+        if(!laserActivatedByDescription&&!laserActivatedByTeleportation){
 
             //System.out.println("Laser not in use, checking is player is pointing at a display...");
 
@@ -811,13 +913,19 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=false;
                     pointingButton=true;
                     pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
 
                     presentPointedButton=((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
 
                     presentPointedButton.setPointed(true);
+                    
+                    //laserActivatedByDisplay=true;
 
                 }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof Display){
 
@@ -825,6 +933,8 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=false;
                     pointingButton=false;
                     pointingDisplay=true;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
 
@@ -837,6 +947,10 @@ public class HandControl extends AbstractControl{
                     }
 
                     presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
+                    
+                    //laserActivatedByDisplay=true;
 
                 }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof ElementButton){
 
@@ -844,11 +958,17 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=false;
                     pointingButton=false;
                     pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
 
                     presentPointedElementButton=((ElementButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     presentPointedButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
+                    
+                    //laserActivatedByDisplay=true;
 
                 }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof PeriodicTableDisplay){
 
@@ -856,11 +976,65 @@ public class HandControl extends AbstractControl{
                     pointingPeriodicTableDisplay=true;
                     pointingButton=false;
                     pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
 
                     presentPointedButton=null;
                     presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=null;
+                    
+                    //laserActivatedByDisplay=true;
+
+                }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof SubstanceButton){
+
+                    pointingElementButton=false;
+                    pointingPeriodicTableDisplay=false;
+                    pointingButton=false;
+                    pointingDisplay=false;
+                    pointingSubstanceButton=true;
+                    pointingMaterialButton=false;
+
+                    makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    
+                    if(presentPointedButton!=null){
+
+                        presentPointedButton.setPointed(false);
+
+                        presentPointedButton=null;
+
+                    }
+
+                    presentPointedElementButton=null;
+                    presentPointedSubstanceButton=((SubstanceButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
+                    presentPointedMaterialButton=null;
+                    //laserActivatedByDisplay=true;
+
+                }else if(collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject") instanceof MaterialButton){
+
+                    pointingElementButton=false;
+                    pointingPeriodicTableDisplay=false;
+                    pointingButton=false;
+                    pointingDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=true;
+
+                    makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    
+                    if(presentPointedButton!=null){
+
+                        presentPointedButton.setPointed(false);
+
+                        presentPointedButton=null;
+
+                    }
+
+                    presentPointedElementButton=null;
+                    presentPointedSubstanceButton=null;
+                    presentPointedMaterialButton=((MaterialButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
+                    //laserActivatedByDisplay=true;
 
                 }else{
 
@@ -868,6 +1042,8 @@ public class HandControl extends AbstractControl{
                     pointingDisplay=false;
                     pointingElementButton=false;
                     pointingPeriodicTableDisplay=false;
+                    pointingSubstanceButton=false;
+                    pointingMaterialButton=false;
 
                     if(presentPointedButton!=null){
 
@@ -876,6 +1052,12 @@ public class HandControl extends AbstractControl{
                         presentPointedButton=null;
 
                     }
+                    
+                    presentPointedSubstanceButton=null;
+                    presentPointedElementButton=null;
+                    presentPointedMaterialButton=null;
+                    
+                    //laserActivatedByDisplay=false;
 
                 }
             
@@ -886,6 +1068,8 @@ public class HandControl extends AbstractControl{
     }
     
     private void makeLaserAppear(Vector3f endPoint,ColorRGBA color){
+        
+        //System.out.println("makeLaserAppear has been called");
         
         hand.setLaserMaterialColor("Color",color);
         
@@ -905,20 +1089,22 @@ public class HandControl extends AbstractControl{
     
     private void grabGrabbableItem(){
         
-        System.out.println("Grab grabbable item called, setting hand's held object to possible item to grab...");
+        //System.out.println("Grab grabbable item called, setting hand's held object to possible item to grab...");
         
         hand.setHeldObject(possibleItemToGrab);
         
         ((Grabbable)hand.getHeldObject()).highlightVisible(false);
         
         //Do an initial action on the grabbed object
+        /*
         if(hand.getHeldObject() instanceof Beaker){
             
-            //((Beaker)hand.getHeldObject()).setEnabled(false);
+            ((Beaker)hand.getHeldObject()).setEnabled(false);
             
         }
+        */
         
-        System.out.println("calling method to inittially position grabebd item...");
+        //System.out.println("calling method to inittially position grabebd item...");
         
         setGrabbedItemPosition();
         
@@ -926,16 +1112,16 @@ public class HandControl extends AbstractControl{
     
     private void setGrabbedItemPosition(){
         
-        System.out.println("Present held item: "+hand.getHeldObject());
+        //System.out.println("Present held item: "+hand.getHeldObject());
         
-        System.out.println("setting the item's position depending on what it is...");
+        //System.out.println("setting the item's position depending on what it is...");
         
         //for the exceptional case that the held object is the fume hood door
         if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof FumeHoodDoor&&hand.getWorldTranslation().getY()<=2&&hand.getWorldTranslation().getY()>=1.02f){
             
             //System.out.println("Held ojbject is not null, it is a fume hood door, the hand's Y position is less or equal to 2 and higher or equal to 1.02");
             
-            ((FumeHoodDoor)hand.getHeldObject()).setPosition(new Vector3f(6.72f,hand.getWorldTranslation().getY(),10.18f));
+            ((FumeHoodDoor)hand.getHeldObject()).setPos(new Vector3f(6.72f,hand.getWorldTranslation().getY(),10.18f));
             
         }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof DistilledWaterContainer){
             
@@ -949,15 +1135,27 @@ public class HandControl extends AbstractControl{
             
         }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
             
-            System.out.println("Object is a beaker, setting its position to hand position: "+hand.getWorldTranslation()+" and rotation to hand rotation: "+hand.getRotation());
+            //System.out.println("Object is a beaker, setting its position to hand position: "+hand.getWorldTranslation()+" and rotation to hand rotation: "+hand.getRotation());
             
-            ((Beaker)hand.getHeldObject()).setPosition(hand.getWorldTranslation());
+            ((Beaker)hand.getHeldObject()).setPos(hand.getWorldTranslation());
             ((Beaker)hand.getHeldObject()).setRotation(hand.getRotation());
             
             //((Beaker)hand.getHeldObject()).clearForces(); Doesnt remove the velocity of the object
             ((Beaker)hand.getHeldObject()).clearVelocity();
             
-            System.out.println("All forces have been cleared on beaker being held");
+            //System.out.println("All forces have been cleared on beaker being held");
+            
+        }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof GasSac){
+            
+            //System.out.println("Object is a GasSac, setting its position to hand position: "+hand.getWorldTranslation()+" and rotation to hand rotation: "+hand.getRotation());
+            
+            ((GasSac)hand.getHeldObject()).setPos(hand.getWorldTranslation());
+            ((GasSac)hand.getHeldObject()).setRotation(hand.getRotation());
+            
+            //((Beaker)hand.getHeldObject()).clearForces(); Doesnt remove the velocity of the object
+            ((GasSac)hand.getHeldObject()).clearVelocity();
+            
+            //System.out.println("All forces have been cleared on GasSac being held");
             
         }
         

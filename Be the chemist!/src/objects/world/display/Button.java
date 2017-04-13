@@ -17,8 +17,16 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Quad;
+import interfaces.Grabbable;
 import java.io.IOException;
+import java.util.ArrayList;
 import objects.PhysicalObject;
+import objects.containers.Container;
+import objects.containers.beaker.Beaker;
+import objects.containers.gasSac.GasSac;
+import objects.player.Hand;
+import objects.solution.Solution;
+import main.Main;
 
 /**
  *
@@ -26,7 +34,11 @@ import objects.PhysicalObject;
  */
 public class Button implements Savable{
     
+    private static ArrayList<Button> stateFilterButtons;
+    
     private AssetManager assetManager;
+    
+    private Main main;
     
     private Display parentDisplay;
     
@@ -56,6 +68,8 @@ public class Button implements Savable{
     
     private ColorRGBA presentBackgroundColor;
     
+    private int preset;
+    
     //Main menu
     public static final int TOGGLE_MODE=0,CREDITS=1,EXIT_GAME=2;
         //Settings TODO
@@ -72,14 +86,18 @@ public class Button implements Savable{
     public static final int KEY_OPEN_PARENTHESES=48,KEY_CLOSE_PARENTHESES=49,KEY_CAPS=50,KEY_COMMA=51,KEY_PERIOD=52;
     
     
-    public Button(AssetManager assetManager,Display parentDisplay,int preset){
+    public Button(Main main,Display parentDisplay,int preset){
         
-        this.assetManager=assetManager;
+        this.main=main;
+        this.assetManager=main.getAssetManager();
         this.parentDisplay=parentDisplay;
         node=new Node();
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text=new BitmapText(font);
+        stateFilterButtons=new ArrayList<>();
         node.attachChild(text);
+        
+        this.preset=preset;
         
         setup(preset);
         
@@ -128,6 +146,9 @@ public class Button implements Savable{
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,-0.85f,0.05f);
+                
+                keyBoardSelectedDisplay=parentDisplay;
+                
                 break;
                 
             case 4:
@@ -141,6 +162,7 @@ public class Button implements Savable{
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.06f,0.05f);
+                stateFilterButtons.add(this);
                 break;
                 
             case 6:
@@ -152,6 +174,7 @@ public class Button implements Savable{
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.19f,0.05f);
+                stateFilterButtons.add(this);
                 break;
                 
             case 7:
@@ -163,6 +186,7 @@ public class Button implements Savable{
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.32f,0.05f);
+                stateFilterButtons.add(this);
                 break;
                 
             case 8:
@@ -174,7 +198,7 @@ public class Button implements Savable{
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(-0.495f,0.03f,0.01f);
                 
-                keyBoardSelectedDisplay=parentDisplay;
+                //keyBoardSelectedDisplay=parentDisplay;
                 
                 break;
                 
@@ -761,7 +785,9 @@ public class Button implements Savable{
         
     }
     
-    public void activate(int preset){
+    public void activate(Hand hand){
+        
+        System.out.println("Button activate() called on preset: "+preset);
         
         switch(preset){
             
@@ -797,6 +823,47 @@ public class Button implements Savable{
                 
                 //WILL NEED TO ADD LOGIC BEHIND SUBSTANCE LIST FIRST
                 
+                if(parentDisplay.getSelectedSubstanceButton()!=null){
+                    
+                    if(hand.isHoldingObject()&&hand.getHeldObject() instanceof Container){
+
+                        if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
+
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance()));
+
+                        }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
+
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance()));
+
+                        }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
+
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance()));
+
+                        }
+
+                    }else if(!hand.isHoldingObject()){
+
+                        switch (parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)) {
+                            case 0:
+                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance())));
+                                break;
+                            case 1:
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance())));
+                                break;
+                            case 2:
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance())));
+                                break;
+                            default:
+                                System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
+                                break;
+                        }
+
+                        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
+
+                    }       
+                    
+                }
+                
                 break;
                 
             case 4:
@@ -809,6 +876,16 @@ public class Button implements Savable{
                     
                     backgroundMat.setColor("Color", POINTED_COLOR);
                     presentBackgroundColor=POINTED_COLOR;
+                    
+                    for(Button b: stateFilterButtons){
+                        
+                        if(b!=this){
+                            
+                            b.setColor(NORMAL_COLOR);
+                            
+                        }
+                        
+                    }
                     
                 }else{
                     
@@ -828,6 +905,16 @@ public class Button implements Savable{
                     backgroundMat.setColor("Color", POINTED_COLOR);
                     presentBackgroundColor=POINTED_COLOR;
                     
+                    for(Button b: stateFilterButtons){
+                        
+                        if(b!=this){
+                            
+                            b.setColor(NORMAL_COLOR);
+                            
+                        }
+                        
+                    }
+                    
                 }else{
                     
                     backgroundMat.setColor("Color", NORMAL_COLOR);
@@ -845,6 +932,16 @@ public class Button implements Savable{
                     
                     backgroundMat.setColor("Color", POINTED_COLOR);
                     presentBackgroundColor=POINTED_COLOR;
+                    
+                    for(Button b: stateFilterButtons){
+                        
+                        if(b!=this){
+                            
+                            b.setColor(NORMAL_COLOR);
+                            
+                        }
+                        
+                    }
                     
                 }else{
                     
@@ -869,518 +966,608 @@ public class Button implements Savable{
                     
                 }
                 
-                text.setSize(0.08f);
-                text.setText("Q");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.495f,0.03f,0.01f);
                 break;
                 
             case 9:
                 
-                text.setSize(0.08f);
-                text.setText("W");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.385f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("W");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("w");
+                    
+                }
+                
                 break;
                 
             case 10:
                 
-                text.setSize(0.08f);
-                text.setText("E");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.275f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("E");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("e");
+                    
+                }
+                
                 break;
                 
             case 11:
                 
-                text.setSize(0.08f);
-                text.setText("R");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.165f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("R");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("r");
+                    
+                }
+                
                 break;
                 
             case 12:
                 
-                text.setSize(0.08f);
-                text.setText("T");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.055f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("T");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("t");
+                    
+                }
+                
                 break;
                 
             case 13:
                 
-                text.setSize(0.08f);
-                text.setText("Y");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.055f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("Y");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("y");
+                    
+                }
+                
                 break;
                 
             case 14:
                 
-                text.setSize(0.08f);
-                text.setText("U");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.165f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("U");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("u");
+                    
+                }
+                
                 break;
                 
             case 15:
                 
-                text.setSize(0.08f);
-                text.setText("I");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.275f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("I");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("i");
+                    
+                }
+                
                 break;
                 
             case 16:
                 
-                text.setSize(0.08f);
-                text.setText("O");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.385f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("O");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("o");
+                    
+                }
+                
                 break;
                 
             case 17:
                 
-                text.setSize(0.08f);
-                text.setText("P");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.495f,0.03f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("P");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("p");
+                    
+                }
+                
                 break;
                 
             case 18:
                 
-                text.setSize(0.08f);
-                text.setText("A");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.44f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("A");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("a");
+                    
+                }
+                
                 break;
                 
             case 19:
                 
-                text.setSize(0.08f);
-                text.setText("S");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.33f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("S");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("s");
+                    
+                }
+                
                 break;
                 
             case 20:
                 
-                text.setSize(0.08f);
-                text.setText("D");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.22f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("D");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("d");
+                    
+                }
+                
                 break;
                 
             case 21:
                 
-                text.setSize(0.08f);
-                text.setText("F");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.11f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("F");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("f");
+                    
+                }
+                
                 break;
                 
             case 22:
                 
-                text.setSize(0.08f);
-                text.setText("G");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("G");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("g");
+                    
+                }
+                
                 break;
                 
             case 23:
                 
-                text.setSize(0.08f);
-                text.setText("H");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.11f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("H");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("h");
+                    
+                }
+                
                 break;
                 
             case 24:
                 
-                text.setSize(0.08f);
-                text.setText("J");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.22f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("J");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("j");
+                    
+                }
+                
                 break;
                 
             case 25:
                 
-                text.setSize(0.08f);
-                text.setText("K");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.33f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("K");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("k");
+                    
+                }
+                
                 break;
                 
             case 26:
                 
-                text.setSize(0.08f);
-                text.setText("L");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.44f,-0.08f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("L");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("l");
+                    
+                }
+                
                 break;
                 
             case 27:
                 
-                text.setSize(0.08f);
-                text.setText("Z");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.385f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("Z");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("z");
+                    
+                }
+                
                 break;
                 
             case 28:
                 
-                text.setSize(0.08f);
-                text.setText("X");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.275f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("X");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("x");
+                    
+                }
+                
                 break;
                 
             case 29:
                 
-                text.setSize(0.08f);
-                text.setText("C");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.165f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("C");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("c");
+                    
+                }
+                
                 break;
                 
             case 30:
                 
-                text.setSize(0.08f);
-                text.setText("V");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.055f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("V");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("v");
+                    
+                }
+                
                 break;
                 
             case 31:
                 
-                text.setSize(0.08f);
-                text.setText("B");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.055f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("B");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("b");
+                    
+                }
+                
                 break;
                 
             case 32:
                 
-                text.setSize(0.08f);
-                text.setText("N");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.165f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("N");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("n");
+                    
+                }
+                
                 break;
                 
             case 33:
                 
-                text.setSize(0.08f);
-                text.setText("M");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.275f,-0.19f,0.01f);
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("M");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("m");
+                    
+                }
+                
                 break;
                 
             case 34:
                 
-                text.setSize(0.08f);
-                text.setText("1");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.495f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("1");
+                
                 break;
                 
             case 35:
                 
-                text.setSize(0.08f);
-                text.setText("2");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.385f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("2");
+                
                 break;
                 
             case 36:
                 
-                text.setSize(0.08f);
-                text.setText("3");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.275f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("3");
+                
                 break;
                 
             case 37:
                 
-                text.setSize(0.08f);
-                text.setText("4");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.165f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("4");
+                
                 break;
                 
             case 38:
                 
-                text.setSize(0.08f);
-                text.setText("5");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.055f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("5");
+                
                 break;
                 
             case 39:
                 
-                text.setSize(0.08f);
-                text.setText("6");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.055f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("6");
+                
                 break;
                 
             case 40:
                 
-                text.setSize(0.08f);
-                text.setText("7");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.165f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("7");
+                
                 break;
                 
             case 41:
                 
-                text.setSize(0.08f);
-                text.setText("8");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.275f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("8");
+                
                 break;
                 
             case 42:
                 
-                text.setSize(0.08f);
-                text.setText("9");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.385f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("9");
+                
                 break;
                 
             case 43:
                 
-                text.setSize(0.08f);
-                text.setText("0");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.495f,0.14f,0.01f);
+                keyBoardSelectedDisplay.addLetter("0");
+                
                 break;
                 
             case 44:
                 
-                text.setSize(0.08f);
-                text.setText(" < ");
-                createBackground(0.14f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.405f,-0.19f,0.01f);
+                keyBoardSelectedDisplay.setTextFieldText(keyBoardSelectedDisplay.getTextField().getText().substring(0,keyBoardSelectedDisplay.getTextField().getText().length()-1));
+                
                 break;
                 
             case 45:
                 
-                text.setSize(0.08f);
-                text.setText("\u2191");
-                createBackground(0.3f,0.02f+text.getLineHeight());
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.33f,0.05f);
+                if(parentDisplay.getSubstanceButtonList().size()>5&&parentDisplay.getIndexOfFirstDisplayedSubstanceButton()>0){
+                    
+                    parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()-1);
+                    parentDisplay.updateDisplayedSubstances();
+                    
+                }
+                
                 break;
                 
             case 46:
                 
-                text.setSize(0.08f);
-                text.setText(" ");
-                createBackground(0.30f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0f,-0.30f,0.01f);
+                keyBoardSelectedDisplay.addLetter(" ");
+                
                 break;
                 
             case 47:
                 
-                text.setSize(0.08f);
-                text.setText("-");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.21f,-0.30f,0.01f);
+                keyBoardSelectedDisplay.addLetter("-");
+                
                 break;
                 
             case 48:
                 
-                text.setSize(0.08f);
-                text.setText("(");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.43f,-0.30f,0.01f);
+                keyBoardSelectedDisplay.addLetter("(");
+                
                 break;
                 
             case 49:
                 
-                text.setSize(0.08f);
-                text.setText(")");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.32f,-0.30f,0.01f);
+                keyBoardSelectedDisplay.addLetter(")");
+                
                 break;
                 
             case 50:
                 
-                text.setSize(0.08f);
-                text.setText("\u2191");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-0.495f,-0.19f,0.01f);
+                capsActivated = !capsActivated;
+                
                 break;
                 
             case 51:
                 
-                text.setSize(0.08f);
-                text.setText(",");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.21f,-0.30f,0.01f);
+                keyBoardSelectedDisplay.addLetter(",");
+                
                 break;
                 
             case 52:
                 
-                text.setSize(0.08f);
-                text.setText(".");
-                createBackground(0.1f,0.1f);
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.001f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0.32f,-0.30f,0.01f);
+                keyBoardSelectedDisplay.addLetter(".");
+                
                 break;
                 
             case 53:
                 
-                text.setSize(0.08f);
-                text.setText("Get selected item");
-                createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(0,-0.85f,0.05f);
+                System.out.println("Get selected item material button pressed");
+                
+                if(parentDisplay.getSelectedMaterialButton()!=null){
+                    
+                    if(!hand.isHoldingObject()){
+
+                        switch (parentDisplay.getSelectedMaterialButton().getName()) {
+                            case "Beaker":
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation()));
+                                break;
+                            case "Gas sac":
+                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation()));
+                                break;
+                            default:
+                                System.out.println("ERROR: Invalid material button name");
+                                break;
+                        }
+
+                        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
+
+                    }       
+                    
+                }
+                
                 break;
                 
             case 54:
                 
-                text.setSize(0.08f);
-                text.setText("\u2193");
-                createBackground(0.3f,0.02f+text.getLineHeight());
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.20f,0.05f);
+                if(parentDisplay.getSubstanceButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedSubstanceButton()<parentDisplay.getSubstanceButtonList().size()-1){
+                    
+                    parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()+1);
+                    parentDisplay.updateDisplayedSubstances();
+                    
+                }
+                
                 break;
                 
             case 55:
                 
-                text.setSize(0.08f);
-                text.setText("\u2191");
-                createBackground(0.3f,0.02f+text.getLineHeight());
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-(parentDisplay.getWidthDimension()/2)+(quad.getWidth()/2)+0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.33f,0.05f);
+                if(parentDisplay.getMaterialButtonList().size()>5&&parentDisplay.getIndexOfFirstDisplayedMaterialButton()>0){
+                    
+                    parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()-1);
+                    parentDisplay.updateDisplayedMaterials();
+                    
+                }
+                
                 break;
                 
             case 56:
                 
-                text.setSize(0.08f);
-                text.setText("\u2193");
-                createBackground(0.3f,0.02f+text.getLineHeight());
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-(parentDisplay.getWidthDimension()/2)+(quad.getWidth()/2)+0.05f,-((parentDisplay.getHeightDimension()/2)+quad.getHeight())+0.20f,0.05f);
+                if(parentDisplay.getMaterialButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedMaterialButton()<parentDisplay.getMaterialButtonList().size()-1){
+                    
+                    parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()+1);
+                    parentDisplay.updateDisplayedMaterials();
+                    
+                }
+                
                 break;
                 
             case 57:
                 
-                text.setSize(0.05f);
-                text.setText("Type (None)");
-                createBackground(0.53f,0.02f+text.getLineHeight());
+                if(text.getText().contains("None")){
+                    
+                    text.setText("Type (Acid)");
+                    
+                    Display.setTypeFilter(1);
+                    
+                }else if(text.getText().contains("Acid")){
+                    
+                    text.setText("Type (Base)");
+                    
+                    Display.setTypeFilter(2);
+                    
+                }else if(text.getText().contains("Base")){
+                    
+                    text.setText("Type (Halogen)");
+                    
+                    Display.setTypeFilter(3);
+                    
+                }else if(text.getText().contains("Halogen")){
+                    
+                    text.setText("Type (Salt)");
+                    
+                    Display.setTypeFilter(4);
+                    
+                }else if(text.getText().contains("Salt")){
+                    
+                    text.setText("Type (Metal)");
+                    
+                    Display.setTypeFilter(5);
+                    
+                }else if(text.getText().contains("Metal")){
+                    
+                    text.setText("Type (Other)");
+                    
+                    Display.setTypeFilter(6);
+                    
+                }else if(text.getText().contains("Other")){
+                    
+                    text.setText("Type (None)");
+                    
+                    Display.setTypeFilter(0);
+                    
+                }
                 
-                //System.out.println("Type quad width: "+quad.getWidth());
-                
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.45f,0.05f);
                 break;
                 
             case 58:
                 
-                text.setSize(0.05f);
-                text.setText("Class (None)");
-                createBackground(0.49f,0.02f+text.getLineHeight());
+                if(text.getText().contains("None")){
+                    
+                    text.setText("Class (Container)");
+                    
+                    Display.setClassFilter(1);
+                    
+                }else if(text.getText().contains("Container")){
+                    
+                    text.setText("Class (Tool)");
+                    
+                    Display.setClassFilter(2);
+                    
+                }else if(text.getText().contains("Tool")){
+                    
+                    text.setText("Class (None)");
+                    
+                    Display.setClassFilter(0);
+                    
+                }
                 
-                //System.out.println("Class quad width: "+quad.getWidth());
-                
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
-                text.setQueueBucket(RenderQueue.Bucket.Translucent);
-                node.setLocalTranslation(-(parentDisplay.getWidthDimension()/2)+(quad.getWidth()/2)+0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.06f,0.05f);
                 break;
             
         }
@@ -1393,6 +1580,13 @@ public class Button implements Savable{
         }
         
         parentDisplay.getNode().attachChild(node);
+        
+    }
+    
+    public void setColor(ColorRGBA color){
+        
+        backgroundMat.setColor("Color", color);
+        presentBackgroundColor=color;
         
     }
 

@@ -5,11 +5,16 @@
 package objects.apparatus.analyticalBalance;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.collision.CollisionResults;
+import com.jme3.export.Savable;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.material.RenderState.BlendMode;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
@@ -27,7 +32,7 @@ import objects.apparatus.Apparatus;
  *
  * @author VIPkiller17
  */
-public class AnalyticalBalance extends Apparatus {
+public class AnalyticalBalance extends Apparatus implements Savable{
     
     private AnalyticalBalanceControl analyticalBalanceControl;
     private PhysicalObject attachedObject;
@@ -35,11 +40,18 @@ public class AnalyticalBalance extends Apparatus {
     private Node node;
     
     private BitmapText text;
+    private BitmapText tareText;
     private BitmapFont font;
     private Spatial analyticalBalanceSurface;
+    private Spatial highlightModel;
+    
+    private Vector3f presentPosition;
+    private Quaternion presentRotation;
     
     private CollisionResults collisionResults;
     
+    private CollisionShape analyticalBalanceCollisionShape;
+    private RigidBodyControl analyticalBalance_phy;
     
     public AnalyticalBalance(Main main,Node rootNode,CollisionResults collisionResults, AssetManager assetManager, Vector3f position) {
        
@@ -50,35 +62,65 @@ public class AnalyticalBalance extends Apparatus {
         spatial=assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance.j3o");
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text = new BitmapText(font);
-        
-        //Quad display = new Quad(0.05f, 0.02f);
-        //Geometry geom = new Geometry("Analytical Balance Display", display);
-        //Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        //material.setColor("Color", ColorRGBA.Black);
-        //geom.setMaterial(material);
+        tareText = new BitmapText(font);
        
+        //Analytical Balance Surface
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0));
+        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0)); //new ColorRGBA(0, 0, 0, 0)
         analyticalBalanceSurface.setMaterial(analyticalBalanceSurfaceMat);
         analyticalBalanceSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(analyticalBalanceSurface);
         
-        //node.attachChild(geom);
+        //Analytical Balance tare button
+        Quad tareButton = new Quad(0.03f, 0.03f); 
+        Geometry tareButtonGeom = new Geometry("Analytical Balance Display", tareButton);
+        Material tareButtonMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        tareButtonMat.setColor("Color", ColorRGBA.Gray);
+        tareButtonGeom.setMaterial(tareButtonMat);
+        tareButtonMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
+        tareButtonGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
+        tareButtonGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        tareButtonGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        tareButtonGeom.setUserData("correctCollision",true);
+        tareButtonGeom.setUserData("correspondingObject", this);
+        tareButtonGeom.setLocalTranslation(-0.115f, 0.025f, 0.055f);
         
-        //geom.setLocalRotation(Quaternion.ZERO); //*
+        //Analytical tare button text
+        tareText.setText("Tare");
+        tareText.setSize(0.01f);
+        tareText.setColor(ColorRGBA.Black);
+        tareText.setLocalTranslation(-0.105f, 0.045f, 0.045f);
+        tareText.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        tareText.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        tareText.setQueueBucket(RenderQueue.Bucket.Translucent);
+        node.attachChild(tareText);
         
-        spatial.setLocalRotation(Quaternion.ZERO); //*
+        //Text initial text to Zero
+        text.setText(0.0+"");
+        text.setSize(0.02f);
+        text.setColor(ColorRGBA.Red);
+        text.setLocalTranslation(-0.09f, 0.037f, -0.085f);
+        text.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
+        text.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
+        node.attachChild(text);
+        
+        node.attachChild(tareButtonGeom);
+        spatial.setLocalRotation(Quaternion.ZERO); 
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         node.attachChild(spatial);
-        
         node.setLocalTranslation(position);
-        rootNode.attachChild(node);
-        node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI*3/4, Vector3f.UNIT_Y));
         
+        //Collision 
+        analyticalBalanceCollisionShape=CollisionShapeFactory.createMeshShape(spatial);
+        analyticalBalance_phy=new RigidBodyControl(analyticalBalanceCollisionShape, 0f);
+        spatial.addControl(analyticalBalance_phy);
+        main.getBulletAppState().getPhysicsSpace().add(analyticalBalance_phy);
         this.collisionResults = collisionResults;
+        
+        rootNode.attachChild(node);
         
     }
     
@@ -145,11 +187,49 @@ public class AnalyticalBalance extends Apparatus {
         else
             return false;
     }
+    
+    public Node getNode(){
+        
+        return node;
+        
+    }
 
     @Override
     public String getDescription() {
         
         return "An analytical balance";
+        
+    }
+    
+    public void setPosition(Vector3f position){
+        
+        spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
+        node.setLocalTranslation(position);
+        
+        System.out.println("Analytical Balance position set to "+position);
+        
+        presentPosition=position;
+        
+    }
+    
+    public Vector3f getPosition(){
+        
+        return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
+        
+    }
+    
+    public void setRotation(Quaternion rotation){
+        
+        spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
+        node.setLocalRotation(rotation);
+        
+        System.out.println("Analytical Balance rotation set to "+rotation);
+        
+    }
+    
+    public Spatial getAnalyticalBalance(){
+        
+        return spatial;
         
     }
 

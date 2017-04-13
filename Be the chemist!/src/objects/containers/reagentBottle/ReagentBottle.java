@@ -55,7 +55,6 @@ public class ReagentBottle extends Container implements Savable {
     private Node node;
     
     public ReagentBottle(Main main,Vector3f position){
-        
         super(main,position);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());

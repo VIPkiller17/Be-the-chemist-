@@ -49,11 +49,7 @@ public abstract class PhysicalObject implements Savable, Describable{
         
     }
     
-    public void setLogicPos(Vector3f position){
-        
-        this.position=position;
-        
-    }
+    public abstract void setPos(Vector3f position);
     
     public Vector3f getPos(){
         
@@ -73,11 +69,7 @@ public abstract class PhysicalObject implements Savable, Describable{
         
     }
     
-    public Node getNode(){
-        
-        return node;
-        
-    }
+    public abstract Node getNode();
     
     public void addPhysicsControl(RigidBodyControl control){
         
@@ -125,15 +117,17 @@ public abstract class PhysicalObject implements Savable, Describable{
     
     @Override
     public void write(JmeExporter je) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public void read(JmeImporter ji) throws IOException {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        
     }
 
     @Override
     public abstract String getDescription();
+    
+    public abstract String getName();
     
 }

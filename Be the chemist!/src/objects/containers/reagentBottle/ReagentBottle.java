@@ -55,16 +55,16 @@ public class ReagentBottle extends Container implements Savable {
     private Node node;
     
     public ReagentBottle(Main main,Vector3f position){
-        ws
+        
         super(main,position);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
     }
     
-    public ReagentBottle(Main main,Vector3f position,Solution solution,double quantity){
+    public ReagentBottle(Main main,Vector3f position,Solution solution){
         
-        super(main,position,solution,quantity);
+        super(main,position,solution);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
@@ -146,7 +146,7 @@ public class ReagentBottle extends Container implements Savable {
         
         particleEmitterPosition=new Vector3f(0.05f,0,0);
         
-        particleEmitter=new ParticleEmitter(assetManager,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
     }
     
@@ -231,7 +231,7 @@ public class ReagentBottle extends Container implements Savable {
     @Override
     public String getDescription() {
         
-        return "ReagentBottle:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getQuantity();
+        return "ReagentBottle:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
         
     }
 
@@ -258,9 +258,42 @@ public class ReagentBottle extends Container implements Savable {
     }
     
     @Override
-    public void setPosition(Vector3f position){
+    public void setPos(Vector3f position){
         
         node.setLocalTranslation(position);
+        
+    }
+    
+    @Override
+    public boolean canContain(int state){
+        
+        switch(state){
+            
+            case 0:
+                
+                return true;
+                
+            case 1:
+                
+                return true;
+                
+            case 2:
+                
+                return true;
+                
+            default:
+                
+                System.out.println("Invalid state passed to canContain()");
+                return false;
+            
+        }
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Reagent bottle";
         
     }
     

@@ -51,11 +51,11 @@ public class AnalyticalBalance extends Apparatus {
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text = new BitmapText(font);
         
-        Quad display = new Quad(0.05f, 0.02f);
-        Geometry geom = new Geometry("Analytical Balance Display", display);
-        Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        material.setColor("Color", ColorRGBA.Black);
-        geom.setMaterial(material);
+        //Quad display = new Quad(0.05f, 0.02f);
+        //Geometry geom = new Geometry("Analytical Balance Display", display);
+        //Material material = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        //material.setColor("Color", ColorRGBA.Black);
+        //geom.setMaterial(material);
        
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -65,9 +65,9 @@ public class AnalyticalBalance extends Apparatus {
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         node.attachChild(analyticalBalanceSurface);
         
-        node.attachChild(geom);
+        //node.attachChild(geom);
         
-        geom.setLocalRotation(Quaternion.ZERO); //*
+        //geom.setLocalRotation(Quaternion.ZERO); //*
         
         spatial.setLocalRotation(Quaternion.ZERO); //*
         spatial.setUserData("correctCollision", true);
@@ -152,6 +152,26 @@ public class AnalyticalBalance extends Apparatus {
         return "An analytical balance";
         
     }
+
+    @Override
+    public void setPos(Vector3f position) {
+        
+        node.setLocalTranslation(position);
+        
+    }
+
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
    
+    @Override
+    public String getName() {
+        
+        return "Analytical balance";
+        
+    }
     
 }

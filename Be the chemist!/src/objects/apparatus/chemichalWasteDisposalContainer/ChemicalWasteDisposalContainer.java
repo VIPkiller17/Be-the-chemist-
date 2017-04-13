@@ -22,6 +22,7 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
     private Main main;
     private Spatial spatial;
     private Node rootNode;
+    private Node node;
     
     
     public ChemicalWasteDisposalContainer(Main main,AssetManager assetManager,Node rootNode){
@@ -30,14 +31,15 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
         
         this.main=main;
         this.rootNode=rootNode;
+        node=new Node();
         
         spatial=assetManager.loadModel("Models/Static/ChemicalWasteDisposalContainer/ChemicalWasteDisposalContainer.j3o");
         spatial.setName("Chemical waste disposal container");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        attachObject(spatial);
+        node.attachChild(spatial);
         
-        rootNode.attachChild(getNode());
+        rootNode.attachChild(node);
         
     }
     
@@ -45,6 +47,27 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
     public String getDescription() {
         
         return "The chemical waste disposal container";
+        
+    }
+
+    @Override
+    public void setPos(Vector3f position) {
+        
+        spatial.setLocalTranslation(position);
+        
+    }
+    
+    @Override
+    public Node getNode() {
+        
+        return node;
+        
+    }
+    
+    @Override
+    public String getName() {
+        
+        return "Chemical waste disposal container";
         
     }
     

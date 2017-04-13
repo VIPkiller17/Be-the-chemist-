@@ -5,6 +5,7 @@
 package objects.containers;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import interfaces.Grabbable;
 import main.Main;
@@ -21,7 +22,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     private boolean full;
     private boolean closed;
     private boolean contains;
-    private double quantity;
+    private double volume;
     private double temperature;
     private double pressure;
     
@@ -33,12 +34,12 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
     }
     
-    public Container(Main main,Vector3f position,Solution solution,double quantity){
+    public Container(Main main,Vector3f position,Solution solution){
         
         super(main,position);
         
         this.solution=solution;
-        this.quantity=quantity;
+        this.volume=solution.getVolume();
         
     }
     
@@ -90,15 +91,21 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
     }
     
-    public void setQuantity(double quantity){
+    public void setVolume(double volume){
         
-        this.quantity=quantity;
+        this.volume=volume;
         
     }
     
-    public double getQuantity(){
+    public double getVolume(){
         
-        return quantity;
+        if(solution!=null)
+        
+            return solution.getVolume();
+        
+        else
+            
+            return 0;
         
     }
     
@@ -126,12 +133,24 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
     }
     
+    public void mergeSolution(Solution solution){
+        
+        if(this.solution!=null)
+            
+            this.solution.merge(solution);
+        
+        else
+            
+            this.solution=solution;
+        
+    }
+    
     @Override
     public boolean equals(Object otherContainer){
         
         if(otherContainer instanceof Container)
             
-            return ((Container)otherContainer).getQuantity()==quantity&&((Container)otherContainer).getTemperature()==temperature&&((Container)otherContainer).getPressure()==pressure;
+            return ((Container)otherContainer).getVolume()==volume&&((Container)otherContainer).getTemperature()==temperature&&((Container)otherContainer).getPressure()==pressure;
         
         else
             
@@ -142,7 +161,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     @Override
     public String toString(){
         
-        return "Container containing "+quantity+" liters of "+solution+" with temperature "+temperature+" and pressure "+pressure;
+        return "Container containing "+volume+" liters of "+solution+" with temperature "+temperature+" and pressure "+pressure;
         
     }
     
@@ -159,6 +178,12 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     @Override
     public abstract String getDescription();
     
-    public abstract void setPosition(Vector3f position);
+    @Override
+    public abstract void setPos(Vector3f position);
+    
+    @Override
+    public abstract Node getNode();
+    
+    public abstract boolean canContain(int state);
     
 }

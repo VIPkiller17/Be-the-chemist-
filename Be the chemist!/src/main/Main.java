@@ -23,6 +23,7 @@ import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
 import objects.PhysicalObject;
 import objects.apparatus.analyticalBalance.AnalyticalBalance;
+import objects.apparatus.bunsenBurner.BunsenBurner;
 import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHood;
@@ -80,6 +81,8 @@ public class Main extends VRApplication {
     private Room room;
     private Floor floor;
     private AnalyticalBalance analyticalBalance;
+    private BunsenBurner bunsenBurner1;
+    private BunsenBurner bunsenBurner2;
     private DistilledWaterContainer distilledWaterContainer;
     private FumeHood fumeHood;
     private TrashBin trashBin;
@@ -168,6 +171,8 @@ public class Main extends VRApplication {
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(8.25f, .95f, 5.60f));
         analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
+        bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(2.70f, 0.92f, 5.3f));
+        bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.00f, 0.92f, 4.3f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
         sink0=new Sink(this,getAssetManager(),rootNode,0);

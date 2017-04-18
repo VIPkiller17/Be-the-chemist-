@@ -147,7 +147,7 @@ public class GasSac extends Container implements Savable{
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
-        collisionShape=new BoxCollisionShape(new Vector3f(0.18f,0.26f,0.03f));
+        collisionShape=new BoxCollisionShape(new Vector3f(0.09f,0.13f,0.02f));
         
         gasSac_phy=new RigidBodyControl(collisionShape,1f);
         spatial.addControl(gasSac_phy);
@@ -238,6 +238,11 @@ public class GasSac extends Container implements Savable{
         
         
         
+    }
+    
+
+    public Spatial getSpatial() {
+        return spatial;
     }
     
     @Override

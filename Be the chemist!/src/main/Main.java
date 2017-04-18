@@ -1,6 +1,7 @@
 package main;
 
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -103,10 +104,11 @@ public class Main extends VRApplication {
     private ArrayList<Ion> ions=new ArrayList<Ion>();
     private ArrayList<Substance> substances=new ArrayList<Substance>();
     
-    private Beaker beaker;
+    private ArrayList<Beaker> beakers;
+    private ArrayList<GasSac> gasSac;
+   
     private Erlenmeyer erlenmeyer;
     private Funnel funnel;
-    private GasSac gasSac;
     private MeasuringCylinder measuringCylinder;
     private Pipette pipette;
     //private VolumetricFlask volumetricFlask;
@@ -197,12 +199,39 @@ public class Main extends VRApplication {
         rootNode.attachChild(testCube);
         */
         
-        beaker=new Beaker(this,new Vector3f(0f,0.061f,0));
-        erlenmeyer=new Erlenmeyer(this,new Vector3f(0.7f,0.5f,0));
-        funnel=new Funnel(this,new Vector3f(0.2f,0.5f,0));
-        gasSac=new GasSac(this,new Vector3f(0.4f,0.5f,0));
-        measuringCylinder=new MeasuringCylinder(this,new Vector3f(0.9f,0.5f,0));
-        pipette=new Pipette(this,new Vector3f(0.11f,0.5f,0));
+        beakers = new ArrayList<Beaker>();
+        beakers.add(new Beaker(this,new Vector3f(4.2f,0.3f,2.9f)));
+        beakers.add(new Beaker(this,new Vector3f(4.2f,0.05f,3f)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        beakers.add(new Beaker(this,new Vector3f(0f,0.061f,0)));
+        
+        gasSac = new ArrayList<GasSac>();
+        gasSac.add(new GasSac(this,new Vector3f(4.2f,0.4f,3.2f)));
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).setPhysicsRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).setPhysicsRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        gasSac.add(new GasSac(this,new Vector3f(0f,0.1f,0)));
+        
+        //erlenmeyer=new Erlenmeyer(this,new Vector3f(0.7f,0.5f,0));
+        //funnel=new Funnel(this,new Vector3f(0.2f,0.5f,0));
+        //Beaker testBeaker = new Beaker(this, new Vector3f(0.4f,0.5f,0));
+        //measuringCylinder=new MeasuringCylinder(this,new Vector3f(0.9f,0.5f,0));
+        //pipette=new Pipette(this,new Vector3f(0.11f,0.5f,0));
         //volumetricFlask=new VolumetricFlask(this,new Vector3f(0.13f,0.5f,0));
         //OBJECTS INIT END
         
@@ -222,6 +251,7 @@ public class Main extends VRApplication {
         testBeakers=new ArrayList<Beaker>();
         
         bulletAppState.setDebugEnabled(true);
+        System.out.print("Bullet App State Debug: " + bulletAppState.isDebugEnabled());
         
     }
 
@@ -229,10 +259,14 @@ public class Main extends VRApplication {
         
         //non-VR inputs for testing without VR
         getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
-        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
-        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
-        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
-        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));
+        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_W));
+        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_S));
+        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_D));
+        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_A));
+        /*getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
+        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));*/
+        /*getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
+        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));*/
         getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
         getInputManager().addMapping("downControl", new KeyTrigger(KeyInput.KEY_LCONTROL));
         getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));

@@ -11,9 +11,13 @@ import com.jme3.scene.Node;
 import java.util.ArrayList;
 import main.Main;
 import objects.PhysicalObject;
+import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.containers.Container;
 import objects.particleEmitter.particle.Particle;
+import objects.solution.Solution;
 import objects.substance.Substance;
+import objects.testing.SimpleEmitter;
+import objects.world.Sink;
 
 /**
  *
@@ -46,8 +50,13 @@ public class ParticleEmitter {
     
     private Node node;
     
+    private Main main;
+    
+    
+    
     public ParticleEmitter(Main main,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocityOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
         
+        this.main=main;
         this.parentObject=parentObject;
         this.position=position;
         this.outDirection=outDirection;
@@ -75,6 +84,93 @@ public class ParticleEmitter {
         parentObject.getNode().attachChild(node);
         
         node.setLocalTranslation(position);
+        
+    }
+    
+    public ParticleEmitter(Main main,PhysicalObject parentObject){
+        
+        this.main=main;
+        this.parentObject=parentObject;
+        
+        if(parentObject instanceof SimpleEmitter){
+            
+            this.position=new Vector3f(0,-0.005f,0);
+            this.outDirection=new Vector3f(0,-1,0);
+            this.randomOutDirectionOffset=new Quaternion().fromAngleAxis(0,Vector3f.UNIT_XYZ);
+            this.randomHorizontalOutputOffset=0;
+            this.randomVerticalOutputOffset=0;
+            this.initialVelocity=new Vector3f(0,0,0);
+            this.randomInitialVelocityOffset=new Vector3f(0,0,0);
+            this.delay=0.5;
+            this.randomDelayOffset=0;
+            this.acceleration=new Vector3f(0,-9.806f,0);
+            this.randomAccelerationOffset=new Vector3f(0,0,0);
+            this.assetManager=main.getAssetManager();
+            
+            System.out.println("Simple emitter's particle emitter created");
+            
+            begin();
+            
+        }else if(parentObject instanceof DistilledWaterContainer){
+                    
+            this.position=new Vector3f(7.695f,0.95f,2.08f);
+            this.outDirection=new Vector3f(0,0,0);
+            this.randomOutDirectionOffset=new Quaternion().fromAngleAxis(0,Vector3f.UNIT_XYZ);
+            this.randomHorizontalOutputOffset=0;
+            this.randomVerticalOutputOffset=0;
+            this.initialVelocity=new Vector3f(0,-0.5f,0);
+            this.randomInitialVelocityOffset=new Vector3f(0,0,0);
+            this.delay=0.1;
+            this.randomDelayOffset=0;
+            this.acceleration=new Vector3f(0,-9.806f,0);
+            this.randomAccelerationOffset=new Vector3f(0,0,0);
+            this.assetManager=main.getAssetManager();
+            
+            System.out.println("DistilledWaterContainer's particle emitter created");
+            
+        }else if(parentObject instanceof Sink){
+                    
+            if(((Sink) parentObject).getIndex()==0){
+                
+                this.position=new Vector3f(0.05f,0.2f,0f);
+                
+            }else{
+                
+                this.position=new Vector3f(-0.05f,0.2f,0f);
+                
+            }
+            
+            this.outDirection=new Vector3f(0,0,0);
+            this.randomOutDirectionOffset=new Quaternion().fromAngleAxis(0,Vector3f.UNIT_XYZ);
+            this.randomHorizontalOutputOffset=0;
+            this.randomVerticalOutputOffset=0;
+            this.initialVelocity=new Vector3f(0,-0.5f,0);
+            this.randomInitialVelocityOffset=new Vector3f(0,0,0);
+            this.delay=0.1;
+            this.randomDelayOffset=0;
+            this.acceleration=new Vector3f(0,-9.806f,0);
+            this.randomAccelerationOffset=new Vector3f(0,0,0);
+            this.assetManager=main.getAssetManager();
+            
+            System.out.println("Sink #"+((Sink) parentObject).getIndex()+"'s particle emitter created");
+            
+        }
+        
+        node=new Node();
+        
+        control=new ParticleEmitterControl(this);
+        
+        node.addControl(control);
+        
+        parentObject.getNode().attachChild(node);
+        
+        node.setLocalTranslation(position);
+        
+    }
+    
+    public void updatePosition(){
+        
+        position=parentObject.getNode().getWorldTranslation().add(position);
         
     }
     
@@ -248,6 +344,8 @@ public class ParticleEmitter {
     
     public void begin(){
         
+        System.out.println("Beginning emission");
+        
         emitting=true;
         
         System.out.println("Emitting set to true");
@@ -271,34 +369,34 @@ public class ParticleEmitter {
     public void emit(){
         
         if(parentObject instanceof Container&&((Container)parentObject).getSolution()!=null){
-
-            boolean[] possibleStates=((Container)parentObject).getSolution().containsStates();
-
-            if(possibleStates[0]){
-
-                System.out.println("New gas particle created");
-
-                control.getActiveParticles().add(new Particle(this,"Models/Particles/Gas/Gas.j3o",0,((Container)parentObject).getSolution().getStateList(0)));
-
-            }
-            
-            if(possibleStates[1]){
-
-                System.out.println("New liquid particle created");
-
-                control.getActiveParticles().add(new Particle(this,"Models/Particles/Liquid/Liquid.j3o",1,((Container)parentObject).getSolution().getStateList(1)));
-
-            }
-            
-            if(possibleStates[2]){
-
-                System.out.println("New solid particle created");
-
-                control.getActiveParticles().add(new Particle(this,"Models/Particles/Solid/Solid.j3o",2,((Container)parentObject).getSolution().getStateList(2)));
                 
-            }
-                
+            System.out.println("Creating new particle for a container");
+            
+            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution()));
+
+        }else if(parentObject instanceof SimpleEmitter){
+            
+            System.out.println("Creating new particle for simple emitter");
+            
+            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,main.getSubstances().get(44),0.001,298));
+            
+        }else if(parentObject instanceof DistilledWaterContainer){
+            
+            System.out.println("Creating new particle for DsitilledWaterContainer");
+            
+            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,main.getSubstances().get(44),0.001,298));
+            
+        }else if(parentObject instanceof Sink){
+            
+            System.out.println("Creating new particle for Sink");
+            
+            //here water is add to the solution of the particle instead of just using the substance directly
+            //this is used as a precursor on how the tap water will later on be composed of multiple substances instead of just one
+            //but only water is added right now because the values arent exact and most of the substances are not yet implemented in the game
+            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,new Solution(null,null,0,0).addSubstance(main.getSubstances().get(44),0.001,298)));
+            
         }
+        
         
     }
     
@@ -329,6 +427,12 @@ public class ParticleEmitter {
     public ParticleEmitterControl getControl(){
         
         return control;
+        
+    }
+    
+    public Node getNode(){
+        
+        return node;
         
     }
     

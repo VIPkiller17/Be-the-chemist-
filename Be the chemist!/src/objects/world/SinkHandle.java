@@ -168,4 +168,10 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
         
     }
     
+    public Spatial getSpatial(){
+        
+        return handle;
+        
+    }
+    
 }

@@ -142,5 +142,12 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         return "Fume hood door";
         
     }
+
+    @Override
+    public Spatial getSpatial() {
+        
+        return spatial;
+        
+    }
     
 }

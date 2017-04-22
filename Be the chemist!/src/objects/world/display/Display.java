@@ -39,6 +39,13 @@ public class Display implements Pointable,Savable{
     private ArrayList<BitmapText> texts;
     private static ArrayList<SubstanceButton> substanceButtonList=new ArrayList<>();
     private static ArrayList<MaterialButton> materialButtonList=new ArrayList<>();
+    private static ArrayList<SubstanceButton> filteredSubstanceButtonList=new ArrayList<>();
+    private static ArrayList<MaterialButton> filteredMaterialButtonList=new ArrayList<>();
+    private static ArrayList<SubstanceButton> initFilteredSubstanceButtonList=new ArrayList<>();
+    private static ArrayList<MaterialButton> initFilteredMaterialButtonList=new ArrayList<>();
+    
+    private static boolean substanceFilterChanged;
+    private static boolean materialFilterChanged;
     
     private int preset;
     
@@ -148,7 +155,7 @@ public class Display implements Pointable,Savable{
                 node.attachChild(texts.get(texts.size()-1));
                 texts.get(texts.size()-1).setSize(0.08f);
                 texts.get(texts.size()-1).setText("");
-                texts.get(texts.size()-1).setLocalTranslation(-0.40f,0.60f,0.055f);
+                texts.get(texts.size()-1).setLocalTranslation(-0.40f,0.73f,0.055f);
                 texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
                 
                 addSubstances();
@@ -165,6 +172,9 @@ public class Display implements Pointable,Savable{
                         buttons.add(new Button(main,this,i));
                     
                 }
+                
+                buttons.add(new Button(main,this,4));
+                
                 node.setLocalTranslation(new Vector3f(-1.1f,0.49f,3.09f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
@@ -201,7 +211,7 @@ public class Display implements Pointable,Savable{
                 node.attachChild(texts.get(texts.size()-1));
                 texts.get(texts.size()-1).setSize(0.08f);
                 texts.get(texts.size()-1).setText("");
-                texts.get(texts.size()-1).setLocalTranslation(-0.40f,0.60f,0.055f);
+                texts.get(texts.size()-1).setLocalTranslation(-0.40f,0.73f,0.055f);
                 texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
                 
                 addMaterials();
@@ -310,9 +320,13 @@ public class Display implements Pointable,Savable{
         
             if(preset==1){
                 
+                setSubstanceFilterChanged(true);
+                
                 updateDisplayedSubstances();
                 
             }else if(preset==3){
+                
+                setMaterialFilterChanged(true);
                 
                 updateDisplayedMaterials();
                 
@@ -330,9 +344,13 @@ public class Display implements Pointable,Savable{
             
             if(preset==1){
                 
+                setSubstanceFilterChanged(true);
+                
                 updateDisplayedSubstances();
                 
             }else if(preset==3){
+                
+                setMaterialFilterChanged(true);
                 
                 updateDisplayedMaterials();
                 
@@ -340,6 +358,26 @@ public class Display implements Pointable,Savable{
             
         }
         
+    }
+    
+    public void removeLastLetter(){
+    
+        setTextFieldText(getTextField().getText().substring(0,getTextField().getText().length()-1));
+        
+        if(preset==1){
+                
+                setSubstanceFilterChanged(true);
+                
+                updateDisplayedSubstances();
+                
+            }else if(preset==3){
+                
+                setMaterialFilterChanged(true);
+                
+                updateDisplayedMaterials();
+                
+            }
+    
     }
     
     private void addSubstances(){
@@ -356,41 +394,119 @@ public class Display implements Pointable,Savable{
                 
             }
             
+            filteredSubstanceButtonList.add(substanceButtonList.get(substanceButtonList.size()-1));
+            
         }
         
-        System.out.println(indexOfFirstDisplayedSubstanceButton);
+        //System.out.println(indexOfFirstDisplayedSubstanceButton);
         
     }
     
     public void updateDisplayedSubstances(){
         
-        System.out.println(substanceButtonList.size()-1+" and "+(indexOfFirstDisplayedSubstanceButton+4));
+        //System.out.println(substanceButtonList.size()-1+" and "+(indexOfFirstDisplayedSubstanceButton+4));
         
-        //if there is a button before the first one displayed, make it dissapear
-        if(indexOfFirstDisplayedSubstanceButton!=0){
+        if(getSubstanceFilterChanged()){
             
-            substanceButtonList.get(indexOfFirstDisplayedSubstanceButton-1).setPosition(-1);
+            indexOfFirstDisplayedSubstanceButton=0;
+            
+            for(SubstanceButton b: filteredSubstanceButtonList){
+                
+                b.setPosition(-1);
+                
+                //System.out.println("substance button: "+b.getSubstance()+" set to -1 because filter changed");
+                
+                setSubstanceFilterChanged(false);
+                
+            }
             
         }
         
-        //if there is a button after the last button displayed, make it dissapear
-        if(indexOfFirstDisplayedSubstanceButton+5<substanceButtonList.size()-1){
+        //clear the current filtered button list is case of a change
+        if(filteredSubstanceButtonList.size()>0){
             
-            substanceButtonList.get(indexOfFirstDisplayedSubstanceButton+5).setPosition(-1);
+            filteredSubstanceButtonList.clear();
             
-            System.out.println(substanceButtonList.get(indexOfFirstDisplayedSubstanceButton+5).getSubstance().getName()+"'s position set to -1");
+        }
+        
+        if(initFilteredSubstanceButtonList.size()>0){
+            
+            initFilteredSubstanceButtonList.clear();
             
         }
         
         indexOfLastDisplayedSubstanceButton=indexOfFirstDisplayedSubstanceButton+4;
         
+        for(int i=0;i<substanceButtonList.size();i++){
+            
+            if(substanceButtonList.get(i).getSubstance().getName().contains(getTextField().getText())||substanceButtonList.get(i).getSubstance().getEquation().contains(getTextField().getText())){
+                
+                initFilteredSubstanceButtonList.add(substanceButtonList.get(i));
+                
+                //System.out.println(substanceButtonList.get(i).getSubstance().getName()+" or "+substanceButtonList.get(i).getSubstance().getEquation()+" contains "+getTextField().getText());
+                
+            }
+            
+        }
+        
+        for(int i=0;i<initFilteredSubstanceButtonList.size();i++){
+            
+            if(typeFilter==0&&phaseFilter==0){
+                
+                filteredSubstanceButtonList.add(initFilteredSubstanceButtonList.get(i));
+                
+            }else if(typeFilter!=0&&phaseFilter==0&&(typeFilter)==initFilteredSubstanceButtonList.get(i).getSubstance().getTypeInteger()){
+                
+                filteredSubstanceButtonList.add(initFilteredSubstanceButtonList.get(i));
+                
+            }else if(phaseFilter!=0&&typeFilter==0&&(phaseFilter-1)==initFilteredSubstanceButtonList.get(i).getSubstance().getStateInteger(298)){
+                    
+                filteredSubstanceButtonList.add(initFilteredSubstanceButtonList.get(i));
+                    
+            }else if(phaseFilter!=0&&typeFilter!=0&&(phaseFilter-1)==initFilteredSubstanceButtonList.get(i).getSubstance().getStateInteger(298)&&(typeFilter)==initFilteredSubstanceButtonList.get(i).getSubstance().getTypeInteger()){
+                    
+                filteredSubstanceButtonList.add(initFilteredSubstanceButtonList.get(i));
+                    
+            }
+            
+        }
+        
+        for(int i=indexOfFirstDisplayedSubstanceButton;i<filteredSubstanceButtonList.size();i++){
+            
+            filteredSubstanceButtonList.get(i).setPosition(i-indexOfFirstDisplayedSubstanceButton);
+            
+        }
+        
+        //if there is a button before the first one displayed, make it dissapear
+        if(indexOfFirstDisplayedSubstanceButton!=0){
+            
+            filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton-1).setPosition(-1);
+            
+            //System.out.println("substance button before first diaplyed: "+filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton-1).getSubstance().getName()+"'s position set to -1");
+            
+        }
+        
+        //if there is a button after the last button displayed, make it dissapear
+        if(indexOfFirstDisplayedSubstanceButton+5<filteredSubstanceButtonList.size()-1){
+            
+            filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton+5).setPosition(-1);
+            
+            //System.out.println(filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton+5).getSubstance().getName()+"'s position set to -1");
+            
+        }
+        
+        /*
+        indexOfLastDisplayedSubstanceButton=indexOfFirstDisplayedSubstanceButton+4;
+        
         presentPositionIndex=0;
         
-        for(int i=indexOfFirstDisplayedSubstanceButton;i<substanceButtonList.size()&&i<=indexOfFirstDisplayedSubstanceButton+4;i++){
+        for(int i=indexOfFirstDisplayedSubstanceButton;i<substanceButtonList.size();i++){
             
             if(typeFilter==0&&phaseFilter==0){
                 
                 substanceButtonList.get(i).setPosition(presentPositionIndex-indexOfFirstDisplayedSubstanceButton);
+                
+                displayedSubstanceButtonList.add(substanceButtonList.get(i));
                 
                 presentPositionIndex++;
                 
@@ -400,27 +516,61 @@ public class Display implements Pointable,Savable{
                 
                     substanceButtonList.get(i).setPosition(presentPositionIndex-indexOfFirstDisplayedSubstanceButton);
                     
+                    displayedSubstanceButtonList.add(substanceButtonList.get(i));
+                    
                     presentPositionIndex++;
                     
                 }else if(phaseFilter==0){
                     
                     substanceButtonList.get(i).setPosition(presentPositionIndex-indexOfFirstDisplayedSubstanceButton);
                     
+                    displayedSubstanceButtonList.add(substanceButtonList.get(i));
+                    
                     presentPositionIndex++;
                     
                 }
                 
             }
+        }
+        */
+        
+        //System.out.println("AFTER: "+indexOfFirstDisplayedSubstanceButton);
+        
+    }
+    
+    public void updateDisplayedSubstancesWithoutFiltering(){
+        
+        indexOfLastDisplayedSubstanceButton=indexOfFirstDisplayedSubstanceButton+4;
+        
+        for(int i=indexOfFirstDisplayedSubstanceButton;i<filteredSubstanceButtonList.size();i++){
+            
+            filteredSubstanceButtonList.get(i).setPosition(i-indexOfFirstDisplayedSubstanceButton);
             
         }
         
-        System.out.println("AFTER: "+indexOfFirstDisplayedSubstanceButton);
+        //if there is a button before the first one displayed, make it dissapear
+        if(indexOfFirstDisplayedSubstanceButton!=0){
+            
+            filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton-1).setPosition(-1);
+            
+            //System.out.println("substance button before first diaplyed: "+filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton-1).getSubstance().getName()+"'s position set to -1");
+            
+        }
+        
+        //if there is a button after the last button displayed, make it dissapear
+        if(indexOfFirstDisplayedSubstanceButton+5<filteredSubstanceButtonList.size()-1){
+            
+            filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton+5).setPosition(-1);
+            
+            //System.out.println(filteredSubstanceButtonList.get(indexOfFirstDisplayedSubstanceButton+5).getSubstance().getName()+"'s position set to -1");
+            
+        }
         
     }
     
     public void setIndexOfFirstDisplayedSubstanceButton(int index){
         
-        System.out.println("BEFORE: "+indexOfFirstDisplayedSubstanceButton);
+        //System.out.println("BEFORE: "+indexOfFirstDisplayedSubstanceButton);
         
         indexOfFirstDisplayedSubstanceButton=index;
         
@@ -441,7 +591,9 @@ public class Display implements Pointable,Savable{
     private void addMaterials(){
             
         materialButtonList.add(new MaterialButton(main,this,"Beaker",new Vector3f(-0.35f,0.5f,0.05f)));
+        filteredMaterialButtonList.add(materialButtonList.get(materialButtonList.size()-1));
         materialButtonList.add(new MaterialButton(main,this,"Gas sac",new Vector3f(-0.35f,0.3f,0.05f)));
+        filteredMaterialButtonList.add(materialButtonList.get(materialButtonList.size()-1));
 
         //materialButtonList.add(new MaterialButton(main,this,name,new Vector3f(-0.35f,-700,0.05f)));
         
@@ -483,24 +635,88 @@ public class Display implements Pointable,Savable{
     
     public void updateDisplayedMaterials(){
         
-        System.out.println(materialButtonList.size()-1+" and "+(indexOfFirstDisplayedMaterialButton+4));
+        //System.out.println(materialButtonList.size()-1+" and "+(indexOfFirstDisplayedMaterialButton+4));
+        
+        if(getMaterialFilterChanged()){
+            
+            indexOfFirstDisplayedMaterialButton=0;
+            
+            for(MaterialButton b: filteredMaterialButtonList){
+                
+                b.setPosition(-1);
+                
+                //System.out.println("Material button: "+b.getName()+" set to -1 because filter changed");
+                
+                setMaterialFilterChanged(false);
+                
+            }
+            
+        }
+        
+        //clear the current filtered button list is case of a change
+        if(filteredMaterialButtonList.size()>0){
+            
+            filteredMaterialButtonList.clear();
+            
+        }
+        
+        if(initFilteredMaterialButtonList.size()>0){
+            
+            initFilteredMaterialButtonList.clear();
+            
+        }
+        
+        indexOfLastDisplayedMaterialButton=indexOfFirstDisplayedMaterialButton+4;
+        
+        for(int i=0;i<materialButtonList.size();i++){
+            
+            if(materialButtonList.get(i).getName().contains(getTextField().getText())){
+                
+                initFilteredMaterialButtonList.add(materialButtonList.get(i));
+                
+            }
+            
+        }
+        
+        for(int i=0;i<initFilteredMaterialButtonList.size();i++){
+            
+            if(classFilter==0){
+                
+                filteredMaterialButtonList.add(materialButtonList.get(i));
+                
+            }else if(classFilter!=0&&classFilter==materialButtonList.get(i).getClassInteger()){
+                
+                filteredMaterialButtonList.add(materialButtonList.get(i));
+                
+            }
+            
+        }
+        
+        for(int i=indexOfFirstDisplayedMaterialButton;i<filteredMaterialButtonList.size();i++){
+            
+            filteredMaterialButtonList.get(i).setPosition(i-indexOfFirstDisplayedMaterialButton);
+            
+        }
         
         //if there is a button before the first one displayed, make it dissapear
         if(indexOfFirstDisplayedMaterialButton!=0){
             
-            materialButtonList.get(indexOfFirstDisplayedMaterialButton-1).setPosition(-1);
+            filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton-1).setPosition(-1);
+            
+            //System.out.println("Material button before first diaplyed: "+filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton-1).getName()+"'s position set to -1");
             
         }
         
         //if there is a button after the last button displayed, make it dissapear
-        if(indexOfFirstDisplayedMaterialButton+5<materialButtonList.size()-1){
+        if(indexOfFirstDisplayedMaterialButton+5<filteredMaterialButtonList.size()-1){
             
-            materialButtonList.get(indexOfFirstDisplayedMaterialButton+5).setPosition(-1);
+            filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton+5).setPosition(-1);
             
-            System.out.println(materialButtonList.get(indexOfFirstDisplayedMaterialButton+5).getName()+"'s position set to -1");
+            //System.out.println(filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton+5).getName()+"'s position set to -1");
             
         }
         
+        /*
         indexOfLastDisplayedMaterialButton=indexOfFirstDisplayedMaterialButton+4;
         
         presentPositionIndex=0;
@@ -509,7 +725,7 @@ public class Display implements Pointable,Savable{
             
             if(classFilter==0){
                 
-                materialButtonList.get(i).setPosition(presentPositionIndex-indexOfFirstDisplayedMaterialButton);
+                displayedMaterialButtonList.add(materialButtonList.get(i));
                 
                 presentPositionIndex++;
                 
@@ -517,19 +733,52 @@ public class Display implements Pointable,Savable{
                 
                 materialButtonList.get(i).setPosition(presentPositionIndex-indexOfFirstDisplayedMaterialButton);
                 
+                displayedMaterialButtonList.add(materialButtonList.get(i));
+                
                 presentPositionIndex++;
                 
             }
             
         }
+        */
         
-        System.out.println("AFTER: "+indexOfFirstDisplayedMaterialButton);
+        //System.out.println("AFTER: "+indexOfFirstDisplayedMaterialButton);
+        
+    }
+    
+    public void updateDisplayedMaterialWithoutFiltering(){
+        
+        indexOfLastDisplayedMaterialButton=indexOfFirstDisplayedMaterialButton+4;
+        
+        for(int i=indexOfFirstDisplayedMaterialButton;i<filteredMaterialButtonList.size();i++){
+            
+            filteredMaterialButtonList.get(i).setPosition(i-indexOfFirstDisplayedMaterialButton);
+            
+        }
+        
+        //if there is a button before the first one displayed, make it dissapear
+        if(indexOfFirstDisplayedMaterialButton!=0){
+            
+            filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton-1).setPosition(-1);
+            
+            //System.out.println("Material button before first diaplyed: "+filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton-1).getName()+"'s position set to -1");
+            
+        }
+        
+        //if there is a button after the last button displayed, make it dissapear
+        if(indexOfFirstDisplayedMaterialButton+5<filteredMaterialButtonList.size()-1){
+            
+            filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton+5).setPosition(-1);
+            
+            //System.out.println(filteredMaterialButtonList.get(indexOfFirstDisplayedMaterialButton+5).getName()+"'s position set to -1");
+            
+        }
         
     }
     
     public void setIndexOfFirstDisplayedMaterialButton(int index){
         
-        System.out.println("BEFORE: "+indexOfFirstDisplayedMaterialButton);
+        //System.out.println("BEFORE: "+indexOfFirstDisplayedMaterialButton);
         
         indexOfFirstDisplayedMaterialButton=index;
         
@@ -563,17 +812,59 @@ public class Display implements Pointable,Savable{
         
         Display.typeFilter=typeFilter;
         
+        setSubstanceFilterChanged(true);
+        
     }
     
     public static void setPhaseFilter(int phaseFilter){
         
         Display.phaseFilter=phaseFilter;
         
+        setSubstanceFilterChanged(true);
+        
     }
     
     public static void setClassFilter(int classFilter){
         
         Display.classFilter=classFilter;
+        
+        setMaterialFilterChanged(true);
+        
+    }
+    
+    public ArrayList<MaterialButton> getFilteredMaterialButtonList(){
+        
+        return filteredMaterialButtonList;
+        
+    }
+    
+    public ArrayList<SubstanceButton> getFilteredSubstanceButtonList(){
+        
+        return filteredSubstanceButtonList;
+        
+    }
+    
+    public static void setSubstanceFilterChanged(boolean substanceFilterChanged){
+        
+        Display.substanceFilterChanged=substanceFilterChanged;
+        
+    }
+    
+    public static boolean getSubstanceFilterChanged(){
+        
+        return Display.substanceFilterChanged;
+        
+    }
+    
+    public static void setMaterialFilterChanged(boolean materialFilterChanged){
+        
+        Display.materialFilterChanged=materialFilterChanged;
+        
+    }
+    
+    public static boolean getMaterialFilterChanged(){
+        
+        return Display.materialFilterChanged;
         
     }
 

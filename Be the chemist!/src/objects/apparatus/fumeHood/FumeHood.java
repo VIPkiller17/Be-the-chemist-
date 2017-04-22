@@ -83,4 +83,10 @@ public class FumeHood extends Apparatus{
         
     }
     
+    public Spatial getSpatial(){
+        
+        return spatial;
+        
+    }
+    
 }

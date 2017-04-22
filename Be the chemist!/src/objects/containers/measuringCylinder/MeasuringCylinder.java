@@ -146,7 +146,7 @@ public class MeasuringCylinder extends Container implements Savable{
         
         particleEmitterPosition=new Vector3f(0,0.16f,-0.01f);
         
-        particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        //particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
     }
     
@@ -291,6 +291,13 @@ public class MeasuringCylinder extends Container implements Savable{
     public String getName() {
         
         return "Measuring cylinder";
+        
+    }
+    
+    @Override
+    public Spatial getSpatial(){
+        
+        return spatial;
         
     }
     

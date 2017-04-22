@@ -187,12 +187,6 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         else
             return false;
     }
-    
-    public Node getNode(){
-        
-        return node;
-        
-    }
 
     @Override
     public String getDescription() {

@@ -11,7 +11,6 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Ray;
 import com.jme3.math.Vector3f;
@@ -22,10 +21,10 @@ import com.jme3.scene.Spatial;
 import com.jme3.scene.shape.Line;
 import interfaces.Describable;
 import java.io.IOException;
-import java.util.ArrayList;
 import jmevr.input.VRAPI;
 import main.Main;
 import objects.PhysicalObject;
+import objects.containers.beaker.Beaker;
 //by Tommy
 public class Hand implements Describable,Savable{
     
@@ -61,6 +60,8 @@ public class Hand implements Describable,Savable{
     
     private Main main;
     
+    private Node heldObjectNode;
+    
     public Hand(Main main,AssetManager assetManager,Node rootNode,VRAPI newVRHardware,CollisionResults collisionResults,int side,Spatial newObserver,Node playerNode,Player player){
         
         this.main=main;
@@ -75,6 +76,8 @@ public class Hand implements Describable,Savable{
         this.rootNode=rootNode;
         this.side=side;
         this.player=player;
+        this.heldObjectNode=new Node();
+        handNode.attachChild(heldObjectNode);
         observer=newObserver;
         VRHardware=newVRHardware;
         
@@ -231,6 +234,7 @@ public class Hand implements Describable,Savable{
     public void setLocation(Vector3f location){
         
         spatialToUpdate.setLocalTranslation(location);
+        heldObjectNode.setLocalTranslation(location);
         
     }
     
@@ -249,6 +253,7 @@ public class Hand implements Describable,Savable{
     public void setRotation(Quaternion rotation){
         
         spatialToUpdate.setLocalRotation(rotation);
+        heldObjectNode.setLocalRotation(rotation);
         
     }
     
@@ -295,6 +300,16 @@ public class Hand implements Describable,Savable{
     public void setHeldObject(PhysicalObject possibleItemToGrab){
         
         heldObject=possibleItemToGrab;
+        
+        /*
+        if(possibleItemToGrab!=null){
+        
+            heldObjectNode.attachChild(possibleItemToGrab.getNode());
+        
+        }else
+            
+            heldObjectNode.detachAllChildren();
+        */
         
         if(heldObject!=null)
             

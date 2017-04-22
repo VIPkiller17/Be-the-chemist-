@@ -45,7 +45,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
         node=new Node();
         
-        particleEmitter=new ParticleEmitter(main,this,new Vector3f(7.69f,0.94f,-2.08f),new Vector3f(0,-1,0),new Quaternion().fromAngles(0,0,0),0,0,new Vector3f(0,-1,0),new Vector3f(0,-0.1f,0),0.1,0.02,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
+        particleEmitter=new ParticleEmitter(main,this);
         
         container=assetManager.loadModel("Models/Static/DistilledWaterContainer/DistilledWaterContainer.j3o");
         container.setName("Distilled water container");
@@ -215,6 +215,13 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
     public String getName() {
         
         return "Distilled water container";
+        
+    }
+    
+    @Override
+    public Spatial getSpatial(){
+        
+        return container;
         
     }
     

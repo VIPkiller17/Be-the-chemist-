@@ -34,7 +34,9 @@ import main.Main;
  */
 public class Button implements Savable{
     
-    private static ArrayList<Button> stateFilterButtons;
+    private static Display substanceList,materialList;
+    
+    private static ArrayList<Button> stateFilterButtons=new ArrayList<>();
     
     private AssetManager assetManager;
     
@@ -79,6 +81,7 @@ public class Button implements Savable{
     public static final int GAS=5,LIQUID=6,SOLID=7,SUBSTANCE_PAGE_UP=45,SUBSTANCE_PAGE_DOWN=54,MATERIAL_PAGE_UP=55,MATERIAL_PAGE_DOWN=56;
     public static final int TYPE=57,CLASS=58;
             //Keyboard
+    public static final int SWITCH_SELECTED_DISPLAY=4;
     public static final int KEY_Q=8,KEY_W=9,KEY_E=10,KEY_R=11,KEY_T=12,KEY_Y=13,KEY_U=14,KEY_I=15,KEY_O=16,KEY_P=17;
     public static final int KEY_A=18,KEY_S=19,KEY_D=20,KEY_F=21,KEY_G=22,KEY_H=23,KEY_J=24,KEY_K=25,KEY_L=26,KEY_Z=27;
     public static final int KEY_X=28,KEY_C=29,KEY_V=30,KEY_B=31,KEY_N=32,KEY_M=33,KEY_1=34,KEY_2=35,KEY_3=36,KEY_4=37;
@@ -94,7 +97,6 @@ public class Button implements Savable{
         node=new Node();
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text=new BitmapText(font);
-        stateFilterButtons=new ArrayList<>();
         node.attachChild(text);
         
         this.preset=preset;
@@ -147,11 +149,23 @@ public class Button implements Savable{
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,-0.85f,0.05f);
                 
+                substanceList=parentDisplay;
+                
                 keyBoardSelectedDisplay=parentDisplay;
                 
                 break;
                 
             case 4:
+                
+                toggle=true;
+                text.setSize(0.08f);
+                text.setText("\u2192");
+                createBackground(0.3f,0.02f+text.getLineHeight());
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setQueueBucket(RenderQueue.Bucket.Translucent);
+                node.setLocalTranslation(0,0.4f,0.05f);
+                stateFilterButtons.add(this);
+                break;
                 
             case 5:
                 
@@ -163,6 +177,9 @@ public class Button implements Savable{
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.06f,0.05f);
                 stateFilterButtons.add(this);
+                
+                //System.out.println("gases filter button added to stateFilterButtons, its size id now: "+stateFilterButtons.size());
+                
                 break;
                 
             case 6:
@@ -175,6 +192,9 @@ public class Button implements Savable{
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.19f,0.05f);
                 stateFilterButtons.add(this);
+                
+                //System.out.println("liquid filter button added to stateFilterButtons, its size id now: "+stateFilterButtons.size());
+                
                 break;
                 
             case 7:
@@ -187,6 +207,9 @@ public class Button implements Savable{
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation((parentDisplay.getWidthDimension()/2)-(quad.getWidth()/2)-0.05f,((parentDisplay.getHeightDimension()/2)-quad.getHeight())-0.32f,0.05f);
                 stateFilterButtons.add(this);
+                
+                //System.out.println("solid filter button added to stateFilterButtons, its size id now: "+stateFilterButtons.size());
+                
                 break;
                 
             case 8:
@@ -654,6 +677,9 @@ public class Button implements Savable{
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,-0.85f,0.05f);
+                
+                materialList=parentDisplay;
+                
                 break;
                 
             case 54:
@@ -787,7 +813,7 @@ public class Button implements Savable{
     
     public void activate(Hand hand){
         
-        System.out.println("Button activate() called on preset: "+preset);
+        //System.out.println("Button activate() called on preset: "+preset);
         
         switch(preset){
             
@@ -829,15 +855,15 @@ public class Button implements Savable{
 
                         if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance()));
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
 
                         }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance()));
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
 
                         }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance()));
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
 
                         }
 
@@ -845,16 +871,16 @@ public class Button implements Savable{
 
                         switch (parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)) {
                             case 0:
-                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance())));
+                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                 break;
                             case 1:
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance())));
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                 break;
                             case 2:
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance())));
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                 break;
                             default:
-                                System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
+                                //System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
                                 break;
                         }
 
@@ -868,6 +894,26 @@ public class Button implements Savable{
                 
             case 4:
                 
+                //System.out.println("Selected dislay switch button pressed, text is: "+text.getText()+", checking is equal to \u2192");
+                
+                if(text.getText().equals("\u2192")){
+                    
+                    //System.out.println("Text is equal");
+                    
+                    text.setText("\u2190");
+                    
+                    keyBoardSelectedDisplay=materialList;
+                    
+                }else{
+                    
+                    //System.out.println("Text is not equal");
+                    
+                    text.setText("\u2192");
+                    
+                    keyBoardSelectedDisplay=substanceList;
+                    
+                }
+                
                 break;
                 
             case 5:
@@ -877,9 +923,15 @@ public class Button implements Savable{
                     backgroundMat.setColor("Color", POINTED_COLOR);
                     presentBackgroundColor=POINTED_COLOR;
                     
+                    //System.out.println("stateFilterButtons list size: "+stateFilterButtons.size());
+                    
                     for(Button b: stateFilterButtons){
                         
-                        if(b!=this){
+                        //System.out.println("Checking if present button b:"+b.getPreset()+" is a different button than this one: "+getPreset());
+                        
+                        if(!b.equals(this)){
+                            
+                            //System.out.println("It is, setting its color to normal");
                             
                             b.setColor(NORMAL_COLOR);
                             
@@ -887,14 +939,18 @@ public class Button implements Savable{
                         
                     }
                     
+                    Display.setPhaseFilter(1);
+                    
                 }else{
                     
                     backgroundMat.setColor("Color", NORMAL_COLOR);
                     presentBackgroundColor=NORMAL_COLOR;
                     
+                    Display.setPhaseFilter(0);
+                    
                 }
                 
-                //ALSO ONLY DISPLAY GASES AT 273K AND 1 ATM IN THE SUBSTANCE LIST
+                substanceList.updateDisplayedSubstances();
                 
                 break;
                 
@@ -915,14 +971,18 @@ public class Button implements Savable{
                         
                     }
                     
+                    Display.setPhaseFilter(2);
+                    
                 }else{
                     
                     backgroundMat.setColor("Color", NORMAL_COLOR);
                     presentBackgroundColor=NORMAL_COLOR;
                     
+                    Display.setPhaseFilter(0);
+                    
                 }
                 
-                //ALSO ONLY DISPLAY LIQUIDS AT 273K AND 1 ATM IN THE SUBSTANCE LIST
+                substanceList.updateDisplayedSubstances();
                 
                 break;
                 
@@ -943,14 +1003,18 @@ public class Button implements Savable{
                         
                     }
                     
+                    Display.setPhaseFilter(3);
+                    
                 }else{
                     
                     backgroundMat.setColor("Color", NORMAL_COLOR);
                     presentBackgroundColor=NORMAL_COLOR;
                     
+                    Display.setPhaseFilter(2);
+                    
                 }
                 
-                //ALSO ONLY DISPLAY SOLIDS AT 273K AND 1 ATM IN THE SUBSTANCE LIST
+                substanceList.updateDisplayedSubstances();
                 
                 break;
                 
@@ -1320,76 +1384,158 @@ public class Button implements Savable{
                 
             case 34:
                 
-                keyBoardSelectedDisplay.addLetter("1");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2081");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("1");
+                    
+                }
                 
                 break;
                 
             case 35:
                 
-                keyBoardSelectedDisplay.addLetter("2");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2082");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("2");
+                    
+                }
                 
                 break;
                 
             case 36:
                 
-                keyBoardSelectedDisplay.addLetter("3");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2083");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("3");
+                    
+                }
                 
                 break;
                 
             case 37:
                 
-                keyBoardSelectedDisplay.addLetter("4");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2084");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("4");
+                    
+                }
                 
                 break;
                 
             case 38:
                 
-                keyBoardSelectedDisplay.addLetter("5");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2085");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("5");
+                    
+                }
                 
                 break;
                 
             case 39:
                 
-                keyBoardSelectedDisplay.addLetter("6");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2086");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("6");
+                    
+                }
                 
                 break;
                 
             case 40:
                 
-                keyBoardSelectedDisplay.addLetter("7");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2087");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("7");
+                    
+                }
                 
                 break;
                 
             case 41:
                 
-                keyBoardSelectedDisplay.addLetter("8");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2088");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("8");
+                    
+                }
                 
                 break;
                 
             case 42:
                 
-                keyBoardSelectedDisplay.addLetter("9");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2089");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("9");
+                    
+                }
                 
                 break;
                 
             case 43:
                 
-                keyBoardSelectedDisplay.addLetter("0");
+                if(capsActivated){
+                
+                    keyBoardSelectedDisplay.addLetter("\u2080");
+                
+                }else{
+                    
+                    keyBoardSelectedDisplay.addLetter("0");
+                    
+                }
                 
                 break;
                 
             case 44:
                 
-                keyBoardSelectedDisplay.setTextFieldText(keyBoardSelectedDisplay.getTextField().getText().substring(0,keyBoardSelectedDisplay.getTextField().getText().length()-1));
+                if(keyBoardSelectedDisplay.getTextField().getText().length()>0)
+                    
+                    keyBoardSelectedDisplay.removeLastLetter();
                 
                 break;
                 
             case 45:
                 
-                if(parentDisplay.getSubstanceButtonList().size()>5&&parentDisplay.getIndexOfFirstDisplayedSubstanceButton()>0){
+                if(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()>0){
                     
                     parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()-1);
-                    parentDisplay.updateDisplayedSubstances();
+                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
                     
                 }
                 
@@ -1421,6 +1567,18 @@ public class Button implements Savable{
                 
             case 50:
                 
+                if(presentBackgroundColor==NORMAL_COLOR){
+                    
+                    backgroundMat.setColor("Color", POINTED_COLOR);
+                    presentBackgroundColor=POINTED_COLOR;
+                    
+                }else{
+                    
+                    backgroundMat.setColor("Color", NORMAL_COLOR);
+                    presentBackgroundColor=NORMAL_COLOR;
+                    
+                }
+                
                 capsActivated = !capsActivated;
                 
                 break;
@@ -1439,7 +1597,7 @@ public class Button implements Savable{
                 
             case 53:
                 
-                System.out.println("Get selected item material button pressed");
+                //System.out.println("Get selected item material button pressed");
                 
                 if(parentDisplay.getSelectedMaterialButton()!=null){
                     
@@ -1453,7 +1611,7 @@ public class Button implements Savable{
                                 hand.setHeldObject(new GasSac(main,hand.getWorldTranslation()));
                                 break;
                             default:
-                                System.out.println("ERROR: Invalid material button name");
+                                //System.out.println("ERROR: Invalid material button name");
                                 break;
                         }
 
@@ -1467,10 +1625,12 @@ public class Button implements Savable{
                 
             case 54:
                 
-                if(parentDisplay.getSubstanceButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedSubstanceButton()<parentDisplay.getSubstanceButtonList().size()-1){
+                if(parentDisplay.getFilteredSubstanceButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedSubstanceButton()<parentDisplay.getFilteredSubstanceButtonList().size()-1){
+                    
+                    //System.out.println("filtered substance button list size: "+parentDisplay.getFilteredSubstanceButtonList().size()+" is higher than 5 and index os last displayed substance button: "+parentDisplay.getIndexOfLastDisplayedSubstanceButton()+" is lower than the last valid index in filteredSusbtanceButtonList: "+(parentDisplay.getFilteredSubstanceButtonList().size()-1));
                     
                     parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()+1);
-                    parentDisplay.updateDisplayedSubstances();
+                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
                     
                 }
                 
@@ -1478,10 +1638,10 @@ public class Button implements Savable{
                 
             case 55:
                 
-                if(parentDisplay.getMaterialButtonList().size()>5&&parentDisplay.getIndexOfFirstDisplayedMaterialButton()>0){
+                if(parentDisplay.getIndexOfFirstDisplayedMaterialButton()>0){
                     
                     parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()-1);
-                    parentDisplay.updateDisplayedMaterials();
+                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
                     
                 }
                 
@@ -1489,10 +1649,10 @@ public class Button implements Savable{
                 
             case 56:
                 
-                if(parentDisplay.getMaterialButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedMaterialButton()<parentDisplay.getMaterialButtonList().size()-1){
+                if(parentDisplay.getFilteredMaterialButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedMaterialButton()<parentDisplay.getMaterialButtonList().size()-1){
                     
                     parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()+1);
-                    parentDisplay.updateDisplayedMaterials();
+                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
                     
                 }
                 
@@ -1544,6 +1704,8 @@ public class Button implements Savable{
                     
                 }
                 
+                substanceList.updateDisplayedSubstances();
+                
                 break;
                 
             case 58:
@@ -1568,6 +1730,8 @@ public class Button implements Savable{
                     
                 }
                 
+                materialList.updateDisplayedMaterials();
+                
                 break;
             
         }
@@ -1585,8 +1749,16 @@ public class Button implements Savable{
     
     public void setColor(ColorRGBA color){
         
+        //System.out.println("Setting "+getPreset()+"'s color to normal");
+        
         backgroundMat.setColor("Color", color);
         presentBackgroundColor=color;
+        
+    }
+    
+    public int getPreset(){
+        
+        return preset;
         
     }
 

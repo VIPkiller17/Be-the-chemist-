@@ -71,4 +71,10 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
         
     }
     
+    public Spatial getSpatial(){
+        
+        return spatial;
+        
+    }
+    
 }

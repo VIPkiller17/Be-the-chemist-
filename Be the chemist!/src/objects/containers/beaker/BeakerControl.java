@@ -5,6 +5,7 @@
 package objects.containers.beaker;
 
 import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
@@ -34,6 +35,30 @@ public class BeakerControl extends AbstractControl{
         
         //SET THE STATE OF THE CONTAINER
         
+        if(beaker.getSolution()!=null&&beaker.getSolution().containsStates()[1]){
+            
+            //System.out.println("beaker contains a liquid, updating color to "+beaker.getSolution().getLiquidColor());
+            
+            beaker.setLiquidVisible(true,beaker.getSolution().getLiquidColor());
+            
+        }else{
+            
+            beaker.setLiquidVisible(false,ColorRGBA.White);
+            
+        }
+        
+        if(beaker.getSolution()!=null&&beaker.getSolution().containsStates()[2]){
+            
+            //System.out.println("beaker contains a solid, updating color...");
+            
+            beaker.setSolidVisible(true,beaker.getSolution().getSolidColor());
+            
+        }else{
+            
+            beaker.setSolidVisible(false,ColorRGBA.White);
+            
+        }
+        
         beaker.updateNodeState();
         
         //beaker.setTemperature(beaker.getSolution().getTemperature());
@@ -41,18 +66,19 @@ public class BeakerControl extends AbstractControl{
         //ACT BASED ON THE STATE OF THE CONTAINER
         
         //if container is rotated 45 degrees to one side, start particle emission
-        if((spatial.getLocalRotation().getX()>=0.382f||spatial.getLocalRotation().getZ()>=0.382f)&&!beaker.isEmitting()){
+        //if the y (height/sin) of the angle between the object x axis and the world x axis is lower than -0.707 (angle higher than 45 degrees)
+        //start emitting
+        if(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f&&!beaker.isEmitting()){
             
-            //System.out.println("*Beaker is now emitting particles*");
+            System.out.println("*Beaker is now emitting particles*");
             
-            //beaker.startParticleEmission();
+            beaker.startPouring();
             
-        }else if(spatial.getLocalRotation().getX()<0.382f&&spatial.getLocalRotation().getZ()<0.382f&&beaker.isEmitting()){
-            //if neither of the angles are higher than 45 degrees, stop the particle emission
+        }else if(spatial.getLocalRotation().getRotationColumn(1).getY()>0.707f&&beaker.isEmitting()){
             
-            //System.out.println("*Beaker is not emitting particles*");
+            System.out.println("*Beaker is not emitting particles*");
             
-            //beaker.stopParticleEmission();
+            beaker.stopPouring();
             
         }
         

@@ -17,6 +17,7 @@ public class SolutionControl extends AbstractControl{
     private Solution solution;
     
     private double presentVolume;
+    private double presentTemperature;
     
     public SolutionControl(Solution solution){
         
@@ -27,6 +28,8 @@ public class SolutionControl extends AbstractControl{
     @Override
     protected void controlUpdate(float f) {
         
+        
+        
         //account for H2O2 decomposition 
         
         presentVolume=0;
@@ -36,6 +39,22 @@ public class SolutionControl extends AbstractControl{
             presentVolume+=solution.getVolumes().get(i);
             
         }
+        
+        solution.setVolume(presentVolume);
+        
+        presentTemperature=0;
+        
+        for(int i=0;i<solution.getTemperatures().size();i++){
+            
+            //System.out.println("Present temperature: "+solution.getTemperatures().get(i));
+            
+            presentTemperature+=solution.getTemperatures().get(i);
+            
+            //System.out.println("Present temperature now: "+presentTemperature);
+            
+        }
+        
+        solution.setTemperature(presentTemperature/solution.getTemperatures().size());
         
     }
 

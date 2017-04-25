@@ -164,7 +164,7 @@ public class SubstanceButton implements Savable{
                 node.setLocalTranslation(-0.35f,0.5f-positionIndex*0.2f,0.05f);
                 break;
             default:
-                System.out.println("ERROR: invalid position index:"+positionIndex+", sent to setPosition() of SubstanceButton");
+                node.setLocalTranslation(-0.35f,-700f,0.05f);
             
         }
         

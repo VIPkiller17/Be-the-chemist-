@@ -5,6 +5,7 @@
 package interfaces;
 
 import com.jme3.math.Vector3f;
+import com.jme3.scene.Spatial;
 
 /**
  *
@@ -17,5 +18,7 @@ public interface Grabbable {
     Vector3f getGrabbablePosition();
     
     boolean isHighlightVisible();
+    
+    Spatial getSpatial();
     
 }

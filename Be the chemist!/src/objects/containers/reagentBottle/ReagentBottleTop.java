@@ -140,4 +140,11 @@ public class ReagentBottleTop extends PhysicalObject implements Grabbable {
         
     }
     
+    @Override
+    public Spatial getSpatial(){
+        
+        return top;
+        
+    }
+    
 }

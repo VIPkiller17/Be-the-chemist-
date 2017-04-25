@@ -75,12 +75,12 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
             
             else if(parentSink.getIndex()==1)
                 
-                node.setLocalTranslation(-0.3f,0.03f,0.06f);
+                node.setLocalTranslation(-0.3f,0.03f,-0.06f);
 
         }else if(index==1){
             
             handle=assetManager.loadModel("Models/Static/Sink/Sink_Handle_Hot.j3o");
-            handle.setName("Cold sink handle");
+            handle.setName("Hot sink handle");
             handle.setUserData("correctCollision", true);
             handle.setUserData("correspondingObject", this);
             node.attachChild(handle);
@@ -91,7 +91,7 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
             
             else if(parentSink.getIndex()==1)
                 
-                node.setLocalTranslation(-0.3f,0.03f,-0.06f);
+                node.setLocalTranslation(-0.3f,0.03f,0.06f);
             
         }
         
@@ -165,6 +165,12 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
     public String getName() {
         
         return "Sink handle";
+        
+    }
+    
+    public Spatial getSpatial(){
+        
+        return handle;
         
     }
     

@@ -50,7 +50,7 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     }
     
     public Solution getSolution(){
-        
+            
         return solution;
         
     }

@@ -197,4 +197,11 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         
     }
     
+    @Override
+    public Spatial getSpatial(){
+        
+        return valveClosed;
+        
+    }
+    
 }

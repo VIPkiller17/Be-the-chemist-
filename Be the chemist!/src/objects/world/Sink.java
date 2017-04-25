@@ -6,9 +6,16 @@
 package objects.world;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.material.Material;
+import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
+import com.jme3.scene.shape.Box;
 import com.jme3.scene.Spatial;
 import main.Main;
 import objects.PhysicalObject;
@@ -59,7 +66,6 @@ public class Sink extends PhysicalObject{
         }else if(index==1){
             
             node.setLocalTranslation(0.19f,0.92f,-0.29f);
-        
         }
     }
     

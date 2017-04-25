@@ -1,6 +1,7 @@
 package main;
 
 import com.jme3.bullet.BulletAppState;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -26,6 +27,7 @@ import jmevr.input.VRAPI;
 import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.PhysicalObject;
 import objects.apparatus.analyticalBalance.AnalyticalBalance;
+import objects.apparatus.bunsenBurner.BunsenBurner;
 import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHood;
@@ -84,6 +86,8 @@ public class Main extends VRApplication {
     private Room room;
     private Floor floor;
     private AnalyticalBalance analyticalBalance;
+    private BunsenBurner bunsenBurner1;
+    private BunsenBurner bunsenBurner2;
     private DistilledWaterContainer distilledWaterContainer;
     private FumeHood fumeHood;
     private TrashBin trashBin;
@@ -105,10 +109,11 @@ public class Main extends VRApplication {
     private ArrayList<Ion> ions=new ArrayList<Ion>();
     private ArrayList<Substance> substances=new ArrayList<Substance>();
     
-    private Beaker beaker;
+    private ArrayList<Beaker> beakers;
+    private ArrayList<GasSac> gasSac;
+   
     private Erlenmeyer erlenmeyer;
     private Funnel funnel;
-    private GasSac gasSac;
     private MeasuringCylinder measuringCylinder;
     private Pipette pipette;
     //private VolumetricFlask volumetricFlask;
@@ -177,6 +182,8 @@ public class Main extends VRApplication {
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(8.25f, .95f, 5.60f));
         analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
+        bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(2.70f, 0.92f, 5.3f));
+        bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.00f, 0.92f, 4.3f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
         sink0=new Sink(this,getAssetManager(),rootNode,0);
@@ -233,7 +240,8 @@ public class Main extends VRApplication {
         //TESTING SECTION
         testBeakers=new ArrayList<>();
         
-        //bulletAppState.setDebugEnabled(true);
+        bulletAppState.setDebugEnabled(true);
+        System.out.print("Bullet App State Debug: " + bulletAppState.isDebugEnabled());
         
     }
 
@@ -241,10 +249,14 @@ public class Main extends VRApplication {
         
         //non-VR inputs for testing without VR
         getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
-        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
-        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
-        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
-        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));
+        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_W));
+        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_S));
+        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_D));
+        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_A));
+        /*getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
+        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));*/
+        /*getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
+        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));*/
         getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
         getInputManager().addMapping("downControl", new KeyTrigger(KeyInput.KEY_LCONTROL));
         getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));

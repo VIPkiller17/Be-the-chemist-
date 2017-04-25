@@ -8,6 +8,7 @@ package objects.world;
 import com.jme3.asset.AssetManager;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
@@ -74,7 +75,7 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
                 node.setLocalTranslation(0.3f,0.03f,0.06f);
             
             else if(parentSink.getIndex()==1)
-                
+              
                 node.setLocalTranslation(-0.3f,0.03f,-0.06f);
 
         }else if(index==1){
@@ -83,7 +84,9 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
             handle.setName("Hot sink handle");
             handle.setUserData("correctCollision", true);
             handle.setUserData("correspondingObject", this);
+            node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
             node.attachChild(handle);
+            
             
             if(parentSink.getIndex()==0)
             

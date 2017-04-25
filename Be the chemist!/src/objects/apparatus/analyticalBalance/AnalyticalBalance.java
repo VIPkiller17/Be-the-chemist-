@@ -67,7 +67,7 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         //Analytical Balance Surface
         analyticalBalanceSurface = assetManager.loadModel("Models/Static/AnalyticalBalance/AnalyticalBalance_Surface.j3o");
         Material analyticalBalanceSurfaceMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0)); //new ColorRGBA(0, 0, 0, 0)
+        analyticalBalanceSurfaceMat.setColor("Color", new ColorRGBA(0, 0, 0, 0));
         analyticalBalanceSurface.setMaterial(analyticalBalanceSurfaceMat);
         analyticalBalanceSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         analyticalBalanceSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
@@ -187,6 +187,13 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         else
             return false;
     }
+    
+    @Override
+    public Node getNode(){
+        
+        return node;
+        
+    }
 
     @Override
     public String getDescription() {
@@ -234,13 +241,6 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         
     }
 
-    @Override
-    public Node getNode() {
-        
-        return node;
-        
-    }
-   
     @Override
     public String getName() {
         

@@ -70,6 +70,7 @@ public class PeriodicTableDisplay implements Pointable,Savable{
         frame.setUserData("correctCollision", true);
         frame.setUserData("correspondingObject", this);
         node.attachChild(frame);
+        frame.setLocalTranslation(2.355f,1.325f,0);
         
         createBackground(4.71f,2.65f);
         
@@ -84,7 +85,7 @@ public class PeriodicTableDisplay implements Pointable,Savable{
         
         rootNode.attachChild(node);
         
-        node.setLocalTranslation(new Vector3f(2f,0.10f,-0.81f));
+        node.setLocalTranslation(new Vector3f(-0.95f,0.21f,-5.95f));
         
     }
     

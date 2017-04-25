@@ -192,15 +192,15 @@ public class ElementButton implements Savable{
 
                 if(substance.getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
 
-                    ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),substance));
+                    ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),substance,1,298));
 
                 }else if(substance.getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
 
-                    ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),substance));
+                    ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),substance,1,298));
 
                 }else if(substance.getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
 
-                    ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),substance));
+                    ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),substance,1,298));
 
                 }
 
@@ -208,13 +208,13 @@ public class ElementButton implements Savable{
 
                 switch (substance.getStateInteger(298)) {
                     case 0:
-                        hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),substance)));
+                        hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),substance,1,298)));
                         break;
                     case 1:
-                        hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),substance)));
+                        hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),substance,1,298)));
                         break;
                     case 2:
-                        hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),substance)));
+                        hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),substance,1,298)));
                         break;
                     default:
                         System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of element button with name: "+name);

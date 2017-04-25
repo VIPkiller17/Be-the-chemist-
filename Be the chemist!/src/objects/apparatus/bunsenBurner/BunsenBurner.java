@@ -166,4 +166,10 @@ public class BunsenBurner extends Apparatus implements Grabbable{
         
     }
     
+    public Spatial getSpatial(){
+        
+        return bunsenBurner;
+        
+    }
+    
 }

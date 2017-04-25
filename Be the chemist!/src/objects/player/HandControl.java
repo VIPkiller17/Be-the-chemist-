@@ -8,6 +8,8 @@ import com.jme3.asset.AssetManager;
 import com.jme3.collision.CollisionResults;
 import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -373,6 +375,15 @@ public class HandControl extends AbstractControl{
         if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())>0.15f){
             
             //System.out.println("Distance between hand and held object is now more than 15 cm, setting held object to null and static hold to false");
+            /*
+            if(((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class)!=null){
+            
+                ((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class).setMass(1);
+                ((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class).setKinematic(false);
+                //possibleItemToGrab.getSpatial().getControl(RigidBodyControl.class).setKinematicSpatial(true);
+            
+            }
+            */
             
             //Do a final action on the object being forcible dropped
             if(hand.getHeldObject() instanceof Beaker){
@@ -513,7 +524,15 @@ public class HandControl extends AbstractControl{
                 //System.out.println("The trigger has just been released");
                 
                 if(!hand.hasStaticHold()){
-                    
+                    /*
+                    if(((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class)!=null){
+            
+                        ((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class).setMass(1);
+                        ((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class).setKinematic(false);
+                        //possibleItemToGrab.getSpatial().getControl(RigidBodyControl.class).setKinematicSpatial(true);
+
+                    }
+                    */
                     if(hand.getHeldObject()!=null&&((Grabbable)hand.getHeldObject()).getGrabbablePosition().distance(hand.getWorldTranslation())<0.15f){
                         
                         ((Grabbable)hand.getHeldObject()).highlightVisible(true);
@@ -1093,16 +1112,18 @@ public class HandControl extends AbstractControl{
         
         hand.setHeldObject(possibleItemToGrab);
         
-        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
-        
-        //Do an initial action on the grabbed object
+        //TO BE TESTED
         /*
-        if(hand.getHeldObject() instanceof Beaker){
+        if(((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class)!=null){
             
-            ((Beaker)hand.getHeldObject()).setEnabled(false);
+            ((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class).setMass(1);
+            ((Grabbable)possibleItemToGrab).getSpatial().getControl(RigidBodyControl.class).setKinematic(true);
+            //possibleItemToGrab.getSpatial().getControl(RigidBodyControl.class).setKinematicSpatial(true);
             
         }
         */
+        
+        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
         
         //System.out.println("calling method to inittially position grabebd item...");
         
@@ -1137,10 +1158,21 @@ public class HandControl extends AbstractControl{
             
             //System.out.println("Object is a beaker, setting its position to hand position: "+hand.getWorldTranslation()+" and rotation to hand rotation: "+hand.getRotation());
             
-            ((Beaker)hand.getHeldObject()).setPos(hand.getWorldTranslation());
-            ((Beaker)hand.getHeldObject()).setRotation(hand.getRotation());
+            if(hand.getSide()==0){
+                
+                ((Beaker)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(0.05f,0,0.02f))));
+                ((Beaker)hand.getHeldObject()).setRotation(hand.getRotation());
+                
+            }else{
+                
+                ((Beaker)hand.getHeldObject()).setRotation(hand.getRotation().mult(new Quaternion().fromAngleAxis(FastMath.PI,Vector3f.UNIT_Y)));
+                ((Beaker)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(-0.05f,0,0.02f))));
+                
+            }
             
             //((Beaker)hand.getHeldObject()).clearForces(); Doesnt remove the velocity of the object
+            
+            ((Beaker)hand.getHeldObject()).updatePhysicsLocation();
             ((Beaker)hand.getHeldObject()).clearVelocity();
             
             //System.out.println("All forces have been cleared on beaker being held");

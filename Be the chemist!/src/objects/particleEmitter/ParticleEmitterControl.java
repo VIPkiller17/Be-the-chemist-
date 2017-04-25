@@ -49,8 +49,8 @@ public class ParticleEmitterControl extends AbstractControl{
             
             if(particleEmitter.isEmitting()){
                 
-                //System.out.println("Particlemitter is emitting, emitting partcile if parent object of emitter is a container: "+(particleEmitter.getParentObject() instanceof Container)+" and if it has a solution: "+((Container)particleEmitter.getParentObject()).getSolution());
-            
+                //System.out.println("Time to emit a partcicle, particleEmitter's emit() called");
+                
                 particleEmitter.emit();
             
             }

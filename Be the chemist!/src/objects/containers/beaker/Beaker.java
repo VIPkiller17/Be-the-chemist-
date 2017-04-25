@@ -11,6 +11,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import objects.containers.Container;
@@ -45,7 +46,8 @@ public class Beaker extends Container implements Savable{
     private Material liquidModelMat;
     private Spatial solidModel;
     private Material solidModelMat;
-    private ParticleEmitter particleEmitter;
+    
+    private ParticleEmitter pourParticleEmitter,evaporationParticleEmitter,reactionParticleEmitter;
     
     private boolean isEmitting;
     
@@ -63,6 +65,8 @@ public class Beaker extends Container implements Savable{
     public Beaker(Main main,Vector3f position){
         
         super(main,position);
+        
+        setSolution(new Solution(this,null,0,0));
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
@@ -98,20 +102,23 @@ public class Beaker extends Container implements Savable{
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Highlight/Beaker_Highlight.j3o");
         liquidModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Liquid/Beaker_Liquid.j3o");
         solidModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Solid/Beaker_Solid.j3o");
-        openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
+        //openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
         
         this.beakerControl=new BeakerControl(this);
         spatial.addControl(beakerControl);
         
-        openningSurface.setName("Beaker #"+index+"'s openning");
+        /*
+        openningSurface.setName("Beaker #"+index+"'s openning surface");
         openningSurfaceMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        openningSurfaceMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+        openningSurfaceMat.setColor("Color",ColorRGBA.Blue);
         openningSurfaceMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         openningSurface.setQueueBucket(RenderQueue.Bucket.Translucent);
         openningSurface.setMaterial(openningSurfaceMat);
+        spatial.setUserData("correspondingObject", this);
         node.attachChild(openningSurface);
-        openningSurface.setLocalTranslation(position.add(0,0.6f,0));
+        openningSurface.setLocalTranslation(position.add(0,-0.02f,0));
         openningSurface.scale(4);
+        */
         
         highlightModel.setName("Beaker #"+index+"'s highlight");
         highlightModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -124,6 +131,7 @@ public class Beaker extends Container implements Savable{
         
         liquidModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         liquidModelMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        liquidModelMat.setColor("Color",ColorRGBA.White);
         liquidModel.setMaterial(liquidModelMat);
         liquidModel.setName("Beaker #"+index+"'s liquid");
         liquidModel.setUserData("correctCollision", true);
@@ -151,18 +159,18 @@ public class Beaker extends Container implements Savable{
         spatial.addControl(beaker_phy);
         bulletAppState.getPhysicsSpace().add(beaker_phy);
         
-        //beaker_phy.setCollisionShape(collisionShape); Seemingly unneeded (See test program)
-        
         rootNode.attachChild(node);
         rootNode.attachChild(spatial);
         
         main.getItemsList().add(this);
         
-        particleEmitterPosition=position.add(0.05f,0,0);
-        
-        particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getControl(RigidBodyControl.class).getPhysicsRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,1,0),Vector3f.ZERO);
+        reactionParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,1,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
         
         setPos(position);
+        
+        main.getParticleReceivers().add(this);
         
     }
     
@@ -196,16 +204,45 @@ public class Beaker extends Container implements Savable{
         
     }
     
-    public void startParticleEmission(){
+    public void startPouring(){
         
-        particleEmitter.begin();
+        pourParticleEmitter.begin();
+        
         isEmitting=true;
         
     }
     
-    public void stopParticleEmission(){
+    public void stopPouring(){
         
-        particleEmitter.stop();
+        pourParticleEmitter.stop();
+        isEmitting=false;
+        
+    }
+    
+    public void startEvaporating(){
+        
+        evaporationParticleEmitter.begin();
+        isEmitting=true;
+        
+    }
+    
+    public void stopEvaporating(){
+        
+        evaporationParticleEmitter.stop();
+        isEmitting=false;
+        
+    }
+    
+    public void startReacting(){
+        
+        reactionParticleEmitter.begin();
+        isEmitting=true;
+        
+    }
+    
+    public void stopReacting(){
+        
+        reactionParticleEmitter.stop();
         isEmitting=false;
         
     }
@@ -213,6 +250,12 @@ public class Beaker extends Container implements Savable{
     public boolean isEmitting(){
         
         return isEmitting;
+        
+    }
+    
+    public ParticleEmitter getPourParticleEmitter(){
+        
+        return pourParticleEmitter;
         
     }
     
@@ -244,7 +287,9 @@ public class Beaker extends Container implements Savable{
     @Override
     public Vector3f getGrabbablePosition() {
         
-        return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
+        return node.getLocalTranslation();
+        
+        //return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
         
     }
 
@@ -269,7 +314,7 @@ public class Beaker extends Container implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         node.setLocalTranslation(position);
         
-        System.out.println("Beaker position set to "+position);
+        //System.out.println("Beaker position set to "+position);
         
         presentPosition=position;
         
@@ -286,7 +331,7 @@ public class Beaker extends Container implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
         node.setLocalRotation(rotation);
         
-        System.out.println("Beaker rotation set to "+rotation);
+        //System.out.println("Beaker rotation set to "+rotation);
         
     }
     
@@ -328,6 +373,36 @@ public class Beaker extends Container implements Savable{
         
     }
     
+    public void setLiquidVisible(boolean liquidVisible,ColorRGBA color){
+        
+        if(liquidVisible){
+            
+            liquidModelMat.setColor("Color",color);
+            liquidModel.setLocalTranslation(Vector3f.ZERO);
+            
+        }else{
+            
+            liquidModel.setLocalTranslation(0,-700,0);
+            
+        }
+        
+    }
+    
+    public void setSolidVisible(boolean solidVisible,ColorRGBA color){
+        
+        if(solidVisible){
+            
+            solidModelMat.setColor("Color",color);
+            solidModel.setLocalTranslation(Vector3f.ZERO);
+            
+        }else{
+            
+            solidModel.setLocalTranslation(0,-700,0);
+            
+        }
+        
+    }
+    
     @Override
     public boolean canContain(int state){
         
@@ -354,6 +429,12 @@ public class Beaker extends Container implements Savable{
         
     }
     
+    public void updatePhysicsLocation(){
+        
+        spatial.getControl(RigidBodyControl.class).setPhysicsLocation(node.getLocalTranslation());
+        
+    }
+    
     @Override
     public Node getNode() {
         
@@ -365,6 +446,13 @@ public class Beaker extends Container implements Savable{
     public String getName() {
         
         return "Beaker";
+        
+    }
+    
+    @Override
+    public Spatial getSpatial(){
+        
+        return spatial;
         
     }
     

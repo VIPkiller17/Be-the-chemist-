@@ -10,6 +10,7 @@ import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
+import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
@@ -52,6 +53,9 @@ public class Room implements Savable{
         
         main.getRootNode().attachChild(room);
         main.getRootNode().attachChild(furniture);
+        
+        room_phy.setPhysicsLocation(new Vector3f(0,1.525f,0));
+        furniture_phy.setPhysicsLocation(new Vector3f(0,0.6f,1.25f));
         
     }
     

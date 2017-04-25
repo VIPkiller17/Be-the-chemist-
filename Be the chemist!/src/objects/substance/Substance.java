@@ -169,15 +169,11 @@ public class Substance{
     
     public int getTypeInteger(){
         
-        if(type.contains("None")){
-            
-            return 0;
-            
-        }else if(type.contains("Acid")){
+        if(type.contains("Acidic")){
             
             return 1;
             
-        }else if(type.contains("Base")){
+        }else if(type.contains("Basic")){
             
             return 2;
             
@@ -193,13 +189,13 @@ public class Substance{
             
             return 5;
             
-        }else if(type.contains("Other")){
+        }else if(type.contains("None")){
             
             return 6;
             
         }else{
             
-            return -1;
+            return 6;
             
         }
         

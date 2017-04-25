@@ -16,6 +16,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.shape.Box;
+import com.jme3.scene.Spatial;
 import main.Main;
 import objects.PhysicalObject;
 import objects.particleEmitter.ParticleEmitter;
@@ -51,54 +52,21 @@ public class Sink extends PhysicalObject{
         
         rootNode.attachChild(node);
         
-        if(index==0){
-            
-            node.setLocalTranslation(2.75f,0.92f,4.85f);
-            particleEmitter=new ParticleEmitter(main,this,new Vector3f(0.02f, 0.02f, 0.02f),new Vector3f(0,-1,0),new Quaternion(0,0,0,0),0,0,new Vector3f(0,0,0),new Vector3f(0,0,0),0.1,0.01,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
-        
-            //Position testCube
-            Box testCube = new Box(0.02f, 0.02f, 0.02f); 
-            Geometry testCubeGeom = new Geometry("Analytical Balance Display", testCube);
-            Material testCubeMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            testCubeMat.setColor("Color", ColorRGBA.Red);
-            testCubeGeom.setMaterial(testCubeMat);
-            testCubeMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-            testCubeGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
-            testCubeGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
-            testCubeGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
-            testCubeGeom.setUserData("correctCollision",true);
-            testCubeGeom.setUserData("correspondingObject", this);
-            testCubeGeom.setLocalTranslation(new Vector3f(0.12f,0.21f,0));
-            node.attachChild(testCubeGeom);
-            
-        }else if(index==1){
-            
-            node.setLocalTranslation(3.339f,0.92f,4.84f);
-            particleEmitter=new ParticleEmitter(main,this,new Vector3f(-0.5f,0.21f,0.01f),new Vector3f(0,-1,0),new Quaternion(0,0,0,0),0,0,new Vector3f(0,0,0),new Vector3f(0,0,0),0.1,0.01,new Vector3f(0,-9.806f,0),new Vector3f(0,0,0));
-            
-            //Position testCube
-            Box testCube = new Box(0.02f, 0.02f, 0.02f); 
-            Geometry testCubeGeom = new Geometry("Analytical Balance Display", testCube);
-            Material testCubeMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-            testCubeMat.setColor("Color", ColorRGBA.Yellow);
-            testCubeGeom.setMaterial(testCubeMat);
-            testCubeMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-            testCubeGeom.setQueueBucket(RenderQueue.Bucket.Transparent);
-            testCubeGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*270, Vector3f.UNIT_Y));
-            testCubeGeom.rotate(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*-60, Vector3f.UNIT_X));
-            testCubeGeom.setUserData("correctCollision",true);
-            testCubeGeom.setUserData("correspondingObject", this);
-            testCubeGeom.setLocalTranslation(new Vector3f(-0.5f,0.21f,0.01f));
-            node.attachChild(testCubeGeom);
-
-            node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
-                
-        }
+        particleEmitter=new ParticleEmitter(main,this);
         
         hotHandle=new SinkHandle(main,assetManager,0,this);
         coldHandle=new SinkHandle(main,assetManager,1,this);
         
         rootNode.attachChild(node);
+        
+        if(index==0){
+            
+            node.setLocalTranslation(-1f,0.92f,-0.29f);
+        
+        }else if(index==1){
+            
+            node.setLocalTranslation(0.19f,0.92f,-0.29f);
+        }
     }
     
     public int getIndex(){
@@ -132,6 +100,12 @@ public class Sink extends PhysicalObject{
     public String getName() {
         
         return "Sink";
+        
+    }
+    
+    public Spatial getSpatial(){
+        
+        return null;
         
     }
     

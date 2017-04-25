@@ -842,7 +842,7 @@ public class Button implements Savable{
                 
             case 2:
                 
-                System.exit(1);
+                System.exit(0);
                 break;
                 
             case 3:
@@ -886,7 +886,7 @@ public class Button implements Savable{
 
                         ((Grabbable)hand.getHeldObject()).highlightVisible(false);
 
-                    }       
+                    }
                     
                 }
                 

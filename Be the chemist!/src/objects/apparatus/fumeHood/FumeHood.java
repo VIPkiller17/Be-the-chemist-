@@ -46,6 +46,8 @@ public class FumeHood extends Apparatus{
         
         rootNode.attachChild(node);
         
+        node.setLocalTranslation(2.97f,1.5f,5.47f);
+        
     }
     
     @Override

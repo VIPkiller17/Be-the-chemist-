@@ -45,22 +45,22 @@ public class Sink extends PhysicalObject{
         
         rootNode.attachChild(node);
         
-        if(index==0){
-            
-            node.setLocalTranslation(4.155f,0.92f,5.14f);
-        
-        }else if(index==1){
-            
-            node.setLocalTranslation(5.345f,0.92f,5.14f);
-        
-        }
-        
         particleEmitter=new ParticleEmitter(main,this);
         
         hotHandle=new SinkHandle(main,assetManager,0,this);
         coldHandle=new SinkHandle(main,assetManager,1,this);
         
         rootNode.attachChild(node);
+        
+        if(index==0){
+            
+            node.setLocalTranslation(-1f,0.92f,-0.29f);
+        
+        }else if(index==1){
+            
+            node.setLocalTranslation(0.19f,0.92f,-0.29f);
+        
+        }
     }
     
     public int getIndex(){

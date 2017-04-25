@@ -52,7 +52,7 @@ public class ParticleEmitter {
     
     private Main main;
     
-    
+    private double volume;
     
     public ParticleEmitter(Main main,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocityOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
         
@@ -113,7 +113,7 @@ public class ParticleEmitter {
             
         }else if(parentObject instanceof DistilledWaterContainer){
                     
-            this.position=new Vector3f(7.695f,0.95f,2.08f);
+            this.position=new Vector3f(-0.37f,-0.39f,0f);
             this.outDirection=new Vector3f(0,0,0);
             this.randomOutDirectionOffset=new Quaternion().fromAngleAxis(0,Vector3f.UNIT_XYZ);
             this.randomHorizontalOutputOffset=0;
@@ -132,11 +132,11 @@ public class ParticleEmitter {
                     
             if(((Sink) parentObject).getIndex()==0){
                 
-                this.position=new Vector3f(0.05f,0.2f,0f);
+                this.position=new Vector3f(0.12f,0.2f,0f);
                 
             }else{
                 
-                this.position=new Vector3f(-0.05f,0.2f,0f);
+                this.position=new Vector3f(-0.12f,0.2f,0f);
                 
             }
             
@@ -368,12 +368,22 @@ public class ParticleEmitter {
     
     public void emit(){
         
-        if(parentObject instanceof Container&&((Container)parentObject).getSolution()!=null){
-                
-            System.out.println("Creating new particle for a container");
+        //System.out.println("Emit has been called");
+        
+        if(parentObject instanceof Container&&!((Container)parentObject).getSolution().getSubstances().isEmpty()){
             
-            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution()));
+            //System.out.println("    the parentobject is a container and the colution is not empty, its volume is: "+((Container)parentObject).getSolution().getVolume()+" and the volume of the particle would be: "+volume);
+                
+            if(((Container)parentObject).getSolution().getVolume()>volume){
+            
+                //System.out.println("        Creating new particle for a container");
 
+                control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution(),volume));
+
+                ((Container)parentObject).getSolution().setVolume(((Container)parentObject).getSolution().getVolume()-volume);
+            
+            }
+            
         }else if(parentObject instanceof SimpleEmitter){
             
             System.out.println("Creating new particle for simple emitter");
@@ -390,10 +400,10 @@ public class ParticleEmitter {
             
             System.out.println("Creating new particle for Sink");
             
-            //here water is add to the solution of the particle instead of just using the substance directly
+            //here water is added to the solution of the particle instead of just using the substance directly
             //this is used as a precursor on how the tap water will later on be composed of multiple substances instead of just one
             //but only water is added right now because the values arent exact and most of the substances are not yet implemented in the game
-            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,new Solution(null,null,0,0).addSubstance(main.getSubstances().get(44),0.001,298)));
+            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,new Solution(null,null,0,0).addSubstance(main.getSubstances().get(44),0.001,298),volume));
             
         }
         
@@ -453,6 +463,12 @@ public class ParticleEmitter {
     public String toString(){
         
         return "ParticleEmitter of object: "+parentObject.getDescription();
+        
+    }
+    
+    public void setVolume(double volume){
+        
+        this.volume=volume;
         
     }
     

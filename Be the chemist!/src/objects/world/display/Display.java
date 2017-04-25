@@ -119,7 +119,7 @@ public class Display implements Pointable,Savable{
                 buttons.add(new Button(main,this,0));
                 buttons.add(new Button(main,this,1));
                 buttons.add(new Button(main,this,2));
-                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,0.5f));
+                node.setLocalTranslation(new Vector3f(-4.9f,1.2f,-4f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
                 
@@ -148,7 +148,7 @@ public class Display implements Pointable,Savable{
                 texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.9f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
                 texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
                 buttons.add(new Button(main,this,3));
-                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,2f));
+                node.setLocalTranslation(new Vector3f(-4.9f,1.2f,-2.5f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 
                 texts.add(new BitmapText(font));
@@ -175,7 +175,7 @@ public class Display implements Pointable,Savable{
                 
                 buttons.add(new Button(main,this,4));
                 
-                node.setLocalTranslation(new Vector3f(-1.1f,0.49f,3.09f));
+                node.setLocalTranslation(new Vector3f(-4.9f,0.49f,-1.4f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
                 
@@ -204,7 +204,7 @@ public class Display implements Pointable,Savable{
                 texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.9f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
                 texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
                 buttons.add(new Button(main,this,53));
-                node.setLocalTranslation(new Vector3f(-1.1f,1.2f,4.18f));
+                node.setLocalTranslation(new Vector3f(-4.9f,1.2f,-0.3f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 
                 texts.add(new BitmapText(font));
@@ -230,7 +230,7 @@ public class Display implements Pointable,Savable{
                 buttons.add(new Button(main,this,54));
                 buttons.add(new Button(main,this,55));
                 buttons.add(new Button(main,this,56));
-                node.setLocalTranslation(new Vector3f(-1.1f,1.5f,3.09f));
+                node.setLocalTranslation(new Vector3f(-4.9f,1.5f,-1.4f));
                 node.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.PI/2,Vector3f.UNIT_Y));
                 break;
                 

@@ -58,8 +58,7 @@ public class Particle {
         spatial=particleEmitter.getAssetManager().loadModel(modelPath);
         spatial.setName("particle");
         spatialMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        //spatialMat.setColor("Color",substance.getColor());
-        spatialMat.setColor("Color",ColorRGBA.Red);
+        spatialMat.setColor("Color",substance.getColor());
         spatialMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
         spatial.setMaterial(spatialMat);
@@ -72,16 +71,14 @@ public class Particle {
         
     }
     
-    public Particle(Main main,ParticleEmitter particleEmitter,String modelPath,int state,Solution solution){
+    public Particle(Main main,ParticleEmitter particleEmitter,String modelPath,int state,Solution solution,double volume){
         
         this.main=main;
         
         velocity=new Vector3f(particleEmitter.getInitialVelocity());
         
-        System.out.println(solution.getSubstances().get(0).getName());
-        
         this.substances=solution.getSubstances();
-        volume=solution.getVolume();
+        this.volume=volume;
         temperature=solution.getTemperature();
         
         this.state=state;
@@ -92,8 +89,10 @@ public class Particle {
         spatial.setName("particle");
         System.out.println(main);
         spatialMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        //spatialMat.setColor("Color",solution.getStateColor(solution.getMostCommonState()));
-        spatialMat.setColor("Color",ColorRGBA.Red);
+        
+        System.out.println(solution.getMostCommonState()+", "+solution.getStateColor(solution.getMostCommonState()));
+        
+        spatialMat.setColor("Color",solution.getStateColor(solution.getMostCommonState()));
         spatialMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
         spatial.setMaterial(spatialMat);
@@ -109,6 +108,8 @@ public class Particle {
     public void destroy(){
         
         spatial.scale(0);
+        
+        spatial.setLocalTranslation(0,-700,0);
         
         spatial=null;
         
@@ -170,6 +171,12 @@ public class Particle {
         
         
         return temperature;
+        
+    }
+    
+    public int getState(){
+        
+        return state;
         
     }
     

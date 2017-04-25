@@ -66,6 +66,8 @@ public class Beaker extends Container implements Savable{
         
         super(main,position);
         
+        setSolution(new Solution(this,null,0,0));
+        
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
     }
@@ -100,11 +102,12 @@ public class Beaker extends Container implements Savable{
         highlightModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Highlight/Beaker_Highlight.j3o");
         liquidModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Liquid/Beaker_Liquid.j3o");
         solidModel=assetManager.loadModel("Models/Objects/Containers/Beaker/Solid/Beaker_Solid.j3o");
-        openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
+        //openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
         
         this.beakerControl=new BeakerControl(this);
         spatial.addControl(beakerControl);
         
+        /*
         openningSurface.setName("Beaker #"+index+"'s openning surface");
         openningSurfaceMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         openningSurfaceMat.setColor("Color",ColorRGBA.Blue);
@@ -115,6 +118,7 @@ public class Beaker extends Container implements Savable{
         node.attachChild(openningSurface);
         openningSurface.setLocalTranslation(position.add(0,-0.02f,0));
         openningSurface.scale(4);
+        */
         
         highlightModel.setName("Beaker #"+index+"'s highlight");
         highlightModelMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
@@ -166,6 +170,8 @@ public class Beaker extends Container implements Savable{
         
         setPos(position);
         
+        main.getParticleReceivers().add(this);
+        
     }
     
     public boolean isCloseable(){
@@ -201,6 +207,7 @@ public class Beaker extends Container implements Savable{
     public void startPouring(){
         
         pourParticleEmitter.begin();
+        
         isEmitting=true;
         
     }
@@ -243,6 +250,12 @@ public class Beaker extends Container implements Savable{
     public boolean isEmitting(){
         
         return isEmitting;
+        
+    }
+    
+    public ParticleEmitter getPourParticleEmitter(){
+        
+        return pourParticleEmitter;
         
     }
     
@@ -301,7 +314,7 @@ public class Beaker extends Container implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         node.setLocalTranslation(position);
         
-        System.out.println("Beaker position set to "+position);
+        //System.out.println("Beaker position set to "+position);
         
         presentPosition=position;
         
@@ -318,7 +331,7 @@ public class Beaker extends Container implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
         node.setLocalRotation(rotation);
         
-        System.out.println("Beaker rotation set to "+rotation);
+        //System.out.println("Beaker rotation set to "+rotation);
         
     }
     

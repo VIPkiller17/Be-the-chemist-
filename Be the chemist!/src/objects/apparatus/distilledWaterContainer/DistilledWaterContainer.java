@@ -59,12 +59,14 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         liquid.setUserData("correctCollision", true);
         liquid.setUserData("correspondingObject", this);
         node.attachChild(liquid);
+        liquid.setLocalTranslation(0.05f,-0.15f,0);
         
         valveClosed=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/DistilledWaterContainer_Valve_Closed.j3o");
         valveClosed.setName("Distilled water container closed valve");
         valveClosed.setUserData("correctCollision", true);
         valveClosed.setUserData("correspondingObject", this);
         node.attachChild(valveClosed);
+        valveClosed.setLocalTranslation(-0.35f,-0.35f,0.015f);
         
         valveOpenned=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/DistilledWaterContainer_Valve_Openned.j3o");
         valveOpenned.setName("Distilled water container openned valve");
@@ -97,6 +99,8 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
         rootNode.attachChild(node);
         
+        node.setLocalTranslation(4.3f,1.329f,-3);
+        
     }
     
     public void setOpenned(boolean openned){
@@ -117,9 +121,9 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
         if(openned){
             
-            valveOpenned.setLocalTranslation(0,-5,0);
+            valveClosed.setLocalTranslation(valveOpenned.getLocalTranslation());
             
-            valveClosed.setLocalTranslation(0,0,0);
+            valveOpenned.setLocalTranslation(0,-5,0);
             
             openned=false;
             
@@ -127,9 +131,9 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
             
         }else{
             
-            valveClosed.setLocalTranslation(0,-5,0);
+            valveOpenned.setLocalTranslation(valveClosed.getLocalTranslation());
             
-            valveOpenned.setLocalTranslation(0,0,0);
+            valveClosed.setLocalTranslation(0,-5,0);
             
             openned=true;
             

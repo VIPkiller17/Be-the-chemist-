@@ -33,6 +33,8 @@ public class Solution {
     
     private Substance presentMergingSubstance;
     
+    private boolean substanceFound;
+    
     public Solution(Container container,Substance substance,double volume,double temperature){
         
         this.parentContainer=container;
@@ -43,6 +45,13 @@ public class Solution {
         
         if(substance!=null){
             substances.add(substance);
+            
+            if(substance.getStateInteger(temperature)==2){
+                
+                volumes.add(volume*0.001/substance.getDensity());
+                
+            }
+            
             volumes.add(volume);
             temperatures.add(temperature);
         }
@@ -90,10 +99,25 @@ public class Solution {
         else
             this.temperatures=new ArrayList<>();
         
-        if(volumes!=null)
-            this.volumes=volumes;
-        else
+        if(volumes!=null){
+            
             this.volumes=new ArrayList<>();
+            
+            for(int i=0;i<substances.size();i++){
+                
+                if(substances.get(i).getStateInteger(temperature)==2){
+                
+                    this.volumes.add(volumes.get(i)*0.001/substances.get(i).getDensity());
+                
+                }
+                
+            }
+            
+        }else{
+            
+            this.volumes=new ArrayList<>();
+            
+        }
         
         if(substances!=null){
             this.substances=substances;
@@ -157,20 +181,30 @@ public class Solution {
     
     public Solution addSubstance(Substance substance,double volume,double temperature){
         
-        System.out.println("is added substance null?: "+(substance==null));
+        System.out.println("addSubstance() called with: "+substance+" with volume: "+volume+" and temp: "+temperature);
         
         if(substances.isEmpty()){
+            
+            System.out.println("    the receiver solution substances list is apparently empty");
             
             substances.add(substance);
             volumes.add(volume);
             temperatures.add(temperature);
             
         }else{
+            
+            System.out.println("    the receiver solution substances list is apparently NOT empty");
+            
+            substanceFound=false;
         
             //TO BE FIXED
             for(int j=0;j<substances.size();j++){
+                
+                System.out.println("        Adding substance "+substances+" to receiver solution");
 
-                if(substance.equals(substances.get(j))){
+                if(substance==substances.get(j)){
+                    
+                    System.out.println("            substance "+substance+" was already in the solution's substance list, adding volume and calculating temperature");
 
                     volumes.set(j,volumes.get(j)+volume);
                     
@@ -179,18 +213,22 @@ public class Solution {
                     //for now an easier alternative is just to leave the temperature as it is in the receiving solution
                     //temperatures.set(j,temperature);
                     
-                    break;
-
-                }else{
-
-                    substances.add(substance);
-                    volumes.add(volume);
-                    temperatures.add(temperature);
+                    substanceFound=true;
                     
                     break;
 
                 }
 
+            }
+            
+            if(!substanceFound){
+                
+                System.out.println("            substance "+substance+" was NOT already in the solution's substance list, adding substance, volume and temperature to corresponding lists");
+                
+                substances.add(substance);
+                volumes.add(volume);
+                temperatures.add(temperature);
+                
             }
             
         }
@@ -578,24 +616,27 @@ public class Solution {
             
                 case 0:
                     
-                    if(gasColor==null)
+                    if(gasColor==null){
                         gasColor=substances.get(i).getColor();
-                    else
-                        gasColor=gasColor.add(substances.get(i).getColor());
+                    }else{
+                        gasColor.set((float)Math.sqrt(((gasColor.getRed()*gasColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((gasColor.getGreen()*gasColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((gasColor.getBlue()*gasColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(gasColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+                    }
                     //System.out.println("Susbtance state is 0 and its gas color has been set to "+substances.get(0).getColor());
                     break;
                 case 1:
-                    if(liquidColor==null)
+                    if(liquidColor==null){
                         liquidColor=substances.get(i).getColor();
-                    else
-                        liquidColor=liquidColor.add(substances.get(i).getColor());
+                    }else{
+                        liquidColor.set((float)Math.sqrt(((liquidColor.getRed()*liquidColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((liquidColor.getGreen()*liquidColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((liquidColor.getBlue()*liquidColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(liquidColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+                    }
                     //System.out.println("Susbtance state is 1 and its liquid color has been set to "+substances.get(0).getColor());
                     break;
                 case 2:
-                    if(solidColor==null)
+                    if(solidColor==null){
                         solidColor=substances.get(i).getColor();
-                    else
-                        solidColor=solidColor.add(substances.get(i).getColor());
+                    }else{
+                        solidColor.set((float)Math.sqrt(((solidColor.getRed()*solidColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((solidColor.getGreen()*solidColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((solidColor.getBlue()*solidColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(solidColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+                    }
                     //System.out.println("Susbtance state is 2 and its solid color has been set to "+substances.get(0).getColor());
                     break;
                 default:
@@ -622,21 +663,27 @@ public class Solution {
             
             presentVolumeList[substances.get(i).getStateInteger(temperatures.get(i))]+=volumes.get(i);
             
+            System.out.println("presentvolumelist at index: "+substances.get(i).getStateInteger(temperatures.get(i))+" now at "+presentVolumeList[substances.get(i).getStateInteger(temperatures.get(i))]);
+            
         }
         
-        if(presentVolumeList[0]>presentVolumeList[1]&&presentVolumeList[0]>presentVolumeList[2]){
+        System.out.println("0: "+presentVolumeList[0]+"\n1: "+presentVolumeList[1]+"\n2: "+presentVolumeList[2]);
+        
+        if(presentVolumeList[0]>=presentVolumeList[1]&&presentVolumeList[0]>=presentVolumeList[2]){
             
             return 0;
             
-        }else if(presentVolumeList[1]>presentVolumeList[0]&&presentVolumeList[1]>presentVolumeList[2]){
+        }else if(presentVolumeList[1]>=presentVolumeList[0]&&presentVolumeList[1]>=presentVolumeList[2]){
             
             return 1;
             
-        }else if(presentVolumeList[2]>presentVolumeList[1]&&presentVolumeList[2]>presentVolumeList[0]){
+        }else if(presentVolumeList[2]>=presentVolumeList[1]&&presentVolumeList[2]>=presentVolumeList[0]){
             
             return 2;
             
         }else{
+            
+            System.out.println("For some reason there is no most common state, returning 0");
             
             return 0;
             

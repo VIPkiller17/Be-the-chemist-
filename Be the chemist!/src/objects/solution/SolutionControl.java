@@ -30,8 +30,9 @@ public class SolutionControl extends AbstractControl{
         
         
         
-        //account for H2O2 decomposition 
+        //account for H2O2 decomposition
         
+        /*
         presentVolume=0;
         
         for(int i=0;i<solution.getVolumes().size();i++){
@@ -41,6 +42,7 @@ public class SolutionControl extends AbstractControl{
         }
         
         solution.setVolume(presentVolume);
+        */
         
         presentTemperature=0;
         

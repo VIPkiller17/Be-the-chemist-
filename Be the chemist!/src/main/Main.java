@@ -15,12 +15,15 @@ import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
+import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
+import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.Collections;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
+import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.PhysicalObject;
 import objects.apparatus.analyticalBalance.AnalyticalBalance;
 import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
@@ -38,7 +41,6 @@ import objects.ion.Ion;
 import objects.player.Player;
 import objects.solution.Solution;
 import objects.substance.Substance;
-import objects.testing.SimpleEmitter;
 import objects.world.Floor;
 import objects.world.Room;
 import objects.world.Sink;
@@ -98,6 +100,7 @@ public class Main extends VRApplication {
     
     //Objects
     private ArrayList<Describable> describables=new ArrayList<Describable>();
+    private ArrayList<PhysicalObject> particleReceivers;
     private ArrayList<Element> elements=new ArrayList<Element>();
     private ArrayList<Ion> ions=new ArrayList<Ion>();
     private ArrayList<Substance> substances=new ArrayList<Substance>();
@@ -119,10 +122,11 @@ public class Main extends VRApplication {
         Main app = new Main();
         
         //Set the frustrum distances
-        app.preconfigureFrustrumNearFar(0.01f,512f);
+        app.preconfigureFrustrumNearFar(0.01f,20f);
         
         //set mirror window size
-        app.preconfigureMirrorWindowSize(1280, 720);
+        app.preconfigureMirrorWindowSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getWidth(),GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getHeight());
+        //app.preconfigureMirrorWindowSize(1280, 720);
         
         //Enables the mirror window, displays the game on the computer also
         app.preconfigureVRApp(PRECONFIG_PARAMETER.ENABLE_MIRROR_WINDOW,true);
@@ -142,6 +146,7 @@ public class Main extends VRApplication {
         
         //var init
         items=new ArrayList<>();
+        particleReceivers=new ArrayList<>();
         initChemistryStructure();
         
         //AmbientLight al = new AmbientLight();
@@ -221,10 +226,14 @@ public class Main extends VRApplication {
         initInputs();
         //INIT THE INPUTS END
         
-        //TESTING SECTION
-        testBeakers=new ArrayList<Beaker>();
+        //INITIAL ACTIONS ON THE LOADED WORLD
         
-        bulletAppState.setDebugEnabled(true);
+        playerLogic.teleportArea(new Vector3f(-4,0,-5));
+        
+        //TESTING SECTION
+        testBeakers=new ArrayList<>();
+        
+        //bulletAppState.setDebugEnabled(true);
         
     }
 
@@ -349,7 +358,7 @@ public class Main extends VRApplication {
     
     public void initLights(){
         
-        
+        /*
         //DL's simulate the ambient light coming from all 6 directions
         DirectionalLight dl0 = new DirectionalLight();
         dl0.setDirection((new Vector3f(0.5f,0,0)).normalizeLocal());
@@ -380,20 +389,17 @@ public class Main extends VRApplication {
         dl5.setDirection((new Vector3f(0,0,-0.5f)).normalizeLocal());
         dl5.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl5);
+        */
         
-        /*
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White);
         rootNode.addLight(sun); 
-        
+ 
         VRDirectionalLightShadowRenderer dlsr = new VRDirectionalLightShadowRenderer(getAssetManager(), 2048, 4);
         dlsr.setLight(sun);
-        //dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
-        //getViewPort().addProcessor(dlsr);
-        getLeftViewPort().addProcessor(dlsr);
-        getRightViewPort().addProcessor(dlsr);
-        */
+        dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCF4);
+        getViewPort().addProcessor(dlsr);
         
         //adds the point lights
         for(int i=0;i<4;i++){
@@ -1334,4 +1340,11 @@ public class Main extends VRApplication {
         return elements;
         
     }
+    
+    public ArrayList<PhysicalObject> getParticleReceivers(){
+        
+        return particleReceivers;
+        
+    }
+    
 }

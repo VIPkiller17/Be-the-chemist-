@@ -300,7 +300,7 @@ public class Main extends VRApplication {
         testBeakers=new ArrayList<>();
         
         bulletAppState.setDebugEnabled(true);
-        System.out.print("Bullet App State Debug: " + bulletAppState.isDebugEnabled());
+        System.out.print("Bullewt App State Debug: " + bulletAppState.isDebugEnabled());
         
     }
 
@@ -376,29 +376,31 @@ public class Main extends VRApplication {
             
             public void onAnalog(String name, float value, float tpf) {
                 
+                float movingRatio = 0.5f;
+                
                 if(name.equals("forward")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("backward")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("right")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("left")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("up")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("downControl")||name.equals("downShift")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }
                 
@@ -1379,6 +1381,28 @@ public class Main extends VRApplication {
             }
         
         }
+        
+        //Check HeadsetPosition
+       if (observer.getWorldTranslation().getX() <= -4.99f) {
+            playerLogic.teleportArea(new Vector3f(-4.99f, observer.getWorldTranslation().getY(), observer.getWorldTranslation().getZ()));
+       }
+       if (observer.getWorldTranslation().getX() >= 4.95f) {
+            playerLogic.teleportArea(new Vector3f(4.95f, observer.getWorldTranslation().getY(), observer.getWorldTranslation().getZ()));
+       }
+         if (observer.getWorldTranslation().getZ() <= -4.83f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), observer.getWorldTranslation().getY(), -4.83f));
+       }
+          if (observer.getWorldTranslation().getZ() >= 5f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), observer.getWorldTranslation().getY(), 5f));
+       }  if (observer.getWorldTranslation().getY() <= 0.01f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), 0.01f, observer.getWorldTranslation().getZ()));
+       }
+          if (observer.getWorldTranslation().getY() >= 2.90) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), 2.90f, observer.getWorldTranslation().getZ()));
+       }
+       
+       
+        //Check height*/
         
         //display number of tracked controllers every 10 seconds
         controllerCountDispTPF+=tpf;

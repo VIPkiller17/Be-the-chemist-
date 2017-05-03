@@ -51,7 +51,7 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         spatial=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor.j3o");
         //spatial.scale(1f,1f,1f);
         spatial.rotate(new Quaternion().fromAngleAxis(FastMath.PI, Vector3f.UNIT_Y));
-        spatial.setLocalTranslation(6.72f,1.02f,10.18f);
+        spatial.setLocalTranslation(0.0f,-0.5f, -0.485f);
         spatial.setName("Fume hood");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);

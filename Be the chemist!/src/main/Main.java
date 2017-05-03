@@ -30,7 +30,6 @@ import java.util.Collections;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
-import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.PhysicalObject;
 import objects.apparatus.analyticalBalance.AnalyticalBalance;
 import objects.apparatus.bunsenBurner.BunsenBurner;
@@ -47,7 +46,6 @@ import objects.containers.pipette.Pipette;
 import objects.element.Element;
 import objects.ion.Ion;
 import objects.player.Player;
-import objects.solution.Solution;
 import objects.substance.Substance;
 import objects.world.Floor;
 import objects.world.Room;
@@ -190,10 +188,10 @@ public class Main extends VRApplication {
         room=new Room(this);
         floor=new Floor(this);
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
-        analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(8.25f, .95f, 5.60f));
+        analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .95f, 0.5f));
         analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
-        bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(2.70f, 0.92f, 5.3f));
-        bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.00f, 0.92f, 4.3f));
+        bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(-1.1f, 0.92f, 0.2f));
+        bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(0.2f, 0.92f, -0.8f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
         sink0=new Sink(this,getAssetManager(),rootNode,0);
@@ -217,16 +215,69 @@ public class Main extends VRApplication {
         testCube.setMaterial(testCubeMat);
         rootNode.attachChild(testCube);
         */
+        beakers = new ArrayList<Beaker>();
         
+        /*Experiment Table*/
+        //Upper Right Beakers
+        beakers.add(new Beaker(this,new Vector3f(-1.0708143f, 0.455f + 0.065f, -1.9390206f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.1044384f, 0.45500004f + 0.065f, -1.2780275f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.105022f, 0.45500007f + 0.065f, 0.7411303f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.1104741f, 0.45500004f + 0.065f, 1.3035444f)));
+        //Lower Right Beakers
+        beakers.add(new Beaker(this,new Vector3f(-1.1110576f, 0.10500002f + 0.065f, -1.8735888f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.0863284f, 0.10500002f + 0.065f, -1.2398827f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.0919302f, 0.10500008f + 0.065f, 0.69709253f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.1104741f, 0.10500008f + 0.065f, 1.3035444f)));
+        //Upper Left Beakers
+        beakers.add(new Beaker(this,new Vector3f(0.23306155f, 0.45500004f + 0.065f, -1.9145788f)));
+        beakers.add(new Beaker(this,new Vector3f(0.32690024f, 0.45500004f + 0.065f, -1.2644167f)));
+        beakers.add(new Beaker(this,new Vector3f(0.25067437f, 0.45500004f + 0.065f, 0.691056f)));
+        beakers.add(new Beaker(this,new Vector3f(0.22558737f, 0.45500004f + 0.065f, 1.3050655f)));
+        //Lower Left Beakers
+        beakers.add(new Beaker(this,new Vector3f(0.23306155f, 0.10500008f + 0.065f, -1.9145788f)));
+        beakers.add(new Beaker(this,new Vector3f(0.32690024f, 0.10500008f + 0.065f, -1.2644167f)));
+        beakers.add(new Beaker(this,new Vector3f(0.25067437f, 0.10500008f + 0.065f, 0.691056f)));
+        beakers.add(new Beaker(this,new Vector3f(0.22558737f, 0.10500008f + 0.065f, 1.3050655f)));
+        
+        /*Fumehood*/
+        //Upper Beaker
+        beakers.add(new Beaker(this,new Vector3f(2.9800186f, 0.54999995f + 0.066f, 5.343186f)));
+        //Lower Beaker
+        beakers.add(new Beaker(this,new Vector3f(3.0056179f, 0.105000024f + 0.065f, 5.209715f)));
+        
+        /*Storage Counters*/
+        //Upper Beakers
+        beakers.add(new Beaker(this,new Vector3f(1.5657148f, 0.45500004f + 0.065f, 5.3555984f)));
+        beakers.add(new Beaker(this,new Vector3f(0.7380991f, 0.45500004f + 0.065f, 5.364832f)));
+        beakers.add(new Beaker(this,new Vector3f(-0.40886056f, 0.45500004f + 0.065f, 5.2887034f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.2874613f, 0.45500004f + 0.065f, 5.284735f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.8765519f, 0.45500007f + 0.065f, 5.3289967f)));
+        beakers.add(new Beaker(this,new Vector3f(-2.5052984f, 0.45500004f + 0.065f, 5.298236f)));
+        beakers.add(new Beaker(this,new Vector3f(-3.0910027f, 0.45500004f + 0.065f, 5.330965f)));
+        beakers.add(new Beaker(this,new Vector3f(-3.7073069f, 0.45500004f + 0.065f, 5.3346424f)));
+        //Lower Beakers
+        beakers.add(new Beaker(this,new Vector3f(1.5657148f, 0.10500008f + 0.065f, 5.3555984f)));
+        beakers.add(new Beaker(this,new Vector3f(0.7380991f, 0.10500008f + 0.065f, 5.364832f)));
+        beakers.add(new Beaker(this,new Vector3f(-0.40886056f, 0.10500008f + 0.065f, 5.2887034f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.2874613f, 0.10500008f + 0.065f, 5.284735f)));
+        beakers.add(new Beaker(this,new Vector3f(-1.8765519f, 0.10500008f + 0.065f, 5.3289967f)));
+        beakers.add(new Beaker(this,new Vector3f(-2.5052984f, 0.10500008f + 0.065f, 5.298236f)));
+        beakers.add(new Beaker(this,new Vector3f(-3.0910027f, 0.1550500008f + 0.065f, 5.330965f)));
+        beakers.add(new Beaker(this,new Vector3f(-3.7073069f, 0.10500008f + 0.065f, 5.3346424f)));
+        
+        //To solve: gasSac rotation issue + GasSac vibration issue
+        
+        gasSac = new ArrayList<GasSac>();
+        gasSac.add(new GasSac(this,new Vector3f(-2f, 0.05f, -2f)));
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).setPhysicsRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*135, new Vector3f(0,1,1)));
+        //gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().multLocal(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
+        /*gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Z));
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));*/
+       
         beaker=new Beaker(this,new Vector3f(-4,0.05f,-5));
         beaker.setSolution(new Solution(this,beaker,substances.get(47),100,298));//solid so grams
         beaker.getSolution().addSubstance(substances.get(5),1,298);//liquid so liters
-        //erlenmeyer=new Erlenmeyer(this,new Vector3f(0.7f,0.5f,0));
-        //funnel=new Funnel(this,new Vector3f(0.2f,0.5f,0));
-        //gasSac=new GasSac(this,new Vector3f(0.4f,0.5f,0));
-        //measuringCylinder=new MeasuringCylinder(this,new Vector3f(0.9f,0.5f,0));
-        //pipette=new Pipette(this,new Vector3f(0.11f,0.5f,0));
-        //volumetricFlask=new VolumetricFlask(this,new Vector3f(0.13f,0.5f,0));
         
         //simpleEmitter=new SimpleEmitter(this,new Vector3f(0,1,0));
         //OBJECTS INIT END
@@ -251,7 +302,7 @@ public class Main extends VRApplication {
         testBeakers=new ArrayList<>();
         
         bulletAppState.setDebugEnabled(true);
-        System.out.print("Bullet App State Debug: " + bulletAppState.isDebugEnabled());
+        System.out.print("Bullewt App State Debug: " + bulletAppState.isDebugEnabled());
         
     }
 
@@ -327,29 +378,31 @@ public class Main extends VRApplication {
             
             public void onAnalog(String name, float value, float tpf) {
                 
+                float movingRatio = 0.5f;
+                
                 if(name.equals("forward")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("backward")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("right")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("left")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("up")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }else if(name.equals("downControl")||name.equals("downShift")){
                     
-                    playerLogic.move(name,0.1f);
+                    playerLogic.move(name,movingRatio);
                     
                 }
                 
@@ -409,7 +462,7 @@ public class Main extends VRApplication {
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White.mult(0.1f));
         rootNode.addLight(sun); 
- 
+      
         VRDirectionalLightShadowRenderer dlsr = new VRDirectionalLightShadowRenderer(getAssetManager(), 8192, 4);
         dlsr.setLight(sun);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
@@ -1349,6 +1402,28 @@ public class Main extends VRApplication {
             }
         
         }
+        
+        //Check HeadsetPosition
+       if (observer.getWorldTranslation().getX() <= -4.99f) {
+            playerLogic.teleportArea(new Vector3f(-4.99f, observer.getWorldTranslation().getY(), observer.getWorldTranslation().getZ()));
+       }
+       if (observer.getWorldTranslation().getX() >= 4.95f) {
+            playerLogic.teleportArea(new Vector3f(4.95f, observer.getWorldTranslation().getY(), observer.getWorldTranslation().getZ()));
+       }
+         if (observer.getWorldTranslation().getZ() <= -4.83f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), observer.getWorldTranslation().getY(), -4.83f));
+       }
+          if (observer.getWorldTranslation().getZ() >= 5f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), observer.getWorldTranslation().getY(), 5f));
+       }  if (observer.getWorldTranslation().getY() <= 0.01f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), 0.01f, observer.getWorldTranslation().getZ()));
+       }
+          if (observer.getWorldTranslation().getY() >= 2.90) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), 2.90f, observer.getWorldTranslation().getZ()));
+       }
+       
+       
+        //Check height*/
         
         //display number of tracked controllers every 10 seconds
         controllerCountDispTPF+=tpf;

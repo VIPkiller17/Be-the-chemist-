@@ -63,7 +63,15 @@ public class Player {
     
     public void teleportArea(Vector3f newPlayerPos){
         
-        playerNode.setLocalTranslation(newPlayerPos);
+        playerNode.setLocalTranslation(newPlayerPos.getX()-VRHardware.getPosition().getX(),0,newPlayerPos.getZ()-VRHardware.getPosition().getZ());
+        
+        if(rightHand!=null)
+        
+            rightHand.getControl().setGrabbedItemPosition();
+        
+        if(leftHand!=null)
+            
+            leftHand.getControl().setGrabbedItemPosition();
         
     }
     

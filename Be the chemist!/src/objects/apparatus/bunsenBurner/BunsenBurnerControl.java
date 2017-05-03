@@ -41,7 +41,8 @@ public class BunsenBurnerControl extends AbstractControl {
         //Find the collisions between the ray and other geoms
         rootNode.collideWith(bunsenBurner.getRay(),collisionResults);
         
-        //TO CONTINUE (Temperature change for colliding geom)
+        
+        
     }
     
      @Override

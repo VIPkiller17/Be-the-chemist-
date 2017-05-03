@@ -69,6 +69,7 @@ public class PeriodicTableDisplay implements Pointable,Savable{
         frame.setName("Periodic table's frame");
         frame.setUserData("correctCollision", true);
         frame.setUserData("correspondingObject", this);
+        frame.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         node.attachChild(frame);
         frame.setLocalTranslation(2.355f,1.325f,0);
         

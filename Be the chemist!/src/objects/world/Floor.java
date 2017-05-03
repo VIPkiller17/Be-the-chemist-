@@ -12,6 +12,7 @@ import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.math.Plane;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Spatial;
 import com.jme3.scene.control.Control;
 import java.io.IOException;
@@ -30,6 +31,7 @@ public class Floor implements Savable{
         spatial.setName("Floor");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
+        spatial.setShadowMode(RenderQueue.ShadowMode.Receive);
         
         collisionShape=new BoxCollisionShape(new Vector3f(5f,0.04f,6f));
         

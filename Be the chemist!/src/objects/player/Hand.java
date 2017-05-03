@@ -107,7 +107,7 @@ public class Hand implements Describable,Savable{
         spatial.setCullHint(Spatial.CullHint.Never);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
-        spatial.setShadowMode(ShadowMode.CastAndReceive);
+        spatial.setShadowMode(ShadowMode.Cast);
         handNode.attachChild(spatial);
         
         closedModel.setLocalTranslation(0f,-50f,0f);
@@ -115,7 +115,7 @@ public class Hand implements Describable,Savable{
         closedModel.setCullHint(Spatial.CullHint.Never);
         closedModel.setUserData("correctCollision", true);
         closedModel.setUserData("correspondingObject", this);
-        closedModel.setShadowMode(ShadowMode.CastAndReceive);
+        closedModel.setShadowMode(ShadowMode.Cast);
         handNode.attachChild(closedModel);
         
         //System.out.println("Created hand model spatial with name "+spatial.getName());
@@ -162,6 +162,8 @@ public class Hand implements Describable,Savable{
     public void setDescriptionMovedOut(boolean movedOut){
         
         descriptionDisplay.setMoveOut(movedOut);
+        
+        //System.out.println("Description moved out of the map: "+movedOut);
         
     }
     
@@ -362,6 +364,12 @@ public class Hand implements Describable,Savable{
 
     public void read(JmeImporter ji) throws IOException {
         
+        
+    }
+    
+    public HandControl getControl(){
+        
+        return handControl;
         
     }
     

@@ -10,6 +10,7 @@ import com.jme3.export.Savable;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
+import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import main.Main;
@@ -39,6 +40,7 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
         spatial.setName("Chemical waste disposal container");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
+        spatial.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         node.attachChild(spatial);
         
         rootNode.attachChild(node);

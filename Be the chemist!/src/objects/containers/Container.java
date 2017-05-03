@@ -28,6 +28,9 @@ public abstract class Container extends PhysicalObject implements Grabbable{
     
     protected boolean highlightVisible;
     
+    private String presentFormattedVolume;
+    private int presentDotPosition;
+    
     public Container(Main main,Vector3f position){
         
         super(main,position);
@@ -106,6 +109,26 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         else
             
             return 0;
+        
+    }
+    
+    public String getFormattedVolume(){
+        
+        if(solution!=null){
+            
+            presentFormattedVolume=""+solution.getVolume();
+            
+            presentDotPosition=presentFormattedVolume.indexOf(".");
+            
+            presentFormattedVolume=presentFormattedVolume.substring(0,presentDotPosition+4);
+        
+            return presentFormattedVolume;
+        
+        }else{
+            
+            return "0";
+            
+        }
         
     }
     

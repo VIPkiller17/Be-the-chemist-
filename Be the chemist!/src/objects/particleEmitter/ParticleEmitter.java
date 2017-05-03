@@ -13,6 +13,7 @@ import main.Main;
 import objects.PhysicalObject;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.containers.Container;
+import objects.containers.beaker.Beaker;
 import objects.particleEmitter.particle.Particle;
 import objects.solution.Solution;
 import objects.substance.Substance;
@@ -54,7 +55,9 @@ public class ParticleEmitter {
     
     private double volume;
     
-    public ParticleEmitter(Main main,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocityOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset){
+    private String name;
+    
+    public ParticleEmitter(Main main,PhysicalObject parentObject,Vector3f position,Vector3f outDirection,Quaternion randomOutDirectionOffset,double randomHorizontalOutputOffset,double randomVerticalOutputOffset,Vector3f initialVelocity,Vector3f randomInitialVelocityOffset,double delay,double randomDelayOffset,Vector3f acceleration,Vector3f randomAccelerationOffset,String name){
         
         this.main=main;
         this.parentObject=parentObject;
@@ -70,6 +73,7 @@ public class ParticleEmitter {
         this.acceleration=acceleration;
         this.randomAccelerationOffset=randomAccelerationOffset;
         this.assetManager=main.getAssetManager();
+        this.name=name;
         
         gasParticleModelPath="Models/Particles/Gas/Gas.j3o";
         liquidParticleModelPath="Models/Particles/Liquid/Liquid.j3o";
@@ -106,10 +110,9 @@ public class ParticleEmitter {
             this.acceleration=new Vector3f(0,-9.806f,0);
             this.randomAccelerationOffset=new Vector3f(0,0,0);
             this.assetManager=main.getAssetManager();
+            this.name="SimpleEmitter's particle emitter";
             
             System.out.println("Simple emitter's particle emitter created");
-            
-            begin();
             
         }else if(parentObject instanceof DistilledWaterContainer){
                     
@@ -125,6 +128,7 @@ public class ParticleEmitter {
             this.acceleration=new Vector3f(0,-9.806f,0);
             this.randomAccelerationOffset=new Vector3f(0,0,0);
             this.assetManager=main.getAssetManager();
+            this.name="DistilledWaterContainer's particle emitter";
             
             System.out.println("DistilledWaterContainer's particle emitter created");
             
@@ -151,6 +155,7 @@ public class ParticleEmitter {
             this.acceleration=new Vector3f(0,-9.806f,0);
             this.randomAccelerationOffset=new Vector3f(0,0,0);
             this.assetManager=main.getAssetManager();
+            this.name="Sink'ss particle emitter";
             
             System.out.println("Sink #"+((Sink) parentObject).getIndex()+"'s particle emitter created");
             
@@ -228,7 +233,7 @@ public class ParticleEmitter {
         
     }
     
-    public double getRandomVerticalutputOffset(){
+    public double getRandomVerticalOutputOffset(){
         
         return randomVerticalOutputOffset;
         
@@ -356,7 +361,7 @@ public class ParticleEmitter {
         
         emitting=false;
         
-        System.out.println("Emitting set to false");
+        System.out.println(name+"'s emitting set to false");
         
     }
     
@@ -374,13 +379,51 @@ public class ParticleEmitter {
             
             //System.out.println("    the parentobject is a container and the colution is not empty, its volume is: "+((Container)parentObject).getSolution().getVolume()+" and the volume of the particle would be: "+volume);
                 
-            if(((Container)parentObject).getSolution().getVolume()>volume){
+            if(parentObject instanceof Beaker){
             
-                //System.out.println("        Creating new particle for a container");
+                if(this.equals(((Beaker)parentObject).getPourParticleEmitter())){
+                
+                    if(((Container)parentObject).getSolution().getPourableVolume()>volume){
 
-                control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution(),volume));
+                        //System.out.println("        Creating new particle for a container");
 
-                ((Container)parentObject).getSolution().setVolume(((Container)parentObject).getSolution().getVolume()-volume);
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getPourables(),volume,((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setPourableVolume(((Container)parentObject).getSolution().getPourableVolume()-volume);
+
+                    }else if(((Container)parentObject).getSolution().getPourableVolume()<volume&&((Container)parentObject).getSolution().getPourableVolume()!=0){
+
+                        //System.out.println("        Creating new particle for a container");
+
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getPourables(),((Container)parentObject).getSolution().getPourableVolume(),((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setPourableVolume(0);
+
+                    }
+                
+                }else if(this.equals(((Beaker)parentObject).getEvaporationParticleEmitter())){
+                    
+                    System.out.println("Emitter is the beaker's evaporation emitter, the evaporatable volume is: "+((Container)parentObject).getSolution().getEvaporatableVolume()+" and volume is: "+volume);
+                
+                    if(((Container)parentObject).getSolution().getEvaporatableVolume()>volume){
+                        
+                        System.out.println("There is more evaporatable volume in the beaker than there should be in the particle, making a particle of given volume...");
+
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getEvaporatables(),volume,((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setEvaporatableVolume(((Container)parentObject).getSolution().getEvaporatableVolume()-volume);
+
+                    }else if(((Container)parentObject).getSolution().getEvaporatableVolume()!=0&&((Container)parentObject).getSolution().getEvaporatableVolume()<volume){
+
+                        System.out.println("There is less evaporatable voume in the beaker than the particle volume should be, making particle with remaining evaporatable volume...");
+                        
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getEvaporatables(),((Container)parentObject).getSolution().getEvaporatableVolume(),((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setEvaporatableVolume(0);
+
+                    }
+                
+                }
             
             }
             
@@ -403,7 +446,7 @@ public class ParticleEmitter {
             //here water is added to the solution of the particle instead of just using the substance directly
             //this is used as a precursor on how the tap water will later on be composed of multiple substances instead of just one
             //but only water is added right now because the values arent exact and most of the substances are not yet implemented in the game
-            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,new Solution(null,null,0,0).addSubstance(main.getSubstances().get(44),0.001,298),volume));
+            control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,new Solution(main,null,null,0,0).addSubstance(main.getSubstances().get(44),0.001,298),volume));
             
         }
         
@@ -446,12 +489,18 @@ public class ParticleEmitter {
         
     }
     
+    public String getName(){
+        
+        return name;
+        
+    }
+    
     @Override
     public boolean equals(Object otherParticleEmitter){
         
         if(otherParticleEmitter instanceof ParticleEmitter)
             
-            return parentObject==((ParticleEmitter)otherParticleEmitter).getParentObject();
+            return ((ParticleEmitter) otherParticleEmitter).getName().equals(name);
             
         else
             

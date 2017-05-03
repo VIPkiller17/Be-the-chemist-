@@ -95,6 +95,8 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
             
         }
         
+        handle.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
+        
         main.getItemsList().add(this);
         
     }

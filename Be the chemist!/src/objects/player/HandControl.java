@@ -268,7 +268,9 @@ public class HandControl extends AbstractControl{
         
         //Update location of Geom
         hand.setLocation(VRHardware.getVRinput().getPosition(handSide));
-
+        
+        //System.out.println("Hand position: "+hand.getWorldTranslation());
+        
         //Update Rotation of Geom
         hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
         
@@ -597,7 +599,7 @@ public class HandControl extends AbstractControl{
 
             }else if(!hand.isHoldingObject()){
 
-                //System.out.println("Updating laser position...");
+                System.out.println("Laser contact position: "+collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint());
 
                 //update start and end points of laser to display it correctly
                 if(foundPresentCorrectCollision)
@@ -1131,7 +1133,7 @@ public class HandControl extends AbstractControl{
         
     }
     
-    private void setGrabbedItemPosition(){
+    public void setGrabbedItemPosition(){
         
         //System.out.println("Present held item: "+hand.getHeldObject());
         

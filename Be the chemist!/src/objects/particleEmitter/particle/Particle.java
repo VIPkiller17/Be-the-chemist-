@@ -40,6 +40,8 @@ public class Particle {
     
     private boolean destroyed;
     
+    private ColorRGBA presentColor;
+    
     public Particle(Main main,ParticleEmitter particleEmitter,String modelPath,int state,Substance substance,double volume,double temperature){
         
         this.main=main;
@@ -65,7 +67,7 @@ public class Particle {
         
         main.getRootNode().attachChild(spatial);
         
-        spatial.setLocalTranslation(particleEmitter.getNode().getWorldTranslation());
+        spatial.setLocalTranslation(particleEmitter.getNode().getWorldTranslation().add(((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomHorizontalOutputOffset())),((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomVerticalOutputOffset())),((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomHorizontalOutputOffset()))));
         
         spatial.addControl(new ParticleControl(this));
         
@@ -87,7 +89,6 @@ public class Particle {
         
         spatial=particleEmitter.getAssetManager().loadModel(modelPath);
         spatial.setName("particle");
-        System.out.println(main);
         spatialMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         
         System.out.println(solution.getMostCommonState()+", "+solution.getStateColor(solution.getMostCommonState()));
@@ -99,7 +100,47 @@ public class Particle {
         
         main.getRootNode().attachChild(spatial);
         
-        spatial.setLocalTranslation(particleEmitter.getNode().getWorldTranslation());
+        spatial.setLocalTranslation(particleEmitter.getNode().getWorldTranslation().add(((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomHorizontalOutputOffset())),((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomVerticalOutputOffset())),((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomHorizontalOutputOffset()))));
+        
+        spatial.addControl(new ParticleControl(this));
+        
+    }
+    
+    public Particle(Main main,ParticleEmitter particleEmitter,String modelPath,int state,ArrayList<Substance> substances,double volume,double temperature){
+        
+        this.main=main;
+        
+        velocity=new Vector3f(particleEmitter.getInitialVelocity());
+        
+        this.substances=substances;
+        this.volume=volume;
+        this.temperature=temperature;
+        
+        this.state=state;
+        
+        this.particleEmitter=particleEmitter;
+        
+        spatial=particleEmitter.getAssetManager().loadModel(modelPath);
+        spatial.setName("particle");
+        spatialMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        
+        presentColor=substances.get(0).getColor();
+        
+        for(int i=1;i<substances.size();i++){
+                
+            presentColor.set((float)Math.sqrt(((presentColor.getRed()*presentColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((presentColor.getGreen()*presentColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((presentColor.getBlue()*presentColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(presentColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+            
+        }
+        
+        spatialMat.setColor("Color",presentColor);
+        //spatialMat.setColor("Color",ColorRGBA.Red);
+        spatialMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
+        spatial.setMaterial(spatialMat);
+        
+        main.getRootNode().attachChild(spatial);
+        
+        spatial.setLocalTranslation(particleEmitter.getNode().getWorldTranslation().add(((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomHorizontalOutputOffset())),((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomVerticalOutputOffset())),((float)((Math.random()*(particleEmitter.getRandomHorizontalOutputOffset()*2))-particleEmitter.getRandomHorizontalOutputOffset()))));
         
         spatial.addControl(new ParticleControl(this));
         

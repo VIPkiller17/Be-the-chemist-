@@ -45,8 +45,8 @@ public class ParticleControl extends AbstractControl{
             //set its position depending on velocity
             particle.getSpatial().move(particle.getVelocity().getX()*tpf,particle.getVelocity().getY()*tpf,particle.getVelocity().getZ()*tpf);
 
-            if(particle.getSpatial().getWorldTranslation().getY()<0){
-                //if a particle hits the floor, destroy it
+            if(particle.getSpatial().getWorldTranslation().getY()<0||particle.getSpatial().getWorldTranslation().getY()>3){
+                //if a particle hits the floor or goes through the roof, destroy it
                 particle.destroy();
 
             }else if(particle.getState()==0&&particle.getSpatial().getLocalTranslation().getX()>1.98&&particle.getSpatial().getLocalTranslation().getX()<3.96&&particle.getSpatial().getLocalTranslation().getY()>0.98&&particle.getSpatial().getLocalTranslation().getY()<2.03&&particle.getSpatial().getLocalTranslation().getZ()>5&&particle.getSpatial().getLocalTranslation().getZ()<5.75){
@@ -90,7 +90,7 @@ public class ParticleControl extends AbstractControl{
             }
             */
             
-            if(!particle.isDestroyed()&&!particle.getMain().getParticleReceivers().isEmpty()){
+            if(!particle.isDestroyed()&&particle.getSpatial()!=null&&!particle.getMain().getParticleReceivers().isEmpty()){
             
                 presentClosestValidReceiver=particle.getMain().getParticleReceivers().get(0);
 

@@ -6,6 +6,7 @@ package objects.substance;
 
 import com.jme3.math.ColorRGBA;
 import java.util.ArrayList;
+import main.Main;
 import objects.ion.Ion;
 
 /**
@@ -29,7 +30,9 @@ public class Substance{
     private ArrayList<Integer> ionCounts;
     private boolean soluble;
     
-    public Substance(String equation,String name,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double density,ColorRGBA color,ArrayList<Ion> ions,ArrayList<Integer> ionCounts,boolean soluble){
+    private Main main;
+    
+    public Substance(Main main,String equation,String name,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double density,ColorRGBA color,ArrayList<Ion> ions,ArrayList<Integer> ionCounts,boolean soluble){
         
         this.equation=equation;
         this.name=name;
@@ -43,6 +46,7 @@ public class Substance{
         this.ions=ions;
         this.ionCounts=ionCounts;
         this.soluble=soluble;
+        this.main=main;
         
     }
     
@@ -198,6 +202,69 @@ public class Substance{
             return 6;
             
         }
+        
+    }
+    
+    public boolean hasIon(int index){
+        
+        for(int i=0;i<ions.size();i++){
+            
+            if(ions.get(i).equals(main.getIons().get(index))){
+                
+                return true;
+                
+            }
+            
+        }
+        
+        return false;
+        
+    }
+    
+    public int[] containsReactiveIon(){
+        
+        int[] presentIonicInfo=new int[3];
+        
+        for(int i=0;i<ions.size();i++){
+        
+            for(int j=0;j<main.getReactivitySeries().size();j++){
+                
+                if(ions.get(i).getElements().size()==1&&ions.get(i).getElements().get(0).equals(main.getReactivitySeries().get(j))){
+                    
+                    presentIonicInfo[0]=i;
+                    presentIonicInfo[1]=j;
+                    
+                    if(ions.size()>1){
+                    
+                        if(i==0)
+
+                            presentIonicInfo[2]=1;
+
+                        else if(i==1)
+
+                            presentIonicInfo[2]=0;
+
+                        else
+
+                            System.out.println("Substance: "+name+"'s reactive ion is at an index !=(0||1)");
+                        
+                    }else
+                        
+                        presentIonicInfo[2]=-1;
+                    
+                    return presentIonicInfo;
+                    
+                }
+                
+            }
+            
+        }
+        
+        presentIonicInfo[0]=-1;
+        presentIonicInfo[1]=-1;
+        presentIonicInfo[3]=-1;
+        
+        return presentIonicInfo;
         
     }
     

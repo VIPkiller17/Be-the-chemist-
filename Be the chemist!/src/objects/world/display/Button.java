@@ -65,8 +65,8 @@ public class Button implements Savable{
     
     private static Display keyBoardSelectedDisplay;
     
-    private static final ColorRGBA POINTED_COLOR=new ColorRGBA(0,255,255,0.7f);
-    private static final ColorRGBA NORMAL_COLOR=new ColorRGBA(0,0,255,0.7f);
+    private static final ColorRGBA POINTED_COLOR=new ColorRGBA(0,255,255,1f);
+    private static final ColorRGBA NORMAL_COLOR=new ColorRGBA(0,0,255,1f);
     
     private ColorRGBA presentBackgroundColor;
     
@@ -761,8 +761,6 @@ public class Button implements Savable{
         backgroundMat=new Material(assetManager,"Common/MatDefs/Misc/Unshaded.j3md");
         backgroundMat.setColor("Color",new ColorRGBA(0,0,255,0.7f));
         presentBackgroundColor=NORMAL_COLOR;
-        backgroundMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        background.setQueueBucket(RenderQueue.Bucket.Transparent);
         background.setMaterial(backgroundMat);
         
     }
@@ -855,15 +853,15 @@ public class Button implements Savable{
 
                         if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
 
                         }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
 
                         }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
 
                         }
 
@@ -871,13 +869,13 @@ public class Button implements Savable{
 
                         switch (parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)) {
                             case 0:
-                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                 break;
                             case 1:
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                 break;
                             case 2:
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                 break;
                             default:
                                 //System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());

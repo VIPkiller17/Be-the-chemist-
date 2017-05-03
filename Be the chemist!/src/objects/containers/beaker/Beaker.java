@@ -66,7 +66,7 @@ public class Beaker extends Container implements Savable{
         
         super(main,position);
         
-        setSolution(new Solution(this,null,0,0));
+        setSolution(new Solution(main,this,null,0,0));
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         
@@ -156,6 +156,7 @@ public class Beaker extends Container implements Savable{
         collisionShape=new CylinderCollisionShape(new Vector3f(0.05f,0.06f,0),1);
         
         beaker_phy=new RigidBodyControl(collisionShape,1);
+        beaker_phy.setFriction(1f);
         spatial.addControl(beaker_phy);
         bulletAppState.getPhysicsSpace().add(beaker_phy);
         
@@ -164,9 +165,9 @@ public class Beaker extends Container implements Savable{
         
         main.getItemsList().add(this);
         
-        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
-        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,1,0),Vector3f.ZERO);
-        reactionParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,1,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's pourParticleEmitter");
+        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Beaker's evaporationParticleEmitter");
+        reactionParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,1,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's reactionParticleEmitter");
         
         setPos(position);
         
@@ -259,6 +260,12 @@ public class Beaker extends Container implements Savable{
         
     }
     
+    public ParticleEmitter getEvaporationParticleEmitter(){
+        
+        return evaporationParticleEmitter;
+        
+    }
+    
     public void explode(){
         
         
@@ -280,7 +287,17 @@ public class Beaker extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Beaker:\n  Contains: "+this.getSolution()+"\n  Quantity: "+getVolume();
+        //System.out.println("getDescription has been called on a beaker.");
+        
+        if(getSolution().getVolume()<0.001){
+            
+            return "Beaker:\n   Empty.";
+            
+        }else{
+        
+            return "Beaker:\n   Contains:\n   "+this.getSolution()+"\n  Total volume: "+getFormattedVolume();
+            
+        }
         
     }
 

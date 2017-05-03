@@ -249,7 +249,7 @@ public class Display implements Pointable,Savable{
         background.setUserData("correctCollision",true);
         background.setUserData("correspondingObject", this);
         backgroundMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        backgroundMat.setColor("Color",new ColorRGBA(0,255,0,0.5f));
+        backgroundMat.setColor("Color",new ColorRGBA(0,255,0,1f));
         backgroundMat.getAdditionalRenderState().setBlendMode(BlendMode.Alpha);
         background.setQueueBucket(Bucket.Transparent);
         background.setMaterial(backgroundMat);

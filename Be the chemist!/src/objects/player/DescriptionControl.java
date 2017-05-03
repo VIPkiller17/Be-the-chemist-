@@ -25,13 +25,15 @@ public class DescriptionControl extends AbstractControl {
         observer=newObserver;
         
     }
-
+    
     @Override
     protected void controlUpdate(float tpf) {
         
+        //System.out.println("Description position: "+spatial.getLocalTranslation());
+        
         if(!movedOut&&VRHardware.getVRinput().getPosition(controllerIndex)!=null&&observer.getWorldTranslation()!=null){
             
-            spatial.setLocalTranslation(VRHardware.getVRinput().getPosition(controllerIndex).add(0,0.05f,0).add(observer.getWorldTranslation()));
+            spatial.setLocalTranslation(VRHardware.getVRinput().getPosition(controllerIndex).add(0,0.1f,0).add(observer.getWorldTranslation()));
             spatial.lookAt(VRHardware.getPosition().add(observer.getWorldTranslation()), Vector3f.UNIT_Y);
         
         }else if(movedOut&&!doneMovingOut){

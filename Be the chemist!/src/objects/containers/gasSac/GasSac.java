@@ -152,6 +152,7 @@ public class GasSac extends Container implements Savable{
         gasSac_phy=new RigidBodyControl(collisionShape,1f);
         gasSac_phy.setFriction(100f);
         gasSac_phy.setMass(100f);
+        gasSac_phy.setFriction(1);
         spatial.addControl(gasSac_phy);
         bulletAppState.getPhysicsSpace().add(gasSac_phy);
         

@@ -82,7 +82,6 @@ public class DescDisplay {
         //attach the description to the rootNode, making it visible
         //rootNode.attachChild(centeredNode);
         //THIS IS NOW BEING DONE IN HAND
-        
     }
     
     public DescDisplay(){
@@ -104,13 +103,13 @@ public class DescDisplay {
             
             if(lines.get(i)!=null&&(i+1)<lines.size()&&lines.get(i+1)!=null){
                 
-                System.out.println("Adding \""+lines.get(i)+"\" to displayed tex");
+                //System.out.println("Adding \""+lines.get(i)+"\" to displayed tex");
                 
                 displayedText+=lines.get(i)+" ";
             
             }else if(lines.get(i)!=null){
                 
-                System.out.println("Adding \""+lines.get(i)+"\" to displayed tex");
+                //System.out.println("Adding \""+lines.get(i)+"\" to displayed tex");
                 
                 displayedText+=lines.get(i);
                 
@@ -125,6 +124,8 @@ public class DescDisplay {
     }
     
     public void setText(String text){
+        
+        //System.out.println("Description text has been set to "+text);
         
         if(!text.equals(rawText)){
         

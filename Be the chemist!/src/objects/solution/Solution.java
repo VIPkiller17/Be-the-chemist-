@@ -5,7 +5,9 @@
 package objects.solution;
 
 import com.jme3.math.ColorRGBA;
+import com.jme3.scene.Node;
 import java.util.ArrayList;
+import main.Main;
 import objects.containers.Container;
 import objects.ion.Ion;
 import objects.substance.Substance;
@@ -24,7 +26,8 @@ public class Solution {
     private ArrayList<Ion> ions;//updated every loop depending on substances and their volumes
     private ArrayList<Double> ionCounts;//updated every loop depending on substances and their volumes
     private double PH;//modified every loop depending on ions
-    private double volume;//modified every loop depending on volumes
+    private double presentVolume;
+    private int presentVolumeCount;
     private ArrayList<Substance> substances;
     private ArrayList<Double> volumes;
     private ArrayList<Double> temperatures;
@@ -35,7 +38,11 @@ public class Solution {
     
     private boolean substanceFound;
     
-    public Solution(Container container,Substance substance,double volume,double temperature){
+    private Node logicNode;
+    
+    private SolutionControl control;
+    
+    public Solution(Main main,Container container,Substance substance,double volume,double temperature){
         
         this.parentContainer=container;
         
@@ -50,9 +57,12 @@ public class Solution {
                 
                 volumes.add(volume*0.001/substance.getDensity());
                 
+            }else{
+                
+                volumes.add(volume);
+                
             }
             
-            volumes.add(volume);
             temperatures.add(temperature);
         }
         
@@ -83,9 +93,14 @@ public class Solution {
             
         }
         
+        logicNode=new Node();
+        main.getRootNode().attachChild(logicNode);
+        control=new SolutionControl(main,this);
+        logicNode.addControl(control);
+        
     }
     
-    public Solution(Container container,ArrayList<Substance> substances,ArrayList<Double> temperatures,ArrayList<Double> volumes){
+    public Solution(Main main,Container container,ArrayList<Substance> substances,ArrayList<Double> temperatures,ArrayList<Double> volumes){
         
         if(substances!=null)
             this.substances=substances;
@@ -128,6 +143,7 @@ public class Solution {
         if(substances!=null&&!substances.isEmpty())
             updateSolutionState();
         
+        /*
         for(Substance s: substances){
             
             switch(s.getStateInteger(298)){
@@ -154,17 +170,29 @@ public class Solution {
                 //System.out.println("ERROR: invalid getStateInteger return value from substance: "+s.getName());
             
             }
-            
+        
         }
+        */
+        
+        logicNode=new Node();
+        main.getRootNode().attachChild(logicNode);
+        control=new SolutionControl(main,this);
+        logicNode.addControl(control);
         
     }
     
-    public void removeSusbtance(int index){
+    public void removeSubstance(int index){
+        
+        //System.out.println("RemoveSusbtance() called on index: "+index+" for substance: "+substances.get(index)+"\nlist before removal: "+substances);
         
         substances.remove(index);
         volumes.remove(index);
         temperatures.remove(index);
         
+        //System.out.println("Litst after removal: "+substances);
+        
+        //commented out because the arraylist places them correctly on its own
+        /*
         for(int i=index+1;i<substances.size();i++){
         
             substances.set(i-1,substances.get(i));
@@ -176,16 +204,17 @@ public class Solution {
         substances.remove(substances.size()-1);
         volumes.remove(volumes.size()-1);
         temperatures.remove(temperatures.size()-1);
+        */
         
     }
     
     public Solution addSubstance(Substance substance,double volume,double temperature){
         
-        System.out.println("addSubstance() called with: "+substance+" with volume: "+volume+" and temp: "+temperature);
+        //System.out.println("addSubstance() called with: "+substance+" with volume: "+volume+" and temp: "+temperature);
         
         if(substances.isEmpty()){
             
-            System.out.println("    the receiver solution substances list is apparently empty");
+            //System.out.println("    the receiver solution substances list is apparently empty");
             
             substances.add(substance);
             volumes.add(volume);
@@ -193,18 +222,18 @@ public class Solution {
             
         }else{
             
-            System.out.println("    the receiver solution substances list is apparently NOT empty");
+            //System.out.println("    the receiver solution substances list is apparently NOT empty");
             
             substanceFound=false;
         
             //TO BE FIXED
             for(int j=0;j<substances.size();j++){
                 
-                System.out.println("        Adding substance "+substances+" to receiver solution");
+                //System.out.println("        Adding substance "+substances+" to receiver solution");
 
                 if(substance==substances.get(j)){
                     
-                    System.out.println("            substance "+substance+" was already in the solution's substance list, adding volume and calculating temperature");
+                    //System.out.println("            substance "+substance+" was already in the solution's substance list, adding volume and calculating temperature");
 
                     volumes.set(j,volumes.get(j)+volume);
                     
@@ -223,7 +252,7 @@ public class Solution {
             
             if(!substanceFound){
                 
-                System.out.println("            substance "+substance+" was NOT already in the solution's substance list, adding substance, volume and temperature to corresponding lists");
+                //System.out.println("            substance "+substance+" was NOT already in the solution's substance list, adding substance, volume and temperature to corresponding lists");
                 
                 substances.add(substance);
                 volumes.add(volume);
@@ -233,7 +262,7 @@ public class Solution {
             
         }
         
-        System.out.println((substances==null)+", "+(substances.isEmpty()));
+        //System.out.println((substances==null)+", "+(substances.isEmpty()));
         
         updateSolutionState();
         
@@ -335,33 +364,53 @@ public class Solution {
         
     }
     
+    public boolean containsInsolubleSolid(){
+    
+        for(Substance s: substances){
+            
+            if(s.getStateInteger(298)==2&&!s.isSoluble()){
+                
+                return true;
+                
+            }
+            
+        }
+        
+        return false;
+    
+    }
+    
     public boolean[] containsStates(){
         
         boolean containsGas=false;
         boolean containsLiquid=false;
         boolean containsSolid=false;
         
-        for(Substance s: substances){
-            
-            //System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
-            
-            switch(s.getStateInteger(temperature)){
-                
-                case 0:
-                    containsGas=true;
-                    //System.out.println(s.getName()+"'s state is gas");
-                    break;
-                case 1:
-                    containsLiquid=true;
-                    //System.out.println(s.getName()+"'s state is liquid");
-                    break;
-                case 2:
-                    containsSolid=true;
-                    //System.out.println(s.getName()+"'s state is solid");
-                    break;
-                default:
-                    //System.out.println("ERROR: @ getting contained states, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
-                
+        if(!substances.isEmpty()){
+        
+            for(Substance s: substances){
+
+                //System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
+
+                switch(s.getStateInteger(temperature)){
+
+                    case 0:
+                        containsGas=true;
+                        //System.out.println(s.getName()+"'s state is gas");
+                        break;
+                    case 1:
+                        containsLiquid=true;
+                        //System.out.println(s.getName()+"'s state is liquid");
+                        break;
+                    case 2:
+                        containsSolid=true;
+                        //System.out.println(s.getName()+"'s state is solid");
+                        break;
+                    default:
+                        //System.out.println("ERROR: @ getting contained states, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
+
+                }
+
             }
             
         }
@@ -477,13 +526,47 @@ public class Solution {
     
     public double getVolume(){
         
-        return volume;
+        presentVolume=0;
+        
+        for(int i=0;i<volumes.size();i++){
+            
+            presentVolume+=volumes.get(i);
+            
+        }
+        
+        return presentVolume;
         
     }
     
     public void setVolume(double volume){
         
-        this.volume=volume;
+        presentVolume=getVolume();
+        
+        if(presentVolume>volume){
+            
+            presentVolume-=volume;
+            
+            presentVolume=presentVolume/volumes.size();
+            
+            for(int i=0;i<volumes.size();i++){
+            
+                setVolume(i,getVolume(i)-presentVolume);
+            
+            }
+            
+        }else if(presentVolume<volume){
+            
+            presentVolume=volume-presentVolume;
+            
+            presentVolume=presentVolume/volumes.size();
+            
+            for(int i=0;i<volumes.size();i++){
+            
+                setVolume(i,getVolume(i)+presentVolume);
+            
+            }
+            
+        }
         
     }
     
@@ -585,11 +668,17 @@ public class Solution {
     @Override
     public String toString(){
         
-        String t="Solution containing: ";
+        String t="Solution containing:\n";
         
-        for(Substance s: substances){
+        for(int i=0;i<substances.size();i++){
             
-            t+=s.getName()+", ";
+            if(i<substances.size()-1)
+            
+                t+="   "+substances.get(i).getName()+": "+volumes.get(i)+" L;\n";
+            
+            else if(i==substances.size()-1)
+                
+                t+="   "+substances.get(i).getName()+": "+volumes.get(i)+" L.\n";
             
         }
         
@@ -600,17 +689,14 @@ public class Solution {
     public void updateSolutionState(){
         
         temperature=0;
-        volume=0;
         
         for(int i=0;i<substances.size();i++){
             
-            System.out.println("Size of substances: "+substances.size()+", is it empty?: "+substances.isEmpty()+", index: "+i+", substance at 0: "+substances.get(0));
+            //System.out.println("Size of substances: "+substances.size()+", is it empty?: "+substances.isEmpty()+", index: "+i+", substance at 0: "+substances.get(0));
             
-            System.out.println(substances.get(i).getName()+"'s temp: "+temperatures.get(i)+", volume: "+volumes.get(i));
+            //System.out.println(substances.get(i).getName()+"'s temp: "+temperatures.get(i)+", volume: "+volumes.get(i));
             
             temperature+=temperatures.get(i);
-            
-            volume+=volumes.get(i);
             
             switch(substances.get(i).getStateInteger(298)){
             
@@ -663,11 +749,11 @@ public class Solution {
             
             presentVolumeList[substances.get(i).getStateInteger(temperatures.get(i))]+=volumes.get(i);
             
-            System.out.println("presentvolumelist at index: "+substances.get(i).getStateInteger(temperatures.get(i))+" now at "+presentVolumeList[substances.get(i).getStateInteger(temperatures.get(i))]);
+            //System.out.println("presentvolumelist at index: "+substances.get(i).getStateInteger(temperatures.get(i))+" now at "+presentVolumeList[substances.get(i).getStateInteger(temperatures.get(i))]);
             
         }
         
-        System.out.println("0: "+presentVolumeList[0]+"\n1: "+presentVolumeList[1]+"\n2: "+presentVolumeList[2]);
+        //System.out.println("0: "+presentVolumeList[0]+"\n1: "+presentVolumeList[1]+"\n2: "+presentVolumeList[2]);
         
         if(presentVolumeList[0]>=presentVolumeList[1]&&presentVolumeList[0]>=presentVolumeList[2]){
             
@@ -710,6 +796,245 @@ public class Solution {
             return liquidColor;
             
         }
+        
+    }
+    
+    public void flush(){
+        
+        if(!substances.isEmpty()){
+            
+            substances.clear();
+            volumes.clear();
+            temperatures.clear();
+            
+        }
+        
+        temperature=0;
+        PH=0;
+        
+    }
+    
+    public SolutionControl getControl(){
+        
+        return control;
+        
+    }
+    
+    public boolean containsLowDensityGas(){
+        
+        //System.out.println("containsLowDensityGas() called.");
+        
+        for(Substance s: substances){
+            
+            //System.out.println("    Checking substance: "+s.getName()+"'s density: "+s.getDensity());
+            
+            if(s.getDensity()<0.00128){
+                
+                //System.out.println("        Substance deensity less than 0.00128, returning true...");
+                
+                return true;
+                
+            }
+            
+        }
+        
+        return false;
+        
+    }
+    
+    public void setPourableVolume(double volume){
+        
+        presentVolume=0;
+        presentVolumeCount=0;
+        
+        for(int i=0;i<substances.size();i++){
+            
+            if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                
+                presentVolume+=volumes.get(i);
+                presentVolumeCount++;
+                
+            }
+            
+        }
+        
+        if(presentVolume>volume){
+            
+            presentVolume-=volume;
+            
+            presentVolume=presentVolume/presentVolumeCount;
+            
+            for(int i=0;i<volumes.size();i++){
+                
+                if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                
+                    setVolume(i,getVolume(i)-presentVolume);
+                
+                }
+            
+            }
+            
+        }else if(presentVolume<volume){
+            
+            presentVolume=volume-presentVolume;
+            
+            presentVolume=presentVolume/presentVolumeCount;
+            
+            for(int i=0;i<volumes.size();i++){
+                
+                if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                
+                    setVolume(i,getVolume(i)+presentVolume);
+                
+                }
+            
+            }
+            
+        }
+        
+    }
+    
+    public double getPourableVolume(){
+        
+        presentVolume=0;
+        
+        for(int i=0;i<volumes.size();i++){
+            
+            if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                
+                presentVolume+=volumes.get(i);
+
+            }
+            
+        }
+        
+        return presentVolume;
+        
+    }
+    
+    public ArrayList<Substance> getPourables(){
+        
+        presentStateList=new ArrayList<>();
+        
+        for(int i=0;i<substances.size();i++){
+            
+            if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                
+                presentStateList.add(substances.get(i));
+
+            }
+            
+        }
+        
+        return presentStateList;
+        
+    }
+    
+    public void setEvaporatableVolume(double volume){
+        
+        System.out.println("setEvaporatableVoume() called");
+        
+        presentVolume=0;
+        presentVolumeCount=0;
+        
+        for(int i=0;i<substances.size();i++){
+            
+            System.out.println("    Checking substance: "+substances.get(i).getName()+" with phase at 298: "+substances.get(i).getStateInteger(temperature)+" and if it has less density than air: "+(substances.get(i).getDensity()<0.00128));
+            
+            if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                
+                System.out.println("        Substance is evaporatable, adding volume to presentvolume");
+                
+                presentVolume+=volumes.get(i);
+                presentVolumeCount++;
+                
+            }
+            
+        }
+        
+        System.out.println("We want to set presentVolume: "+presentVolume+" to volume: "+volume);
+        
+        if(presentVolume>volume){
+            
+            System.out.println("    The total volume of evaporatables is "+presentVolume+" which is more than the volume we want to set it too of "+volume);
+            
+            presentVolume-=volume;
+            
+            presentVolume=presentVolume/presentVolumeCount;
+            
+            for(int i=0;i<volumes.size();i++){
+                
+                System.out.println("        Checking volume: "+volumes.get(i));
+                
+                if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                
+                    System.out.println("            Volume's corresponding substance is a gas at 298 and its density is less than air's, setting its volume...");
+                    
+                    setVolume(i,getVolume(i)-presentVolume);
+                
+                }
+            
+            }
+            
+        }else if(presentVolume<volume){
+            
+            System.out.println("    Total volume of evaporatables is less than teh volume we want to set it at, so we want to add partial volumes to get an evaporatable total of the geiven volume");
+            
+            presentVolume=volume-presentVolume;
+            
+            presentVolume=presentVolume/presentVolumeCount;
+            
+            for(int i=0;i<volumes.size();i++){
+                
+                System.out.println("        Checking volume "+volumes.get(i));
+                
+                if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                
+                    System.out.println("            Volume's corresponding substance is evaporatable, adding partial volume...");
+                    
+                    setVolume(i,getVolume(i)+presentVolume);
+                
+                }
+            
+            }
+            
+        }
+        
+    }
+    
+    public double getEvaporatableVolume(){
+        
+        presentVolume=0;
+        
+        for(int i=0;i<volumes.size();i++){
+            
+            if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                
+                presentVolume+=volumes.get(i);
+
+            }
+            
+        }
+        
+        return presentVolume;
+        
+    }
+    
+    public ArrayList<Substance> getEvaporatables(){
+        
+        presentStateList=new ArrayList<>();
+        
+        for(int i=0;i<substances.size();i++){
+            
+            if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                
+                presentStateList.add(substances.get(i));
+
+            }
+            
+        }
+        
+        return presentStateList;
         
     }
     

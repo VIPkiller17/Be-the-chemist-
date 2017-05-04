@@ -124,7 +124,11 @@ public class Substance{
     
     public int getStateInteger(double temperature){
         
+        System.out.println("Checking "+getName()+"'s state at temperature: "+temperature+" with mp+"+meltingPoint+", bp: "+boilingPoint+" and sp: "+sublimationPoint);
+        
         if(meltingPoint==-1&&boilingPoint==-1){
+            
+            System.out.println(getName()+" does NOT have a melting point and boiling point, meaning it has a sublimation point");
             
             if(temperature<sublimationPoint){
                 
@@ -138,15 +142,23 @@ public class Substance{
             
         }else if(meltingPoint!=-1&&boilingPoint!=-1){
             
+            System.out.println(getName()+" has a melting point and boiling point");
+            
             if(temperature<meltingPoint){
+                
+                System.out.println(getName()+" is a solid at temperature: "+temperature);
                 
                 return 2;//solid
                 
             }else if(temperature>meltingPoint&&temperature<boilingPoint){
                 
+                System.out.println(getName()+" is a liquid at temperature: "+temperature);
+                
                 return 1;//liquid
                 
             }else if(temperature>boilingPoint){
+                
+                System.out.println(getName()+" is a gas at temperature: "+temperature);
                 
                 return 0;//gas
                 
@@ -262,7 +274,7 @@ public class Substance{
         
         presentIonicInfo[0]=-1;
         presentIonicInfo[1]=-1;
-        presentIonicInfo[3]=-1;
+        presentIonicInfo[2]=-1;
         
         return presentIonicInfo;
         

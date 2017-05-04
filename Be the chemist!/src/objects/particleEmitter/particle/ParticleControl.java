@@ -104,7 +104,7 @@ public class ParticleControl extends AbstractControl{
 
                                 for(Substance s: particle.getSubstances()){
 
-                                    System.out.println(((Container)particle.getMain().getParticleReceivers().get(i)).getSolution());
+                                    //System.out.println(((Container)particle.getMain().getParticleReceivers().get(i)).getSolution());
                                     
                                     ((Container)particle.getMain().getParticleReceivers().get(i)).getSolution().addSubstance(s,particle.getVolume(),particle.getTemperature());
                                 }

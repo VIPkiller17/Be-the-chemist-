@@ -49,7 +49,7 @@ public class SimpleEmitter extends PhysicalObject{
         
         //particleEmitter.updatePosition();
         
-        System.out.println("Simple emitter created");
+        //System.out.println("Simple emitter created");
 
     }
 

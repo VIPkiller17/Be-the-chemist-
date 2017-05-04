@@ -1,27 +1,21 @@
 package main;
 
-import static android.app.ProgressDialog.show;
 import com.jme3.bullet.BulletAppState;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResults;
-import com.jme3.font.BitmapText;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
 import com.jme3.input.controls.AnalogListener;
 import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
-import com.jme3.material.Material;
 import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
-import com.jme3.renderer.queue.RenderQueue.ShadowMode;
-import com.jme3.scene.Geometry;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
-import com.jme3.scene.shape.Box;
 import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
 import java.awt.GraphicsEnvironment;
@@ -30,6 +24,7 @@ import java.util.Collections;
 import jmevr.app.VRApplication;
 import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
+import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.PhysicalObject;
 import objects.apparatus.analyticalBalance.AnalyticalBalance;
 import objects.apparatus.bunsenBurner.BunsenBurner;
@@ -46,6 +41,7 @@ import objects.containers.pipette.Pipette;
 import objects.element.Element;
 import objects.ion.Ion;
 import objects.player.Player;
+import objects.solution.Solution;
 import objects.substance.Substance;
 import objects.world.Floor;
 import objects.world.Room;
@@ -118,6 +114,7 @@ public class Main extends VRApplication {
     private ArrayList<Beaker> beakers;
     private ArrayList<GasSac> gasSac;
    
+    private Beaker beaker;
     private Erlenmeyer erlenmeyer;
     private Funnel funnel;
     private MeasuringCylinder measuringCylinder;
@@ -143,7 +140,7 @@ public class Main extends VRApplication {
         app.preconfigureVRApp(PRECONFIG_PARAMETER.ENABLE_MIRROR_WINDOW,true);
         
         //Makes it so that the game pauses on loss of focus
-        app.setPauseOnLostFocus(true);
+        //app.setPauseOnLostFocus(true);
         
         //Make the game use VR instancing
         //app.preconfigureVRApp(PRECONFIG_PARAMETER.INSTANCE_VR_RENDERING,true);
@@ -158,11 +155,8 @@ public class Main extends VRApplication {
         //var init
         items=new ArrayList<>();
         particleReceivers=new ArrayList<>();
+        beakers = new ArrayList<>();
         initChemistryStructure();
-        
-        //AmbientLight al = new AmbientLight();
-        //al.setColor(ColorRGBA.White.mult(1.3f));
-        //rootNode.addLight(al);
         
         //Lights
         initLights();
@@ -206,18 +200,7 @@ public class Main extends VRApplication {
         //WORLD INIT END
         
         //OBJECTS INIT START
-        /*
-        Box testBox=new Box(0.1f,0.1f,0.1f);
-        testCube=new Geometry("Test cube",testBox);
-        testCube.setShadowMode(ShadowMode.CastAndReceive);
-        Material testCubeMat=new Material(getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        testCubeMat.setColor("Color",ColorRGBA.Blue);
-        testCube.setMaterial(testCubeMat);
-        rootNode.attachChild(testCube);
-        */
-        beakers = new ArrayList<Beaker>();
         
-        /*Experiment Table*/
         //Upper Right Beakers
         beakers.add(new Beaker(this,new Vector3f(-1.0708143f, 0.455f + 0.065f, -1.9390206f)));
         beakers.add(new Beaker(this,new Vector3f(-1.1044384f, 0.45500004f + 0.065f, -1.2780275f)));
@@ -239,13 +222,11 @@ public class Main extends VRApplication {
         beakers.add(new Beaker(this,new Vector3f(0.25067437f, 0.10500008f + 0.065f, 0.691056f)));
         beakers.add(new Beaker(this,new Vector3f(0.22558737f, 0.10500008f + 0.065f, 1.3050655f)));
         
-        /*Fumehood*/
         //Upper Beaker
         beakers.add(new Beaker(this,new Vector3f(2.9800186f, 0.54999995f + 0.066f, 5.343186f)));
         //Lower Beaker
         beakers.add(new Beaker(this,new Vector3f(3.0056179f, 0.105000024f + 0.065f, 5.209715f)));
         
-        /*Storage Counters*/
         //Upper Beakers
         beakers.add(new Beaker(this,new Vector3f(1.5657148f, 0.45500004f + 0.065f, 5.3555984f)));
         beakers.add(new Beaker(this,new Vector3f(0.7380991f, 0.45500004f + 0.065f, 5.364832f)));
@@ -271,24 +252,17 @@ public class Main extends VRApplication {
         gasSac.add(new GasSac(this,new Vector3f(-2f, 0.05f, -2f)));
         gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).setPhysicsRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*135, new Vector3f(0,1,1)));
         //gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().multLocal(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
-        /*gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Z));
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Z));
         gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_X));
-        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));*/
-       
-        beaker=new Beaker(this,new Vector3f(-4,0.05f,-5));
-        beaker.setSolution(new Solution(this,beaker,substances.get(47),100,298));//solid so grams
-        beaker.getSolution().addSubstance(substances.get(5),1,298);//liquid so liters
+        gasSac.get(0).getSpatial().getControl(RigidBodyControl.class).getPhysicsRotation().add(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*90, Vector3f.UNIT_Y));
         
-        //simpleEmitter=new SimpleEmitter(this,new Vector3f(0,1,0));
+        
+        //beaker=new Beaker(this,new Vector3f(-4,0.05f,-5));
+        //beaker.setSolution(new Solution(this,beaker,substances.get(47),100,298));//solid so grams
+        //beaker.getSolution().addSubstance(substances.get(5),1,298);//liquid so liters
         //OBJECTS INIT END
         
-        //LIGHT INIT START
-        //PointLight light = new PointLight(new Vector3f(0f,0.5f,0f));
-        //light.setColor(ColorRGBA.White);
-        //rootNode.addLight(light);
-        //LIGHT INIT END
-        
-        //LOAD SPACIALS END
+        //LOAD OBJECTS END
         
         //INIT THE INPUTS START
         initInputs();
@@ -301,26 +275,21 @@ public class Main extends VRApplication {
         //TESTING SECTION
         testBeakers=new ArrayList<>();
         
-        bulletAppState.setDebugEnabled(true);
-        System.out.print("Bullewt App State Debug: " + bulletAppState.isDebugEnabled());
+        //bulletAppState.setDebugEnabled(true);
         
     }
 
     private void initInputs() {
         
         //non-VR inputs for testing without VR
-        getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
-        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_W));
-        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_S));
-        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_D));
-        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_A));
-        /*getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
-        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));*/
-        /*getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
-        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));*/
+        getInputManager().addMapping("forward", new KeyTrigger(KeyInput.KEY_W));
+        getInputManager().addMapping("backward", new KeyTrigger(KeyInput.KEY_S));
+        getInputManager().addMapping("right", new KeyTrigger(KeyInput.KEY_D));
+        getInputManager().addMapping("left", new KeyTrigger(KeyInput.KEY_A));
         getInputManager().addMapping("up", new KeyTrigger(KeyInput.KEY_SPACE));
         getInputManager().addMapping("downControl", new KeyTrigger(KeyInput.KEY_LCONTROL));
         getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));
+        getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
         
         //test cube controls
         getInputManager().addMapping("cubeNegativeZ", new KeyTrigger(KeyInput.KEY_NUMPAD8));
@@ -433,6 +402,7 @@ public class Main extends VRApplication {
     
     public void initLights(){
         //DL's simulate the ambient light coming from all 6 directions
+        
         DirectionalLight dl0 = new DirectionalLight();
         dl0.setDirection((new Vector3f(0.5f,0,0)).normalizeLocal());
         dl0.setColor(ColorRGBA.White.mult(0.3f));
@@ -477,8 +447,9 @@ public class Main extends VRApplication {
                 light.setPosition(new Vector3f((i*2)-3f,2.75f,(j*2)-4f));
                 light.setColor(ColorRGBA.White.mult(0.03f));
                 rootNode.addLight(light); 
-                /*
+                
                 //Adds marker cubes to show the pointlight positions
+                /*
                 Box box=new Box(0.1f,0.1f,0.1f);
                 Geometry boxGeom=new Geometry("Light marker",box);
                 boxGeom.setLocalTranslation((i*2)-3f,2.75f,(j*2)-4f);
@@ -489,10 +460,11 @@ public class Main extends VRApplication {
                 rootNode.attachChild(boxGeom);
                 System.out.println("Light placed at "+light.getPosition());
                 */
+                
             }
             
         }
-        
+
     }
     
     public ArrayList<PhysicalObject> getItemsList(){
@@ -1403,29 +1375,37 @@ public class Main extends VRApplication {
         
         }
         
-        //Check HeadsetPosition
-       if (observer.getWorldTranslation().getX() <= -4.99f) {
-            playerLogic.teleportArea(new Vector3f(-4.99f, observer.getWorldTranslation().getY(), observer.getWorldTranslation().getZ()));
-       }
-       if (observer.getWorldTranslation().getX() >= 4.95f) {
-            playerLogic.teleportArea(new Vector3f(4.95f, observer.getWorldTranslation().getY(), observer.getWorldTranslation().getZ()));
-       }
-         if (observer.getWorldTranslation().getZ() <= -4.83f) {
-            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), observer.getWorldTranslation().getY(), -4.83f));
-       }
-          if (observer.getWorldTranslation().getZ() >= 5f) {
-            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), observer.getWorldTranslation().getY(), 5f));
-       }  if (observer.getWorldTranslation().getY() <= 0.01f) {
+        //System.out.println("Observer position: "+observer.getWorldTranslation());
+        //System.out.println("VRHardware position: "+VRHardware.getPosition());
+        //System.out.println("Both added up: "+observer.getWorldTranslation().add(VRHardware.getPosition()));
+        
+        if (observer.getWorldTranslation().add(VRHardware.getPosition()).getX() < -4.95f) {
+            playerLogic.teleportArea(new Vector3f(-4.95f,observer.getWorldTranslation().add(VRHardware.getPosition()).getY(),observer.getWorldTranslation().add(VRHardware.getPosition()).getZ()));
+        }
+        
+        if (observer.getWorldTranslation().add(VRHardware.getPosition()).getX() > 4.95f) {
+            playerLogic.teleportArea(new Vector3f(4.95f,observer.getWorldTranslation().add(VRHardware.getPosition()).getY(),observer.getWorldTranslation().add(VRHardware.getPosition()).getZ()));
+        }
+        
+        if (observer.getWorldTranslation().add(VRHardware.getPosition()).getZ() < -4.83f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().add(VRHardware.getPosition()).getX(),observer.getWorldTranslation().add(VRHardware.getPosition()).getY(), -4.83f));
+        }
+        
+        if (observer.getWorldTranslation().add(VRHardware.getPosition()).getZ() > 5f) {
+            playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().add(VRHardware.getPosition()).getX(),observer.getWorldTranslation().add(VRHardware.getPosition()).getY(), 5f));
+        }
+        /*
+        if (observer.getWorldTranslation().add(VRHardware.getPosition()).getY() <= 0.01f) {
             playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), 0.01f, observer.getWorldTranslation().getZ()));
-       }
-          if (observer.getWorldTranslation().getY() >= 2.90) {
+        }
+        
+        if (observer.getWorldTranslation().add(VRHardware.getPosition()).getY() >= 2.90) {
             playerLogic.teleportArea(new Vector3f(observer.getWorldTranslation().getX(), 2.90f, observer.getWorldTranslation().getZ()));
-       }
-       
-       
-        //Check height*/
+        }
+        */
         
         //display number of tracked controllers every 10 seconds
+        /*
         controllerCountDispTPF+=tpf;
         if(controllerCountDispTPF>=10){
             
@@ -1433,6 +1413,7 @@ public class Main extends VRApplication {
             controllerCountDispTPF=0;
             
         }
+        */
         
         //Common TPF counter
         CommonTPF+=tpf;

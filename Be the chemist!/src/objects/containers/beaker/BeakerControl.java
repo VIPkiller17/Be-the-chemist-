@@ -40,9 +40,9 @@ public class BeakerControl extends AbstractControl{
         
         //SET THE STATE OF THE CONTAINER
         
-        if(beaker.getSolution()!=null&&beaker.getSolution().containsStates()[1]&&beaker.getSolution().getVolume()>=0.001){
+        if(beaker.getSolution()!=null&&beaker.getSolution().containsStates()[1]){
             
-            //System.out.println("beaker contains a liquid, updating color to "+beaker.getSolution().getLiquidColor());
+            System.out.println("beaker contains a liquid, updating color to "+beaker.getSolution().getLiquidColor());
             
             beaker.setLiquidVisible(true,beaker.getSolution().getLiquidColor());
             
@@ -52,9 +52,9 @@ public class BeakerControl extends AbstractControl{
             
         }
         
-        if(beaker.getSolution()!=null&&beaker.getSolution().containsInsolubleSolid()&&beaker.getSolution().getVolume()>=0.001){
+        if(beaker.getSolution()!=null&&beaker.getSolution().containsInsolubleSolid()){
             
-            //System.out.println("beaker contains a solid, updating color...");
+            System.out.println("beaker contains a solid, updating color...");
             
             beaker.setSolidVisible(true,beaker.getSolution().getSolidColor());
             
@@ -66,6 +66,7 @@ public class BeakerControl extends AbstractControl{
         
         beaker.updateNodeState();
         
+        //This should be done by the angle, the more tilted is the container the less it emits from evaporation
         beaker.getEvaporationParticleEmitter().setVolume(0.001);
         
         if(spatial.getLocalRotation().getRotationColumn(1).getY()<0){
@@ -94,13 +95,13 @@ public class BeakerControl extends AbstractControl{
         //start emitting
         if(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f&&!beaker.getPourParticleEmitter().isEmitting()){
             
-            System.out.println("*Beaker is now emitting particles*");
+            //System.out.println("*Beaker is now emitting particles*");
             
             beaker.startPouring();
             
         }else if(spatial.getLocalRotation().getRotationColumn(1).getY()>0.707f&&beaker.getPourParticleEmitter().isEmitting()){
             
-            System.out.println("*Beaker is not emitting particles*");
+            //System.out.println("*Beaker is not emitting particles*");
             
             beaker.stopPouring();
             
@@ -108,7 +109,7 @@ public class BeakerControl extends AbstractControl{
         
         if(!beaker.getEvaporationParticleEmitter().isEmitting()&&beaker.getSolution().containsLowDensityGas()){
             
-            System.out.println("Beaker contains a gas with density lower than air's and the evaporation emitter is not already emitting, starting emission");
+            //System.out.println("Beaker contains a gas with density lower than air's and the evaporation emitter is not already emitting, starting emission");
             
             beaker.startEvaporating();
             
@@ -125,7 +126,7 @@ public class BeakerControl extends AbstractControl{
             
         }
         
-        System.out.println(beaker.getSolution());
+        //System.out.println(beaker.getSolution());
         
     }
 

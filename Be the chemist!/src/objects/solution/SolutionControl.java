@@ -241,7 +241,7 @@ public class SolutionControl extends AbstractControl{
                 presentIonicInfo0=solution.getSubstances().get(i).containsReactiveIon();
                 presentIonicInfo1=solution.getSubstances().get(j).containsReactiveIon();
                 
-                if((solution.getSubstances().get(i).getTypeInteger()==5||solution.getSubstances().get(i).equals(main.getSubstances().get(54)))&&presentIonicInfo1[0]!=-1&&presentIonicInfo1[1]!=-1&&solution.getSubstances().get(j).getIons().size()>1){
+                if((solution.getSubstances().get(i).getTypeInteger()==5||solution.getSubstances().get(i).equals(main.getSubstances().get(54)))&&presentIonicInfo1[0]!=-1&&presentIonicInfo1[1]!=-1&&presentIonicInfo1[2]!=-1&&solution.getSubstances().get(j).getIons().size()>1){
                     //if first is metal and second has an ion present in the reactivity series and second has more than one ion
                     
                     if(presentIonicInfo0[1]<presentIonicInfo1[1]){
@@ -320,7 +320,7 @@ public class SolutionControl extends AbstractControl{
                         
                     }
                     
-                }else if(solution.getSubstances().get(j).getTypeInteger()==5||solution.getSubstances().get(j).equals(main.getSubstances().get(54))&&presentIonicInfo0[0]!=-1&&presentIonicInfo0[1]!=-1&&solution.getSubstances().get(i).getIons().size()>1){
+                }else if((solution.getSubstances().get(j).getTypeInteger()==5||solution.getSubstances().get(j).equals(main.getSubstances().get(54)))&&presentIonicInfo0[0]!=-1&&presentIonicInfo0[1]!=-1&&presentIonicInfo0[2]!=-1&&solution.getSubstances().get(i).getIons().size()>1){
                     //if first is metal and second has an ion present in the reactivity series and second has more than one ion
                     
                     if(presentIonicInfo1[1]<presentIonicInfo0[1]){

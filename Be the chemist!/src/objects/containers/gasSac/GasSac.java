@@ -283,7 +283,7 @@ public class GasSac extends Container implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         node.setLocalTranslation(position);
         
-        System.out.println("Gas sac position set to "+position);
+        //System.out.println("Gas sac position set to "+position);
         
         presentPosition=position;
         
@@ -300,7 +300,7 @@ public class GasSac extends Container implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
         node.setLocalRotation(rotation);
         
-        System.out.println("Gas sac rotation set to "+rotation);
+        //System.out.println("Gas sac rotation set to "+rotation);
         
     }
     

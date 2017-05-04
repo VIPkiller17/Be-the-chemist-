@@ -349,11 +349,11 @@ public class ParticleEmitter {
     
     public void begin(){
         
-        System.out.println("Beginning emission");
+        //System.out.println("Beginning emission");
         
         emitting=true;
         
-        System.out.println("Emitting set to true");
+        //System.out.println("Emitting set to true");
         
     }
     
@@ -361,7 +361,7 @@ public class ParticleEmitter {
         
         emitting=false;
         
-        System.out.println(name+"'s emitting set to false");
+        //System.out.println(name+"'s emitting set to false");
         
     }
     
@@ -403,11 +403,11 @@ public class ParticleEmitter {
                 
                 }else if(this.equals(((Beaker)parentObject).getEvaporationParticleEmitter())){
                     
-                    System.out.println("Emitter is the beaker's evaporation emitter, the evaporatable volume is: "+((Container)parentObject).getSolution().getEvaporatableVolume()+" and volume is: "+volume);
+                    //System.out.println("Emitter is the beaker's evaporation emitter, the evaporatable volume is: "+((Container)parentObject).getSolution().getEvaporatableVolume()+" and volume is: "+volume);
                 
                     if(((Container)parentObject).getSolution().getEvaporatableVolume()>volume){
                         
-                        System.out.println("There is more evaporatable volume in the beaker than there should be in the particle, making a particle of given volume...");
+                        //System.out.println("There is more evaporatable volume in the beaker than there should be in the particle, making a particle of given volume...");
 
                         control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getEvaporatables(),volume,((Container)parentObject).getSolution().getTemperature()));
 
@@ -415,7 +415,7 @@ public class ParticleEmitter {
 
                     }else if(((Container)parentObject).getSolution().getEvaporatableVolume()!=0&&((Container)parentObject).getSolution().getEvaporatableVolume()<volume){
 
-                        System.out.println("There is less evaporatable voume in the beaker than the particle volume should be, making particle with remaining evaporatable volume...");
+                        //System.out.println("There is less evaporatable voume in the beaker than the particle volume should be, making particle with remaining evaporatable volume...");
                         
                         control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getEvaporatables(),((Container)parentObject).getSolution().getEvaporatableVolume(),((Container)parentObject).getSolution().getTemperature()));
 
@@ -429,19 +429,19 @@ public class ParticleEmitter {
             
         }else if(parentObject instanceof SimpleEmitter){
             
-            System.out.println("Creating new particle for simple emitter");
+            //System.out.println("Creating new particle for simple emitter");
             
             control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,main.getSubstances().get(44),0.001,298));
             
         }else if(parentObject instanceof DistilledWaterContainer){
             
-            System.out.println("Creating new particle for DsitilledWaterContainer");
+            //System.out.println("Creating new particle for DsitilledWaterContainer");
             
             control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Liquid/Liquid.j3o",1,main.getSubstances().get(44),0.001,298));
             
         }else if(parentObject instanceof Sink){
             
-            System.out.println("Creating new particle for Sink");
+            //System.out.println("Creating new particle for Sink");
             
             //here water is added to the solution of the particle instead of just using the substance directly
             //this is used as a precursor on how the tap water will later on be composed of multiple substances instead of just one

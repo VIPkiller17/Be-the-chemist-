@@ -76,7 +76,7 @@ public class Beaker extends Container implements Savable{
         
         super(main,position,solution);
         
-        System.out.println("TEST: creating beaker with main: "+main);
+        //System.out.println("TEST: creating beaker with main: "+main);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
         

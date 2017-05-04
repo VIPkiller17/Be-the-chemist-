@@ -188,27 +188,27 @@ public class ElementButton implements Savable{
         
         if(!grayedOut){
             
-            System.out.println("Activate() called on element button: "+substance.getName()+" and button is not grayed out, continuing...");
+            //System.out.println("Activate() called on element button: "+substance.getName()+" and button is not grayed out, continuing...");
         
             if(hand.isHoldingObject()&&hand.getHeldObject() instanceof Container){
                 
-                System.out.println("  Hand is holding an object and the object is a Container, the state of the element at 298: "+substance.getStateInteger(298));
+                //System.out.println("  Hand is holding an object and the object is a Container, the state of the element at 298: "+substance.getStateInteger(298));
 
                 if(substance.getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
                     
-                    System.out.println("   Hand can contain state 0, merging new solution with the one in the container...");
+                    //System.out.println("   Hand can contain state 0, merging new solution with the one in the container...");
 
                     ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),substance,1,298));
 
                 }else if(substance.getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
                     
-                    System.out.println("   Hand can contain state 1, merging new solution with the one in the container...");
+                    //System.out.println("   Hand can contain state 1, merging new solution with the one in the container...");
 
                     ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),substance,1,298));
 
                 }else if(substance.getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
                     
-                    System.out.println("   Hand can contain state 2, merging new solution with the one in the container...");
+                    //System.out.println("   Hand can contain state 2, merging new solution with the one in the container...");
 
                     ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),substance,100,298));
 
@@ -216,19 +216,19 @@ public class ElementButton implements Savable{
 
             }else if(!hand.isHoldingObject()){
                 
-                System.out.println("  Hand is not holding an object, the state of the element at 298: "+substance.getStateInteger(298));
+                //System.out.println("  Hand is not holding an object, the state of the element at 298: "+substance.getStateInteger(298));
 
                 switch (substance.getStateInteger(298)) {
                     case 0:
-                        System.out.println("   Element is gas, spawning it in a gas sac...");
+                        //System.out.println("   Element is gas, spawning it in a gas sac...");
                         hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),substance,1,298)));
                         break;
                     case 1:
-                        System.out.println("   Element is liquid, spawning it in a beaker...");
+                        //System.out.println("   Element is liquid, spawning it in a beaker...");
                         hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),substance,1,298)));
                         break;
                     case 2:
-                        System.out.println("   Element is solid, spawning it in a beaker...");
+                        //System.out.println("   Element is solid, spawning it in a beaker...");
                         hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),substance,100,298)));
                         break;
                     default:

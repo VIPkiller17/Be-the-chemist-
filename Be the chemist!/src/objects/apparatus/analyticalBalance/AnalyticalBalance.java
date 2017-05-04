@@ -207,7 +207,7 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsLocation(position);
         node.setLocalTranslation(position);
         
-        System.out.println("Analytical Balance position set to "+position);
+        //System.out.println("Analytical Balance position set to "+position);
         
         presentPosition=position;
         
@@ -224,7 +224,7 @@ public class AnalyticalBalance extends Apparatus implements Savable{
         spatial.getControl(RigidBodyControl.class).setPhysicsRotation(rotation);
         node.setLocalRotation(rotation);
         
-        System.out.println("Analytical Balance rotation set to "+rotation);
+        //System.out.println("Analytical Balance rotation set to "+rotation);
         
     }
     

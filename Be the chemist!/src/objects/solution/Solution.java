@@ -21,7 +21,9 @@ public class Solution {
     private Container parentContainer;
     
     private double temperature;//updated every loop depending on tempeartures of substancecs
-    private ColorRGBA liquidColor,solidColor,gasColor;
+    private ColorRGBA liquidColor=new ColorRGBA(0,0,0,0),solidColor=new ColorRGBA(0,0,0,0),gasColor=new ColorRGBA(0,0,0,0);
+    private ColorRGBA presentLiquidColor=new ColorRGBA(0,0,0,0),presentSolidColor=new ColorRGBA(0,0,0,0),presentGasColor=new ColorRGBA(0,0,0,0);
+    private boolean liquidColorInit,solidColorInit,gasColorInit;
     
     private ArrayList<Ion> ions;//updated every loop depending on substances and their volumes
     private ArrayList<Double> ionCounts;//updated every loop depending on substances and their volumes
@@ -41,6 +43,8 @@ public class Solution {
     private Node logicNode;
     
     private SolutionControl control;
+    
+    private boolean hasFoundSubstance;
     
     public Solution(Main main,Container container,Substance substance,double volume,double temperature){
         
@@ -390,7 +394,7 @@ public class Solution {
         
             for(Substance s: substances){
 
-                //System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
+                System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
 
                 switch(s.getStateInteger(temperature)){
 
@@ -441,26 +445,36 @@ public class Solution {
         
         for(int i=0;i<solution.getSubstances().size();i++){
             
+            hasFoundSubstance=false;
+            
             presentMergingSubstance=solution.getSubstances().get(i);
             
             for(int j=0;j<substances.size();j++){
                 
                 if(presentMergingSubstance.equals(substances.get(j))){
                     
-                    volumes.set(j,solution.getVolumes().get(j));
-                    temperatures.set(j,solution.getTemperatures().get(j));
+                    volumes.set(j,volumes.get(j)+solution.getVolumes().get(i));
+                    temperatures.set(j,volumes.get(j)+solution.getTemperatures().get(i));
                     
-                }else{
+                    hasFoundSubstance=true;
                     
-                    substances.add(presentMergingSubstance);
-                    volumes.add(solution.getVolumes().get(i));
-                    temperatures.add(solution.getTemperatures().get(i));
+                    break;
                     
                 }
                 
             }
             
+            if(!hasFoundSubstance){
+                    
+                substances.add(presentMergingSubstance);
+                volumes.add(solution.getVolumes().get(i));
+                temperatures.add(solution.getTemperatures().get(i));
+
+            }
+            
         }
+        
+        updateSolutionState();
         
     }
     
@@ -688,6 +702,10 @@ public class Solution {
     
     public void updateSolutionState(){
         
+        liquidColorInit=false;
+        solidColorInit=false;
+        gasColorInit=false;
+        
         temperature=0;
         
         for(int i=0;i<substances.size();i++){
@@ -698,30 +716,33 @@ public class Solution {
             
             temperature+=temperatures.get(i);
             
-            switch(substances.get(i).getStateInteger(298)){
+            switch(substances.get(i).getStateInteger(getTemperature())){
             
                 case 0:
                     
-                    if(gasColor==null){
-                        gasColor=substances.get(i).getColor();
+                    if(!gasColorInit){
+                        presentGasColor.set(substances.get(i).getColor());
+                        gasColorInit=true;
                     }else{
-                        gasColor.set((float)Math.sqrt(((gasColor.getRed()*gasColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((gasColor.getGreen()*gasColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((gasColor.getBlue()*gasColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(gasColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+                        presentGasColor.set((float)Math.sqrt(((gasColor.getRed()*gasColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((gasColor.getGreen()*gasColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((gasColor.getBlue()*gasColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(gasColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
                     }
                     //System.out.println("Susbtance state is 0 and its gas color has been set to "+substances.get(0).getColor());
                     break;
                 case 1:
-                    if(liquidColor==null){
-                        liquidColor=substances.get(i).getColor();
+                    if(!liquidColorInit){
+                        presentLiquidColor.set(substances.get(i).getColor());
+                        liquidColorInit=true;
                     }else{
-                        liquidColor.set((float)Math.sqrt(((liquidColor.getRed()*liquidColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((liquidColor.getGreen()*liquidColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((liquidColor.getBlue()*liquidColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(liquidColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+                        presentLiquidColor.set((float)Math.sqrt(((liquidColor.getRed()*liquidColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((liquidColor.getGreen()*liquidColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((liquidColor.getBlue()*liquidColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(liquidColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
                     }
                     //System.out.println("Susbtance state is 1 and its liquid color has been set to "+substances.get(0).getColor());
                     break;
                 case 2:
-                    if(solidColor==null){
-                        solidColor=substances.get(i).getColor();
+                    if(!solidColorInit){
+                        presentSolidColor.set(substances.get(i).getColor());
+                        solidColorInit=true;
                     }else{
-                        solidColor.set((float)Math.sqrt(((solidColor.getRed()*solidColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((solidColor.getGreen()*solidColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((solidColor.getBlue()*solidColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(solidColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
+                        presentSolidColor.set((float)Math.sqrt(((solidColor.getRed()*solidColor.getRed())+(substances.get(i).getColor().getRed()*substances.get(i).getColor().getRed()))/2),(float)Math.sqrt(((solidColor.getGreen()*solidColor.getGreen())+(substances.get(i).getColor().getGreen()*substances.get(i).getColor().getGreen()))/2),(float)Math.sqrt(((solidColor.getBlue()*solidColor.getBlue())+(substances.get(i).getColor().getBlue()*substances.get(i).getColor().getBlue()))/2),(solidColor.getAlpha()+substances.get(i).getColor().getAlpha())/2);
                     }
                     //System.out.println("Susbtance state is 2 and its solid color has been set to "+substances.get(0).getColor());
                     break;
@@ -731,6 +752,10 @@ public class Solution {
             }
             
         }
+        
+        liquidColor.set(presentLiquidColor);
+        solidColor.set(presentSolidColor);
+        gasColor.set(presentGasColor);
         
         //System.out.println("Temperature: "+temperature+", temperatures: "+temperatures);
         
@@ -932,18 +957,18 @@ public class Solution {
     
     public void setEvaporatableVolume(double volume){
         
-        System.out.println("setEvaporatableVoume() called");
+        //System.out.println("setEvaporatableVoume() called");
         
         presentVolume=0;
         presentVolumeCount=0;
         
         for(int i=0;i<substances.size();i++){
             
-            System.out.println("    Checking substance: "+substances.get(i).getName()+" with phase at 298: "+substances.get(i).getStateInteger(temperature)+" and if it has less density than air: "+(substances.get(i).getDensity()<0.00128));
+            //System.out.println("    Checking substance: "+substances.get(i).getName()+" with phase at 298: "+substances.get(i).getStateInteger(temperature)+" and if it has less density than air: "+(substances.get(i).getDensity()<0.00128));
             
             if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
                 
-                System.out.println("        Substance is evaporatable, adding volume to presentvolume");
+                //System.out.println("        Substance is evaporatable, adding volume to presentvolume");
                 
                 presentVolume+=volumes.get(i);
                 presentVolumeCount++;
@@ -952,11 +977,11 @@ public class Solution {
             
         }
         
-        System.out.println("We want to set presentVolume: "+presentVolume+" to volume: "+volume);
+        //System.out.println("We want to set presentVolume: "+presentVolume+" to volume: "+volume);
         
         if(presentVolume>volume){
             
-            System.out.println("    The total volume of evaporatables is "+presentVolume+" which is more than the volume we want to set it too of "+volume);
+            //System.out.println("    The total volume of evaporatables is "+presentVolume+" which is more than the volume we want to set it too of "+volume);
             
             presentVolume-=volume;
             
@@ -964,11 +989,11 @@ public class Solution {
             
             for(int i=0;i<volumes.size();i++){
                 
-                System.out.println("        Checking volume: "+volumes.get(i));
+                //System.out.println("        Checking volume: "+volumes.get(i));
                 
                 if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
                 
-                    System.out.println("            Volume's corresponding substance is a gas at 298 and its density is less than air's, setting its volume...");
+                    //System.out.println("            Volume's corresponding substance is a gas at 298 and its density is less than air's, setting its volume...");
                     
                     setVolume(i,getVolume(i)-presentVolume);
                 
@@ -978,7 +1003,7 @@ public class Solution {
             
         }else if(presentVolume<volume){
             
-            System.out.println("    Total volume of evaporatables is less than teh volume we want to set it at, so we want to add partial volumes to get an evaporatable total of the geiven volume");
+            //System.out.println("    Total volume of evaporatables is less than teh volume we want to set it at, so we want to add partial volumes to get an evaporatable total of the geiven volume");
             
             presentVolume=volume-presentVolume;
             
@@ -986,11 +1011,11 @@ public class Solution {
             
             for(int i=0;i<volumes.size();i++){
                 
-                System.out.println("        Checking volume "+volumes.get(i));
+                //System.out.println("        Checking volume "+volumes.get(i));
                 
                 if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
                 
-                    System.out.println("            Volume's corresponding substance is evaporatable, adding partial volume...");
+                    //System.out.println("            Volume's corresponding substance is evaporatable, adding partial volume...");
                     
                     setVolume(i,getVolume(i)+presentVolume);
                 

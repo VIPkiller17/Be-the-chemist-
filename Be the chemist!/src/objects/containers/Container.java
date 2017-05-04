@@ -116,11 +116,19 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
         if(solution!=null){
             
+            //System.out.println("Actual total volume: "+solution.getVolume());
+            
             presentFormattedVolume=""+solution.getVolume();
             
             presentDotPosition=presentFormattedVolume.indexOf(".");
             
-            presentFormattedVolume=presentFormattedVolume.substring(0,presentDotPosition+4);
+            if(presentFormattedVolume.substring(presentDotPosition,presentFormattedVolume.length()-1).length()>4)
+            
+                presentFormattedVolume=presentFormattedVolume.substring(0,presentDotPosition+4);
+            
+            else
+                
+                presentFormattedVolume=""+solution.getVolume();
         
             return presentFormattedVolume;
         

@@ -35,7 +35,7 @@ public class BunsenBurner extends Apparatus implements Grabbable{
     
     private Ray ray;
     
-    private Spatial bunsenBurner, bunsenBurnerHighlight;
+    private Spatial bunsenBurnerHighlight;
     private Material bunsenBurnerHighlightMat;
     
     private boolean highlightVisible;
@@ -134,7 +134,7 @@ public class BunsenBurner extends Apparatus implements Grabbable{
     @Override
     public Vector3f getGrabbablePosition() {
         
-        return bunsenBurner.getWorldTranslation();
+        return spatial.getWorldTranslation();
         
     }
 
@@ -166,9 +166,10 @@ public class BunsenBurner extends Apparatus implements Grabbable{
         
     }
     
+    @Override
     public Spatial getSpatial(){
         
-        return bunsenBurner;
+        return spatial;
         
     }
     

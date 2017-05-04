@@ -105,7 +105,7 @@ public class SubstanceButton implements Savable{
     
     public void activate(){
         
-        System.out.println("Substance button acitavted");
+        //System.out.println("Substance button acitavted");
         
         setSelected(!selected);
         
@@ -115,7 +115,7 @@ public class SubstanceButton implements Savable{
         
         this.selected=selected;
         
-        System.out.println("Substance button selected set to: "+selected);
+        //System.out.println("Substance button selected set to: "+selected);
         
         if(selected){
             

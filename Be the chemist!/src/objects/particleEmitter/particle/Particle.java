@@ -91,7 +91,7 @@ public class Particle {
         spatial.setName("particle");
         spatialMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         
-        System.out.println(solution.getMostCommonState()+", "+solution.getStateColor(solution.getMostCommonState()));
+        //System.out.println(solution.getMostCommonState()+", "+solution.getStateColor(solution.getMostCommonState()));
         
         spatialMat.setColor("Color",solution.getStateColor(solution.getMostCommonState()));
         spatialMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);

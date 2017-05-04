@@ -104,7 +104,7 @@ public class MaterialButton implements Savable{
     
     public void activate(){
         
-        System.out.println("Material button acitavted");
+        //System.out.println("Material button acitavted");
         
         setSelected(!selected);
         
@@ -114,7 +114,7 @@ public class MaterialButton implements Savable{
         
         this.selected=selected;
         
-        System.out.println("Material button selected set to: "+selected);
+        //System.out.println("Material button selected set to: "+selected);
         
         if(selected){
             

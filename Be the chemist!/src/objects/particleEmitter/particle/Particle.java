@@ -60,7 +60,8 @@ public class Particle {
         spatial=particleEmitter.getAssetManager().loadModel(modelPath);
         spatial.setName("particle");
         spatialMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
-        spatialMat.setColor("Color",substance.getColor());
+        //spatialMat.setColor("Color",substance.getColor());
+        spatialMat.setColor("Color",ColorRGBA.Red);
         spatialMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
         spatial.setMaterial(spatialMat);
@@ -150,7 +151,7 @@ public class Particle {
         
         spatial.scale(0);
         
-        spatial.setLocalTranslation(0,-700,0);
+        spatial.setLocalTranslation(0,-30,0);
         
         spatial=null;
         

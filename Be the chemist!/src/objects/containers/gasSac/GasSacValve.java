@@ -70,13 +70,15 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         node.attachChild(valveClosedHighlight);
         valveClosedHighlight.setLocalTranslation(new Vector3f(0,-50,0));
         
-        Box boxMesh = new Box(0.01f,0.01f,0.01f); 
+        /*
+        Box boxMesh = new Box(1f,1f,1f); 
         Geometry boxGeo = new Geometry("A Textured Box", boxMesh); 
         Material boxMat = new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         boxMat.setColor("Color", ColorRGBA.Blue);
         boxGeo.setMaterial(boxMat); 
         node.attachChild(boxGeo);
         boxGeo.setLocalTranslation(gasSac.getParticleEmitter().getPosition());
+        */
         
         valveOpennedHighlight=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Openned_Highlight.j3o");
         valveOpennedHighlight.setName("Gas sac openned valve highlight");
@@ -96,7 +98,7 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         
         if(openned){
             
-            valveOpenned.setLocalTranslation(0,-50,0);
+            valveOpenned.setLocalTranslation(0,-30,0);
             
             valveClosed.setLocalTranslation(0,0,0);
             
@@ -106,7 +108,7 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
             
         }else{
             
-            valveClosed.setLocalTranslation(0,-50,0);
+            valveClosed.setLocalTranslation(0,-30,0);
             
             valveOpenned.setLocalTranslation(0,0,0);
             
@@ -131,14 +133,14 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
                 
                 valveOpennedHighlight.setLocalTranslation(0,0,0);
-                valveClosedHighlight.setLocalTranslation(0,-5,0);
+                valveClosedHighlight.setLocalTranslation(0,-30,0);
             
             }else{
                 
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
                 
-                valveOpennedHighlight.setLocalTranslation(0,-5,0);
+                valveOpennedHighlight.setLocalTranslation(0,-30,0);
                 valveClosedHighlight.setLocalTranslation(0,0,0);
                 
             }
@@ -148,8 +150,8 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
             //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
             //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
             
-            valveOpennedHighlight.setLocalTranslation(0,-5,0);
-            valveClosedHighlight.setLocalTranslation(0,-5,0);
+            valveOpennedHighlight.setLocalTranslation(0,-30,0);
+            valveClosedHighlight.setLocalTranslation(0,-30,0);
                 
         }
         
@@ -158,7 +160,7 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
     @Override
     public Vector3f getGrabbablePosition() {
         
-        return gasSac.getGrabbablePosition().addLocal(-0.02f, 0.17f, 0);
+        return gasSac.getGrabbablePosition().addLocal(-0.03f,0.17f,0);
         
     }
 

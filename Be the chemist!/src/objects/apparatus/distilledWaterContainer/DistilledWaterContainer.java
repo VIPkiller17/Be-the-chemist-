@@ -5,10 +5,12 @@
 package objects.apparatus.distilledWaterContainer;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
+import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Node;
@@ -34,6 +36,9 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
     private Material valveClosedHighlightMat,valveOpennedHighlightMat;
     
     private Node node;
+    
+    private CollisionShape cs;
+    private RigidBodyControl phy;
     
     public DistilledWaterContainer(Main main,AssetManager assetManager,Node rootNode){
         
@@ -99,7 +104,14 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
         rootNode.attachChild(node);
         
+        cs=CollisionShapeFactory.createMeshShape(container);
+        
+        phy=new RigidBodyControl(cs,0);
+        container.addControl(phy);
+        main.getBulletAppState().getPhysicsSpace().add(phy);
+        
         node.setLocalTranslation(4.3f,1.329f,-3);
+        phy.setPhysicsLocation(new Vector3f(4.3f,1.329f,-3));
         
     }
     
@@ -121,7 +133,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
         if(openned){
             
-            valveClosed.setLocalTranslation(valveOpenned.getLocalTranslation());
+            valveClosed.setLocalTranslation(-0.35f,-0.35f,0.015f);
             
             valveOpenned.setLocalTranslation(0,-5,0);
             
@@ -131,7 +143,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
             
         }else{
             
-            valveOpenned.setLocalTranslation(valveClosed.getLocalTranslation());
+            valveOpenned.setLocalTranslation(-0.37f,-0.35f,0f);
             
             valveClosed.setLocalTranslation(0,-5,0);
             
@@ -169,7 +181,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
                 
-                valveOpennedHighlight.setLocalTranslation(0,0,0);
+                valveOpennedHighlight.setLocalTranslation(-0.37f,-0.35f,0f);
                 valveClosedHighlight.setLocalTranslation(0,-5,0);
             
             }else{
@@ -178,7 +190,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
                 
                 valveOpennedHighlight.setLocalTranslation(0,-5,0);
-                valveClosedHighlight.setLocalTranslation(0,0,0);
+                valveClosedHighlight.setLocalTranslation(-0.35f,-0.35f,0.015f);
                 
             }
         
@@ -204,7 +216,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
     @Override
     public Vector3f getGrabbablePosition() {
         
-        return new Vector3f(7.7f,0.96f,2.08f);
+        return node.getWorldTranslation().add(-0.35f,-0.35f,0.015f);
         
     }
 

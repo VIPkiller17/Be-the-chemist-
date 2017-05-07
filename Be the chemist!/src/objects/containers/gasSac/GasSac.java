@@ -12,6 +12,7 @@ import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
+import com.jme3.math.ColorRGBA;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import objects.containers.Container;
@@ -20,6 +21,8 @@ import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue;
+import com.jme3.scene.Geometry;
+import com.jme3.scene.shape.Box;
 import main.Main;
 import objects.solution.Solution;
 
@@ -163,7 +166,17 @@ public class GasSac extends Container implements Savable{
         
         particleEmitterPosition=new Vector3f(-0.03f,0.17f,0);
         
-        //particleEmitter=new ParticleEmitter(main,this,particleEmitterPosition,spatial.getLocalRotation().getRotationColumn(1),new Quaternion().fromAngleAxis((FastMath.PI*5)/180, Vector3f.UNIT_XYZ),0.005,0.005,new Vector3f(0,0,0),new Vector3f(0,0,0),0.3,0.002,new Vector3f(0,-9.806f,0),Vector3f.ZERO);
+        /*
+        Box boxMesh = new Box(0.01f,0.01f,0.01f); 
+        Geometry boxGeo = new Geometry("A Textured Box", boxMesh); 
+        Material boxMat = new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
+        boxMat.setColor("Color", ColorRGBA.Blue);
+        boxGeo.setMaterial(boxMat); 
+        boxGeo.setLocalTranslation(-0.03f,0.17f,0);
+        node.attachChild(boxGeo);
+        */
+        
+        particleEmitter=new ParticleEmitter(main,this,new Vector3f(particleEmitterPosition),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"GasSac's evaporationParticleEmitter");
         
         setPos(position);
         

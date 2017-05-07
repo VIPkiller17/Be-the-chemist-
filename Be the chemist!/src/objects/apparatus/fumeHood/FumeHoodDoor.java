@@ -5,12 +5,15 @@
 package objects.apparatus.fumeHood;
 
 import com.jme3.asset.AssetManager;
+import com.jme3.bullet.collision.shapes.BoxCollisionShape;
+import com.jme3.bullet.collision.shapes.CollisionShape;
+import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.JmeExporter;
 import com.jme3.export.JmeImporter;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
-import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
@@ -38,6 +41,9 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     private Material handleHighlightMat;
     private boolean isHighlightVisible;
     
+    private CompoundCollisionShape cs;
+    private RigidBodyControl phy;
+    
     private Node node;
     
     public FumeHoodDoor(Main main,FumeHood fumeHood,AssetManager assetManager,Node rootNode){
@@ -49,32 +55,38 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         this.fumeHood=fumeHood;
         
         spatial=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor.j3o");
-        //spatial.scale(1f,1f,1f);
         spatial.rotate(new Quaternion().fromAngleAxis(FastMath.PI, Vector3f.UNIT_Y));
-        spatial.setLocalTranslation(0.0f,-0.5f, -0.485f);
         spatial.setName("Fume hood");
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Translucent);
-        node.attachChild(spatial);
+        fumeHood.getNode().attachChild(spatial);
+        //spatial.setLocalTranslation(0.0f,-0.5f, -0.485f);
         
         handleHighlight=assetManager.loadModel("Models/Static/FumeHood/FumeHoodDoor_Highlight.j3o");
-        //spatial.scale(1f,1f,1f);
         handleHighlight.rotate(new Quaternion().fromAngleAxis(FastMath.PI, Vector3f.UNIT_Y));
-        handleHighlight.setLocalTranslation(6.72f,1.02f,10.18f);
+        handleHighlight.setLocalTranslation(0,-20,0);
         handleHighlight.setName("Fume hood door handle highlight");
         handleHighlight.setUserData("correctCollision", true);
         handleHighlight.setUserData("correspondingObject", this);
         handleHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+        handleHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
         handleHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         handleHighlight.setQueueBucket(RenderQueue.Bucket.Transparent);
         handleHighlight.setMaterial(handleHighlightMat);
-        node.attachChild(handleHighlight);
-        
-        fumeHood.getNode().attachChild(node);
+        fumeHood.getNode().attachChild(handleHighlight);
         
         main.getItemsList().add(this);
+        
+        cs=new CompoundCollisionShape();
+        
+        cs.addChildShape(new BoxCollisionShape(new Vector3f(0.99f,0.53f,0.065f)),new Vector3f(0,0.49f,-0.03f));
+        
+        phy=new RigidBodyControl(cs,0);
+        spatial.addControl(phy);
+        main.getBulletAppState().getPhysicsSpace().add(phy);
+        
+        phy.setPhysicsLocation(new Vector3f(2.97f,1f,5.04f));
         
     }
 
@@ -98,13 +110,19 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
         
         this.isHighlightVisible=isHighlightVisible;
         
-        if(isHighlightVisible)
-        
-            handleHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
-        
-        else
+        if(isHighlightVisible){
             
-            handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+            handleHighlight.setLocalTranslation(phy.getPhysicsLocation().subtract(0, 0.001f, 0));
+        
+            //handleHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        
+        }else{
+            
+            handleHighlight.setLocalTranslation(0,-20,0);
+            
+            //handleHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
+            
+        }
         
     }
 
@@ -118,14 +136,14 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     @Override
     public Vector3f getGrabbablePosition() {
         
-        return node.getLocalTranslation();
+        return phy.getPhysicsLocation();
         
     }
     
     @Override
     public void setPos(Vector3f position) {
         
-        node.setLocalTranslation(position);
+        phy.setPhysicsLocation(position);
         
     }
     

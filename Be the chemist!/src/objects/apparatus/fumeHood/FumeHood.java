@@ -6,10 +6,11 @@ package objects.apparatus.fumeHood;
 
 import com.jme3.asset.AssetManager;
 import com.jme3.bullet.collision.shapes.BoxCollisionShape;
-import com.jme3.bullet.collision.shapes.CollisionShape;
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.bullet.util.CollisionShapeFactory;
+import com.jme3.math.FastMath;
+import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.queue.RenderQueue.ShadowMode;
 import com.jme3.scene.Node;
@@ -46,7 +47,7 @@ public class FumeHood extends Apparatus{
         
         spatial=assetManager.loadModel("Models/Static/FumeHood/FumeHood.j3o");
         //spatial.scale(1f,1f,1f);
-        //spatial.rotate(0.0f, 0.0f, 0.0f);
+        spatial.setLocalRotation(new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*180, Vector3f.UNIT_Y));
         //spatial.setLocalTranslation(position);
         spatial.setName("Fume hood");
         spatial.setUserData("correctCollision", true);
@@ -60,7 +61,7 @@ public class FumeHood extends Apparatus{
         
         initCorrecterCollisionShapes();
         
-        phy.setPhysicsLocation(new Vector3f(2.97f,1.5f,5.47f));
+        phy.setPhysicsLocation(new Vector3f(2.97f,1.5f,5.53f));
         
     }
     

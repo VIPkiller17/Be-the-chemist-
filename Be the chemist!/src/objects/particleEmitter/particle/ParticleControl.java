@@ -53,6 +53,10 @@ public class ParticleControl extends AbstractControl{
                 //if a gas particle is inside the fume hood, destroy it
                 particle.destroy();
                 
+            }else if(particle.getSpatial().getWorldTranslation().distance(ChemicalWasteDisposalContainer.OPENNING_POSITION)<0.05f){
+                
+                particle.destroy();
+                
             }
             
             //This would be the correct way of implementing it, but we get a nullpointerexception on collidewith
@@ -100,7 +104,7 @@ public class ParticleControl extends AbstractControl{
                     
                         if(particle.getMain().getParticleReceivers().get(i) instanceof Container){
 
-                            if(particle.getSpatial().getWorldTranslation().distance(((Container)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation())<0.03f){
+                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((Container)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation())<0.03f){
 
                                 for(Substance s: particle.getSubstances()){
 

@@ -521,4 +521,10 @@ public class ParticleEmitter {
         
     }
     
+    public double getVolume(){
+        
+        return volume;
+        
+    }
+    
 }

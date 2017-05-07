@@ -35,7 +35,7 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
     
     private boolean highlightVisible;
     
-    private float[] angles;
+    private float presentAngle;
     
     private Node node;
 
@@ -104,13 +104,53 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
         
     }
     
-    public void setRotation(Quaternion angle){
+    public void rotate(float angle){
         
-        //angles=new float[4];
+        //System.out.println("Sink handle rotate() called with angle: "+angle);
         
-        angle.toAngles(angles);
+        if(angle>0&&presentAngle+angle<=180){
+            
+            //System.out.println("    Angle is higher than 0, and adding it to the preset angle wont make it go over 180, adding to present angle...");
         
-        //SET THE WATER OUTPUT FROM THE PARTICLEEMITTER ACCORDINGLY
+            presentAngle+=angle;
+
+            //System.out.println("        Present sink handle angle: "+presentAngle);
+            
+        }else if(angle>0&&presentAngle+angle>180){
+            
+            //System.out.println("    Angle is higher than 0, but adding to present angle would make it go over 180, setting present angle to 180...");
+        
+            presentAngle=180;
+
+            //System.out.println("        Present sink handle angle: "+presentAngle);
+            
+        }else if(angle<0&&presentAngle>=FastMath.abs(angle)){
+            
+            //System.out.println("    Angle is lower than 0, but its absolute value is lower than or equal to the present angle, adding to present angle...");
+            
+            presentAngle+=angle;
+
+            //System.out.println("        Present sink handle angle: "+presentAngle);
+            
+        }else if(angle<0&&presentAngle<FastMath.abs(angle)){
+            
+            //System.out.println("    Angle is lower than 0, and its absolute value is higher than the present angle, setting presentangle to 0...");
+            
+            presentAngle=0;
+
+            //System.out.println("        Present sink handle angle: "+presentAngle);
+            
+        }
+        
+        handle.setLocalRotation(new Quaternion().fromAngleAxis(-0.05f*presentAngle, Vector3f.UNIT_Y));
+
+        if(index==0)
+        
+            parentSink.setColdFlow(presentAngle/1000);
+        
+        else
+            
+            parentSink.setHotFlow(presentAngle/1000);
         
     }
     

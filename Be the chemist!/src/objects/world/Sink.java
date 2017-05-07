@@ -36,6 +36,8 @@ public class Sink extends PhysicalObject{
     private SinkHandle hotHandle,coldHandle;
     private int index;
     
+    private float coldFlow,hotFlow;
+    
     private Node node;
 
     public Sink(Main main,AssetManager assetManager,Node rootNode,int index){
@@ -106,6 +108,62 @@ public class Sink extends PhysicalObject{
     public Spatial getSpatial(){
         
         return null;
+        
+    }
+    
+    public void setFlow(double amount){
+        
+        particleEmitter.setVolume(amount);
+        
+    }
+    
+    public void addFlow(double amount){
+        
+        if(particleEmitter.getVolume()>0)
+        
+        particleEmitter.setVolume(particleEmitter.getVolume()+amount);
+        
+    }
+    
+    public void setColdFlow(float amount){
+        
+        System.out.println("            Set cold flow called");
+        
+        coldFlow=amount;
+        
+        particleEmitter.setVolume(coldFlow+hotFlow);
+        
+        if(!particleEmitter.isEmitting()&&particleEmitter.getVolume()>0){
+            
+            System.out.println("                Particle emitter is not emitting but its volume is higher than 0, starting emission");
+            
+            particleEmitter.begin();
+            
+        }else if(particleEmitter.isEmitting()&&particleEmitter.getVolume()<=0){
+            
+            System.out.println("                Particle emitter is emitting but its volume is lower or equal to 0, stopping emission");
+            
+            particleEmitter.stop();
+            
+        }
+        
+    }
+    
+    public void setHotFlow(float amount){
+        
+        hotFlow=amount;
+        
+        particleEmitter.setVolume(coldFlow+hotFlow);
+        
+        if(!particleEmitter.isEmitting()&&particleEmitter.getVolume()>0){
+            
+            particleEmitter.begin();
+            
+        }else if(particleEmitter.isEmitting()&&particleEmitter.getVolume()<=0){
+            
+            particleEmitter.stop();
+            
+        }
         
     }
     

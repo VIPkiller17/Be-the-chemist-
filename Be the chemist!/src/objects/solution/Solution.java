@@ -187,11 +187,15 @@ public class Solution {
     
     public void removeSubstance(int index){
         
+        System.out.println("Lists before removal of substance, subs: "+substances+" vols: "+volumes+" and temps: "+temperatures);
+        
         //System.out.println("RemoveSusbtance() called on index: "+index+" for substance: "+substances.get(index)+"\nlist before removal: "+substances);
         
         substances.remove(index);
         volumes.remove(index);
         temperatures.remove(index);
+        
+        System.out.println("Lists after removal of substance, subs: "+substances+" vols: "+volumes+" and temps: "+temperatures);
         
         //System.out.println("Litst after removal: "+substances);
         
@@ -394,7 +398,7 @@ public class Solution {
         
             for(Substance s: substances){
 
-                System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
+                //System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
 
                 switch(s.getStateInteger(temperature)){
 
@@ -554,6 +558,8 @@ public class Solution {
     
     public void setVolume(double volume){
         
+        //System.out.println("setVolume() called, volume before: "+getVolume());
+        
         presentVolume=getVolume();
         
         if(presentVolume>volume){
@@ -581,6 +587,8 @@ public class Solution {
             }
             
         }
+        
+        //System.out.println("setVolume() called, volume after: "+getVolume());
         
     }
     
@@ -616,13 +624,21 @@ public class Solution {
     
     public void setVolumes(ArrayList<Double> volumes){
         
+        //System.out.println("setVolumes(list) called, volume before: "+getVolume());
+        
         this.volumes=volumes;
+        
+        //System.out.println("setVolumes(list) called, volume after: "+getVolume());
         
     }
     
     public void setVolume(int index,Double volume){
         
+        //System.out.println("setVolume(index,volume) called, volume before: "+getVolume());
+        
         volumes.set(index,volume);
+        
+        //System.out.println("setVolume(index,volume) called, volume after: "+getVolume());
         
     }
     
@@ -682,7 +698,7 @@ public class Solution {
     @Override
     public String toString(){
         
-        String t="Solution containing:\n";
+        String t="Solution containing: (non formatted: "+substances+")\n";
         
         for(int i=0;i<substances.size();i++){
             
@@ -712,11 +728,11 @@ public class Solution {
             
             //System.out.println("Size of substances: "+substances.size()+", is it empty?: "+substances.isEmpty()+", index: "+i+", substance at 0: "+substances.get(0));
             
-            //System.out.println(substances.get(i).getName()+"'s temp: "+temperatures.get(i)+", volume: "+volumes.get(i));
+            //System.out.println(substances.get(i).getName()+"'s temp: "+temperatures.get(i)+", volume: "+volumes.get(i)+"\n    state at 298: "+substances.get(i).getStateInteger(298));
             
             temperature+=temperatures.get(i);
             
-            switch(substances.get(i).getStateInteger(getTemperature())){
+            switch(substances.get(i).getStateInteger(getTemperature(i))){
             
                 case 0:
                     
@@ -869,6 +885,8 @@ public class Solution {
     
     public void setPourableVolume(double volume){
         
+        System.out.println("setPourableVolume() called, volume before: "+getVolume());
+        
         presentVolume=0;
         presentVolumeCount=0;
         
@@ -916,6 +934,8 @@ public class Solution {
             }
             
         }
+        
+        System.out.println("setPourableVolume() called, volume after: "+getVolume());
         
     }
     
@@ -1060,6 +1080,36 @@ public class Solution {
         }
         
         return presentStateList;
+        
+    }
+    
+    public void removeInvalidSubstances(){
+        
+        //System.out.println("Substances list size: "+substances.size());
+        
+        //System.out.println("Lists before removal of all invalid substances, subs: "+substances+" vols: "+volumes+" and temps: "+temperatures);
+        
+        for(int i=0;i<substances.size();i++){
+            
+            //System.out.println("Checking volume validity of "+substances.get(i).getName()+" with volume: "+volumes.get(i)+" at index: "+i);
+            
+            if(volumes.get(i)<0.001){
+
+                //System.out.println("    Lists before removal of substance, subs: "+substances+" vols: "+volumes+" and temps: "+temperatures);
+                
+                substances.remove(i);
+                volumes.remove(i);
+                temperatures.remove(i);
+                
+                i--;
+
+                //System.out.println("    Lists after removal of substance, subs: "+substances+" vols: "+volumes+" and temps: "+temperatures);
+                
+            }
+            
+        }
+        
+        //System.out.println("        Lists after removal of all invalid substances, subs: "+substances+" vols: "+volumes+" and temps: "+temperatures);
         
     }
     

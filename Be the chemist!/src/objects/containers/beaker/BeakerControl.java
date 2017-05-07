@@ -42,7 +42,7 @@ public class BeakerControl extends AbstractControl{
         
         if(beaker.getSolution()!=null&&beaker.getSolution().containsStates()[1]){
             
-            System.out.println("beaker contains a liquid, updating color to "+beaker.getSolution().getLiquidColor());
+            //System.out.println("beaker contains a liquid, updating color to "+beaker.getSolution().getLiquidColor());
             
             beaker.setLiquidVisible(true,beaker.getSolution().getLiquidColor());
             
@@ -54,7 +54,7 @@ public class BeakerControl extends AbstractControl{
         
         if(beaker.getSolution()!=null&&beaker.getSolution().containsInsolubleSolid()){
             
-            System.out.println("beaker contains a solid, updating color...");
+            //System.out.println("beaker contains a solid, updating color...");
             
             beaker.setSolidVisible(true,beaker.getSolution().getSolidColor());
             

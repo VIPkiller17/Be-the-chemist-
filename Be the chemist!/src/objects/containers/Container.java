@@ -6,8 +6,8 @@ package objects.containers;
 
 import com.jme3.math.Vector3f;
 import com.jme3.scene.Node;
-import com.jme3.scene.Spatial;
 import interfaces.Grabbable;
+import interfaces.Heatable;
 import main.Main;
 import objects.PhysicalObject;
 import objects.solution.Solution;
@@ -16,7 +16,7 @@ import objects.solution.Solution;
  *
  * @author VIPkiller17
  */
-public abstract class Container extends PhysicalObject implements Grabbable{
+public abstract class Container extends PhysicalObject implements Grabbable,Heatable{
 
     private Solution solution;
     private boolean full;
@@ -140,15 +140,31 @@ public abstract class Container extends PhysicalObject implements Grabbable{
         
     }
     
+    @Override
     public void setTemperature(double temperature){
         
         this.temperature=temperature;
         
     }
     
+    @Override
     public double getTemperature(){
         
         return temperature;
+        
+    }
+    
+    @Override
+    public void addKelvin(double kelvin){
+        
+        temperature+=kelvin;
+        
+    }
+    
+    @Override
+    public void removeKelvin(double kelvin){
+        
+        temperature-=kelvin;
         
     }
     

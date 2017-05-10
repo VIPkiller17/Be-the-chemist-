@@ -46,6 +46,11 @@ public class Solution {
     
     private boolean hasFoundSubstance;
     
+    private int presentVolumeDotPosition;
+    private int presentTempDotPosition;
+    private String presentFormattedVolume;
+    private String presentFormattedTemp;
+    
     public Solution(Main main,Container container,Substance substance,double volume,double temperature){
         
         this.parentContainer=container;
@@ -698,17 +703,43 @@ public class Solution {
     @Override
     public String toString(){
         
-        String t="Solution containing: (non formatted: "+substances+")\n";
+        String t="Solution containing:\n";
         
         for(int i=0;i<substances.size();i++){
             
+            presentFormattedVolume=""+getVolume(i);
+            presentFormattedTemp=""+getTemperature(i);
+            
+            presentVolumeDotPosition=presentFormattedVolume.indexOf(".");
+            presentTempDotPosition=presentFormattedTemp.indexOf(".");
+            
+            if(presentFormattedVolume.substring(presentVolumeDotPosition,presentFormattedVolume.length()-1).length()>4){
+            
+                presentFormattedVolume=presentFormattedVolume.substring(0,presentVolumeDotPosition+4);
+            
+            }else{
+                
+                presentFormattedVolume=""+getVolume(i);
+            
+            }
+            
+            if(presentFormattedTemp.substring(presentTempDotPosition,presentFormattedTemp.length()-1).length()>4){
+            
+                presentFormattedTemp=presentFormattedTemp.substring(0,presentTempDotPosition+4);
+            
+            }else{
+                
+                presentFormattedTemp=""+getTemperature(i);
+            
+            }
+            
             if(i<substances.size()-1)
             
-                t+="   "+substances.get(i).getName()+": "+volumes.get(i)+" L;\n";
+                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n  with temperature: "+presentFormattedTemp+" K;\n";
             
             else if(i==substances.size()-1)
                 
-                t+="   "+substances.get(i).getName()+": "+volumes.get(i)+" L.\n";
+                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n  with temperature: "+presentFormattedTemp+" K.\n";
             
         }
         
@@ -945,7 +976,9 @@ public class Solution {
         
         for(int i=0;i<volumes.size();i++){
             
-            if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+            System.out.println("        Checking if "+substances.get(i)+" has density: "+substances.get(i).getDensity()+" heigher than 0.00128: "+(substances.get(i).getDensity()>0.00128));
+            
+            if(substances.get(i).getDensity()>0.00128){
                 
                 presentVolume+=volumes.get(i);
 
@@ -963,7 +996,7 @@ public class Solution {
         
         for(int i=0;i<substances.size();i++){
             
-            if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+            if(substances.get(i).getDensity()>0.00128){
                 
                 presentStateList.add(substances.get(i));
 

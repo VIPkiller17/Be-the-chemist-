@@ -164,10 +164,13 @@ public class Beaker extends Container implements Savable{
         rootNode.attachChild(spatial);
         
         main.getItemsList().add(this);
+        main.getHeatables().add(this);
         
         pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's pourParticleEmitter");
         evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Beaker's evaporationParticleEmitter");
-        reactionParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,1,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's reactionParticleEmitter");
+        //reactionParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,1,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's reactionParticleEmitter");
+        
+        evaporationParticleEmitter.setVolume(0.001);
         
         setPos(position);
         
@@ -295,7 +298,7 @@ public class Beaker extends Container implements Savable{
             
         }else{
         
-            return "Beaker:\n   Contains:\n   "+this.getSolution()+"\n  Total volume: "+getFormattedVolume();
+            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n      Total temperature: "+getSolution().getTemperature();
             
         }
         
@@ -337,6 +340,7 @@ public class Beaker extends Container implements Savable{
         
     }
     
+    @Override
     public Vector3f getPosition(){
         
         return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();

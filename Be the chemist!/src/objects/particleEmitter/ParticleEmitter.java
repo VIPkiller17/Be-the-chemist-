@@ -14,6 +14,7 @@ import objects.PhysicalObject;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.containers.Container;
 import objects.containers.beaker.Beaker;
+import objects.containers.gasSac.GasSac;
 import objects.particleEmitter.particle.Particle;
 import objects.solution.Solution;
 import objects.substance.Substance;
@@ -402,6 +403,56 @@ public class ParticleEmitter {
                     }
                 
                 }else if(this.equals(((Beaker)parentObject).getEvaporationParticleEmitter())){
+                    
+                    //System.out.println("Emitter is the beaker's evaporation emitter, the evaporatable volume is: "+((Container)parentObject).getSolution().getEvaporatableVolume()+" and volume is: "+volume);
+                
+                    if(((Container)parentObject).getSolution().getEvaporatableVolume()>volume){
+                        
+                        //System.out.println("There is more evaporatable volume in the beaker than there should be in the particle, making a particle of given volume...");
+
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getEvaporatables(),volume,((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setEvaporatableVolume(((Container)parentObject).getSolution().getEvaporatableVolume()-volume);
+
+                    }else if(((Container)parentObject).getSolution().getEvaporatableVolume()!=0&&((Container)parentObject).getSolution().getEvaporatableVolume()<volume){
+
+                        //System.out.println("There is less evaporatable voume in the beaker than the particle volume should be, making particle with remaining evaporatable volume...");
+                        
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getEvaporatables(),((Container)parentObject).getSolution().getEvaporatableVolume(),((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setEvaporatableVolume(0);
+
+                    }
+                
+                }
+            
+            }else if(parentObject instanceof GasSac){
+                
+                //System.out.println("The emitter's parentobject is a gassac, is this its pouremitter?: "+this.equals(((GasSac)parentObject).getPourParticleEmitter()));
+            
+                if(this.equals(((GasSac)parentObject).getPourParticleEmitter())){
+                    
+                    //System.out.println("    it is, is volume: "+volume+" higher than the pourable volume in the gas sac which is: "+((Container)parentObject).getSolution().getPourableVolume()+",?: "+(((Container)parentObject).getSolution().getPourableVolume()>volume));
+                
+                    if(((Container)parentObject).getSolution().getPourableVolume()>volume){
+
+                        //System.out.println("        Creating new particle for a container");
+
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getPourables(),volume,((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setPourableVolume(((Container)parentObject).getSolution().getPourableVolume()-volume);
+
+                    }else if(((Container)parentObject).getSolution().getPourableVolume()<volume&&((Container)parentObject).getSolution().getPourableVolume()!=0){
+
+                        //System.out.println("        Creating new particle for a container");
+
+                        control.getActiveParticles().add(new Particle(main,this,"Models/Particles/Gas/Gas.j3o",((Container)parentObject).getSolution().getMostCommonState(),((Container)parentObject).getSolution().getPourables(),((Container)parentObject).getSolution().getPourableVolume(),((Container)parentObject).getSolution().getTemperature()));
+
+                        ((Container)parentObject).getSolution().setPourableVolume(0);
+
+                    }
+                
+                }else if(this.equals(((GasSac)parentObject).getEvaporationParticleEmitter())){
                     
                     //System.out.println("Emitter is the beaker's evaporation emitter, the evaporatable volume is: "+((Container)parentObject).getSolution().getEvaporatableVolume()+" and volume is: "+volume);
                 

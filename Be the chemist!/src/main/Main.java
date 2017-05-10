@@ -1,7 +1,6 @@
 package main;
 
 import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.collision.CollisionResults;
 import com.jme3.input.KeyInput;
 import com.jme3.input.controls.ActionListener;
@@ -18,6 +17,7 @@ import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
 import interfaces.Describable;
+import interfaces.Heatable;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,6 +31,7 @@ import objects.apparatus.bunsenBurner.BunsenBurner;
 import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHood;
+import objects.apparatus.hotPlate.HotPlate;
 import objects.apparatus.trashBin.TrashBin;
 import objects.containers.beaker.Beaker;
 import objects.containers.erlenmeyer.Erlenmeyer;
@@ -59,6 +60,7 @@ public class Main extends VRApplication {
     
     private BulletAppState bulletAppState;
     
+    //Grabbable objects list
     private ArrayList<PhysicalObject> items;
     
     public static final ColorRGBA HIGHLIGHT_VISIBLE=new ColorRGBA(0,255,0,0.5f);
@@ -88,6 +90,7 @@ public class Main extends VRApplication {
     private Room room;
     private Floor floor;
     private AnalyticalBalance analyticalBalance;
+    private HotPlate hotPlate;
     private BunsenBurner bunsenBurner1;
     private BunsenBurner bunsenBurner2;
     private DistilledWaterContainer distilledWaterContainer;
@@ -106,7 +109,13 @@ public class Main extends VRApplication {
     
     //Objects
     private ArrayList<Describable> describables=new ArrayList<Describable>();
+    
+    //all objects that can receive particles
     private ArrayList<PhysicalObject> particleReceivers;
+    
+    //all objects taht can be heated
+    private ArrayList<Heatable> heatables;
+    
     private ArrayList<Element> elements=new ArrayList<Element>();
     private ArrayList<Ion> ions=new ArrayList<Ion>();
     private ArrayList<Substance> substances=new ArrayList<Substance>();
@@ -154,6 +163,7 @@ public class Main extends VRApplication {
         
         //var init
         items=new ArrayList<>();
+        heatables=new ArrayList<>();
         particleReceivers=new ArrayList<>();
         beakers = new ArrayList<>();
         initChemistryStructure();
@@ -182,8 +192,10 @@ public class Main extends VRApplication {
         room=new Room(this);
         floor=new Floor(this);
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
-        analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .95f, 0.5f));
+        analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .94f, 0.5f));
         analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
+        hotPlate = new HotPlate(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .94f, 0.8f));
+        //hotPlate.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
         bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(-1.1f, 0.93f, 0.2f));
         bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(0.2f, 0.93f, -0.8f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
@@ -250,6 +262,8 @@ public class Main extends VRApplication {
         
         gasSac = new ArrayList<GasSac>();
         gasSac.add(new GasSac(this,new Vector3f(-4f, 0.05f, -4f)));
+        gasSac.get(0).setSolution(new Solution(this,beaker,substances.get(45),1,298));
+        gasSac.get(0).getSolution().addSubstance(substances.get(54),1,298);
         
         beaker=new Beaker(this,new Vector3f(-4,0.05f,-5));
         //beaker.setSolution(new Solution(this,beaker,substances.get(43),100,298));//solid so grams
@@ -1335,6 +1349,8 @@ public class Main extends VRApplication {
     @Override
     public void simpleUpdate(float tpf) {
         
+        //System.out.println("Present tpf: "+tpf);
+        
         //TPF COUNTERS START
         
         //every second check if a controller is detected and create it
@@ -1457,6 +1473,12 @@ public class Main extends VRApplication {
     public ArrayList<Element> getReactivitySeries(){
         
         return reactivitySeries;
+        
+    }
+    
+    public ArrayList<Heatable> getHeatables(){
+        
+        return heatables;
         
     }
     

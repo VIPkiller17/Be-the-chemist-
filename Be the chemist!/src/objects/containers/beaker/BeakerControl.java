@@ -32,7 +32,7 @@ public class BeakerControl extends AbstractControl{
         
         //TESTING
         
-        //System.out.println("Beaker's description: "+beaker.getDescription());
+        //System.out.println("Beaker's description: "+beaker.getDescription()+"\n\n");
         
         //System.out.println("Height of angle of beakre rotation: "+spatial.getLocalRotation().getRotationColumn(1).getY()+" and angle is smaller than 0.707: "+(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f)+" and beaker is emitting: "+beaker.isEmitting());
         
@@ -67,7 +67,7 @@ public class BeakerControl extends AbstractControl{
         beaker.updateNodeState();
         
         //This should be done by the angle, the more tilted is the container the less it emits from evaporation
-        beaker.getEvaporationParticleEmitter().setVolume(0.001);
+        //beaker.getEvaporationParticleEmitter().setVolume(0.001);
         
         if(spatial.getLocalRotation().getRotationColumn(1).getY()<0){
             

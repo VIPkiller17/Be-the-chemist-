@@ -4,6 +4,7 @@
  */
 package objects.containers.gasSac;
 
+import com.jme3.math.FastMath;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
 import com.jme3.scene.control.AbstractControl;
@@ -31,6 +32,44 @@ public class GasSacControl extends AbstractControl{
         //gasSac.setTemperature(beaker.getSolution().getTemperature());
         
         gasSac.updateNodeState();
+        
+        if(spatial.getLocalRotation().getRotationColumn(1).getY()<0){
+            
+            gasSac.getPourParticleEmitter().setVolume((((FastMath.RAD_TO_DEG*FastMath.asin(Math.abs(spatial.getLocalRotation().getRotationColumn(1).getY())))+90)/1000)*gasSac.getPourParticleEmitter().getDelay());
+
+        }else{
+            
+            gasSac.getPourParticleEmitter().setVolume((FastMath.RAD_TO_DEG*Math.acos(spatial.getLocalRotation().getRotationColumn(1).getY())/1000)*gasSac.getPourParticleEmitter().getDelay());
+        
+        }
+        
+        if(gasSac.isOpenned()){
+            
+            //System.out.println("Gas sac is openned, evap emitting: "+gasSac.getEvaporationParticleEmitter().isEmitting()+", solution contains low density gas: "+gasSac.getSolution().containsLowDensityGas());
+            //System.out.println("pourParticleEMitter emitting: "+gasSac.getPourParticleEmitter().isEmitting()+", its volume: "+gasSac.getPourParticleEmitter().getVolume()+", its angle: "+spatial.getLocalRotation().getRotationColumn(1).getY()+", and is that lower than 0.707: "+(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f));
+            
+            if(!gasSac.getEvaporationParticleEmitter().isEmitting()&&gasSac.getSolution().containsLowDensityGas()){
+                
+                gasSac.startEvaporation();
+                
+            }
+            
+            if(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f&&!gasSac.getPourParticleEmitter().isEmitting()){
+                
+                gasSac.startPouring();
+            
+            }else if(spatial.getLocalRotation().getRotationColumn(1).getY()>0.707f&&gasSac.getPourParticleEmitter().isEmitting()){
+
+                gasSac.stopPouring();
+
+            }
+            
+        }else{
+            
+            gasSac.stopEvaporation();
+            gasSac.stopPouring();
+            
+        }
         
         //ACT BASED ON THE STATE OF THE CONTAINER
         

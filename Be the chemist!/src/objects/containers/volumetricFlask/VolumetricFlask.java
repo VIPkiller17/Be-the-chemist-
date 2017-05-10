@@ -303,4 +303,11 @@ public class VolumetricFlask extends Container implements Savable{
         
     }
     
+    @Override
+    public Vector3f getPosition() {
+        
+        return getSpatial().getWorldTranslation();
+        
+    }
+    
 }

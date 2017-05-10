@@ -292,4 +292,11 @@ public class Pipette extends Container implements Savable{
         
     }
     
+    @Override
+    public Vector3f getPosition() {
+        
+        return getSpatial().getWorldTranslation();
+        
+    }
+    
 }

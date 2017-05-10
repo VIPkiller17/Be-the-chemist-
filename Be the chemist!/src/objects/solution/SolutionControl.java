@@ -40,7 +40,7 @@ public class SolutionControl extends AbstractControl{
     }
     
     @Override
-    protected void controlUpdate(float f) {
+    protected void controlUpdate(float tpf) {
         
         //account for H2O2 decomposition
         //account for H2CO3 decomposition

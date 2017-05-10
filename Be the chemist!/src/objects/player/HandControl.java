@@ -21,11 +21,13 @@ import com.jme3.scene.shape.Box;
 import interfaces.Describable;
 import interfaces.Grabbable;
 import jmevr.input.OpenVRInput;
+import jmevr.input.OpenVRInput.VRINPUT_TYPE;
 import jmevr.input.VRAPI;
 import main.Main;
 import objects.PhysicalObject;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHoodDoor;
+import objects.apparatus.hotPlate.HotPlate;
 import objects.containers.beaker.Beaker;
 import objects.containers.gasSac.GasSac;
 import objects.containers.gasSac.GasSacValve;
@@ -94,6 +96,8 @@ public class HandControl extends AbstractControl{
     
     private Quaternion rotationWhenGrabbed;
     private Quaternion rotationOnLastFrame=new Quaternion();
+    
+    private boolean triggerReleasedAfterHold;
     
     private Player player;
     
@@ -439,13 +443,6 @@ public class HandControl extends AbstractControl{
         
             //for each item in the item list
             for(PhysicalObject p: main.getItemsList()){
-                
-                //TESTING
-                if(p instanceof GasSacValve){
-                    
-                    System.out.println(((GasSacValve) p).getGrabbablePosition().distance(hand.getWorldTranslation()));
-                    
-                }
 
                 //System.out.println("Object: "+p);
 
@@ -457,12 +454,6 @@ public class HandControl extends AbstractControl{
                 if(p instanceof Grabbable&&((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<=0.15f&&(possibleItemToGrab==null||((Grabbable)p).getGrabbablePosition().distance(hand.getWorldTranslation())<((Grabbable)possibleItemToGrab).getGrabbablePosition().distance(hand.getWorldTranslation()))){
 
                     //System.out.println("This is the new better grabbable item");
-                    
-                    if(p instanceof GasSacValve){
-                        
-                        System.out.println("possible to grab object is gas sac valve");
-                        
-                    }
 
                     //set the last grabbable item's highlight to invisible
                     //set the grabbable item to the item
@@ -585,6 +576,10 @@ public class HandControl extends AbstractControl{
                     
                     hand.setOpenned(true);
                     
+                }else{
+                    
+                    triggerReleasedAfterHold=true;
+                    
                 }
 
                 //add what happens when the player releases the trigger
@@ -611,6 +606,14 @@ public class HandControl extends AbstractControl{
     }
     
     private void updateTriggerByAxis(){
+        
+        if(hand.isHoldingObject()&&hand.getHeldObject() instanceof GasSac&&triggerReleasedAfterHold){
+            
+            if(FastMath.RAD_TO_DEG*VRHardware.getVRinput().getAxis(0,VRINPUT_TYPE.ViveTriggerAxis).x>10)
+            
+                ((GasSac)hand.getHeldObject()).getEvaporationParticleEmitter().setDelay(10/(FastMath.RAD_TO_DEG*VRHardware.getVRinput().getAxis(0,VRINPUT_TYPE.ViveTriggerAxis).x));
+            
+        }
         
         //rightHandSpatial.setLocalScale(VRHardware.getVRinput().getAxis(0,VRINPUT_TYPE.ViveTriggerAxis).x+0.1f);
         
@@ -775,6 +778,8 @@ public class HandControl extends AbstractControl{
 
                 hand.setStaticHold(true);
                 //System.out.println("Hand static hold set to true");
+                
+                triggerReleasedAfterHold=false;
 
             }
 
@@ -928,7 +933,7 @@ public class HandControl extends AbstractControl{
                 
                 if(hand.isHoldingObject()&&hand.getHeldObject() instanceof GasSac){
                     
-                    ((GasSac)hand.getHeldObject()).toggle();
+                    ((GasSac)hand.getHeldObject()).getValve().toggle();
                     
                 }
                 
@@ -1283,6 +1288,14 @@ public class HandControl extends AbstractControl{
             ((GasSacValve)hand.getHeldObject()).highlightVisible(true);
             
             hand.setHeldObject(null);
+            
+        }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof HotPlate){
+            
+            //System.out.println("Setting SinkHandle rotation to +"+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+            
+            ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+            
+            rotationWhenGrabbed=VRHardware.getVRinput().getFinalObserverRotation(handSide);
             
         }
         

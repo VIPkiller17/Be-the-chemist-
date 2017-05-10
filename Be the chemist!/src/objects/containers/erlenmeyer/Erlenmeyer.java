@@ -302,5 +302,12 @@ public class Erlenmeyer extends Container implements Savable{
         return spatial;
         
     }
+
+    @Override
+    public Vector3f getPosition() {
+        
+        return getSpatial().getWorldTranslation();
+        
+    }
     
 }

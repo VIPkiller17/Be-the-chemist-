@@ -32,7 +32,6 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
     private Material valveClosedHighlightMat,valveOpennedHighlightMat;
     
     private boolean highlightVisible;
-    private boolean openned;
     
     private Node node;
     
@@ -96,25 +95,21 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
     
     public void toggle(){
         
-        if(openned){
+        if(gasSac.isOpenned()){
             
-            valveOpenned.setLocalTranslation(0,-30,0);
+            valveOpenned.setLocalTranslation(0,-50,0);
             
             valveClosed.setLocalTranslation(0,0,0);
             
-            openned=false;
-            
-            gasSac.getParticleEmitter().stop();
+            gasSac.setOpenned(false);
             
         }else{
             
-            valveClosed.setLocalTranslation(0,-30,0);
+            valveClosed.setLocalTranslation(0,-50,0);
             
             valveOpenned.setLocalTranslation(0,0,0);
             
-            openned=true;
-            
-            gasSac.getParticleEmitter().begin();
+            gasSac.setOpenned(true);
             
         }
         
@@ -127,7 +122,7 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         
         if(highlightVisible)
             
-            if(openned){
+            if(gasSac.isOpenned()){
         
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);

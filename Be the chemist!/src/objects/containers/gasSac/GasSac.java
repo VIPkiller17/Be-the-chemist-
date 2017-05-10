@@ -24,6 +24,7 @@ import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
 import com.jme3.scene.shape.Box;
 import main.Main;
+import objects.PhysicalObject;
 import objects.solution.Solution;
 
 /**
@@ -50,9 +51,8 @@ public class GasSac extends Container implements Savable{
     private Spatial gasModel;
     private Material gasModelMat;
     private Spatial valveClosed,valveOpenned;
-    private ParticleEmitter particleEmitter;
+    private ParticleEmitter evaporationParticleEmitter,pourParticleEmitter;
     
-    private boolean isEmitting;
     private boolean openned;
     
     private Vector3f particleEmitterPosition;
@@ -65,6 +65,8 @@ public class GasSac extends Container implements Savable{
     
     private Vector3f presentPosition;
     private Quaternion presentRotation;
+    
+    private GasSacValve valve;
     
     public GasSac(Main main,Vector3f position){
         
@@ -135,17 +137,6 @@ public class GasSac extends Container implements Savable{
         node.attachChild(gasModel);
         gasModel.setLocalTranslation(0,-50,0);
         
-        valveClosed.setName("Gas sac closed valve");
-        valveClosed.setUserData("correctCollision", true);
-        valveClosed.setUserData("correspondingObject", this);
-        node.attachChild(valveClosed);
-        
-        valveOpenned.setName("Gas sac openned valve");
-        valveOpenned.setUserData("correctCollision", true);
-        valveOpenned.setUserData("correspondingObject", this);
-        node.attachChild(valveOpenned);
-        valveOpenned.setLocalTranslation(new Vector3f(0,-50,0));
-        
         spatial.setName("GasSac #"+index++);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
@@ -158,6 +149,8 @@ public class GasSac extends Container implements Savable{
         gasSac_phy.setFriction(1);
         spatial.addControl(gasSac_phy);
         bulletAppState.getPhysicsSpace().add(gasSac_phy);
+        
+        valve=new GasSacValve(main,this);
         
         rootNode.attachChild(node);
         rootNode.attachChild(spatial);
@@ -176,7 +169,10 @@ public class GasSac extends Container implements Savable{
         node.attachChild(boxGeo);
         */
         
-        particleEmitter=new ParticleEmitter(main,this,new Vector3f(particleEmitterPosition),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"GasSac's evaporationParticleEmitter");
+        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(particleEmitterPosition),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"GasSac's evaporationParticleEmitter");
+        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(particleEmitterPosition),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-1,0),Vector3f.ZERO,"GasSac's pourParticleEmitter");
+        
+        evaporationParticleEmitter.setVolume(0.001);
         
         setPos(position);
         
@@ -212,29 +208,39 @@ public class GasSac extends Container implements Savable{
         
     }
     
-    public ParticleEmitter getParticleEmitter(){
+    public ParticleEmitter getEvaporationParticleEmitter(){
         
-        return particleEmitter;
-        
-    }
-    
-    public void startParticleEmission(){
-        
-        particleEmitter.begin();
-        isEmitting=true;
+        return evaporationParticleEmitter;
         
     }
     
-    public void stopParticleEmission(){
+    public ParticleEmitter getPourParticleEmitter(){
         
-        particleEmitter.stop();
-        isEmitting=false;
+        return pourParticleEmitter;
         
     }
     
-    public boolean isEmitting(){
+    public void startEvaporation(){
         
-        return isEmitting;
+        evaporationParticleEmitter.begin();
+        
+    }
+    
+    public void startPouring(){
+        
+        pourParticleEmitter.begin();
+        
+    }
+    
+    public void stopEvaporation(){
+        
+        evaporationParticleEmitter.stop();
+        
+    }
+    
+    public void stopPouring(){
+        
+        pourParticleEmitter.stop();
         
     }
     
@@ -264,7 +270,15 @@ public class GasSac extends Container implements Savable{
     @Override
     public String getDescription() {
         
-        return "Gas sac:\n  Contains: "+this.getSolution()+"\n  Quantity: "+this.getVolume();
+        if(getSolution().getVolume()<0.001){
+            
+            return "Gas sac:\n   Empty.";
+            
+        }else{
+        
+            return "Gas sac:\n   Contains:\n   "+this.getSolution()+"\n  Total volume: "+getFormattedVolume();
+            
+        }
         
     }
 
@@ -302,6 +316,7 @@ public class GasSac extends Container implements Savable{
         
     }
     
+    @Override
     public Vector3f getPosition(){
         
         return spatial.getControl(RigidBodyControl.class).getPhysicsLocation();
@@ -387,31 +402,6 @@ public class GasSac extends Container implements Savable{
         }
         
     }
-    public void toggle(){
-        
-        if(openned){
-            
-            valveOpenned.setLocalTranslation(0,-50,0);
-            
-            valveClosed.setLocalTranslation(0,0,0);
-            
-            openned=false;
-            
-            particleEmitter.stop();
-            
-        }else{
-            
-            valveClosed.setLocalTranslation(0,-50,0);
-            
-            valveOpenned.setLocalTranslation(0,0,0);
-            
-            openned=true;
-            
-            particleEmitter.begin();
-            
-        }
-        
-    }
     
     @Override
     public String getName() {
@@ -420,11 +410,25 @@ public class GasSac extends Container implements Savable{
         
     }
     
-    /*@Override
-    public Spatial getSpatial(){
+    public boolean isOpenned(){
         
-        return spatial;
+        return openned;
         
-    }*/
+    }
+    
+    public void setOpenned(boolean openned){
+        
+        //System.out.println("GasSac openned set to: "+openned);
+        
+        this.openned=openned;
+        
+    }
+    
+    public GasSacValve getValve(){
+        
+        return valve;
+        
+    }
+    
     
 }

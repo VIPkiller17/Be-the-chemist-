@@ -24,7 +24,9 @@ public class Substance{
     private double sublimationPoint;
     private String type;
     private double molarMass;
-    private double density;
+    private double solidDensity;
+    private double liquidDensity;
+    private double gasDensity;
     private ColorRGBA color;
     private ArrayList<Ion> ions;
     private ArrayList<Integer> ionCounts;
@@ -32,7 +34,7 @@ public class Substance{
     
     private Main main;
     
-    public Substance(Main main,String equation,String name,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double density,ColorRGBA color,ArrayList<Ion> ions,ArrayList<Integer> ionCounts,boolean soluble){
+    public Substance(Main main,String equation,String name,double meltingPoint,double boilingPoint,double sublimationPoint,String type,double molarMass,double solidDensity,double liquidDensity,double gasDensity,ColorRGBA color,ArrayList<Ion> ions,ArrayList<Integer> ionCounts,boolean soluble){
         
         this.equation=equation;
         this.name=name;
@@ -41,7 +43,9 @@ public class Substance{
         this.sublimationPoint=sublimationPoint;
         this.type=type;
         this.molarMass=molarMass;
-        this.density=density;
+        this.solidDensity=solidDensity;
+        this.liquidDensity=liquidDensity;
+        this.gasDensity=gasDensity;
         this.color=color;
         this.ions=ions;
         this.ionCounts=ionCounts;
@@ -92,9 +96,19 @@ public class Substance{
         
     }
     
-    public double getDensity(){
+    public double getDensity(int stateInteger){
         
-        return density;
+        switch (stateInteger) {
+            case 0:
+                return gasDensity;
+            case 1:
+                return liquidDensity;
+            case 2:
+                return solidDensity;
+            default:
+                System.out.println("ERROR: Invalid state integer sent to getDensity in Substance");
+                return solidDensity;
+        }
         
     }
     

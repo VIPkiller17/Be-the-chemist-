@@ -194,7 +194,7 @@ public class Main extends VRApplication {
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
         analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .94f, 0.5f));
         analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
-        hotPlate = new HotPlate(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .94f, 0.8f));
+        hotPlate = new HotPlate(this,new Vector3f(4.25f,0.94f, 0.8f));
         //hotPlate.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
         bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(-1.1f, 0.93f, 0.2f));
         bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(0.2f, 0.93f, -0.8f));
@@ -790,28 +790,28 @@ public class Main extends VRApplication {
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(0));
         presentCountList.add(2);
-        substances.add(new Substance(this,"F\u2082","Fluorine gas",53.48,85.03,-1,"Halogen",37.996,0.001696,new ColorRGBA(1,1,0.6f,0.5f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"F\u2082","Fluorine gas",53.48,85.03,-1,"Halogen",37.996,1.505,1.505,0.001696,new ColorRGBA(1,1,0.6f,0.5f),presentIonList,presentCountList,false));
         
         //Cl2 1
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(1));
         presentCountList.add(2);
-        substances.add(new Substance(this,"Cl\u2082","Chlorine gas",171.6,239.11,-1,"Halogen",70.9,0.0032,new ColorRGBA(1,1,0.6f,0.5f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Cl\u2082","Chlorine gas",171.6,239.11,-1,"Halogen",70.9,1.5625,1.5625,0.0032,new ColorRGBA(1,1,0.6f,0.5f),presentIonList,presentCountList,false));
         
         //Br2 2
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(2));
         presentCountList.add(2);
-        substances.add(new Substance(this,"Br\u2082","Bromine",265.8,332,-1,"Halogen",159.808,3.103,new ColorRGBA(0.5f,0,0,0.9f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Br\u2082","Bromine",265.8,332,-1,"Halogen",159.808,3.103,3.103,0.0031,new ColorRGBA(0.5f,0,0,0.9f),presentIonList,presentCountList,false));
         
         //I2 3
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(3));
         presentCountList.add(2);
-        substances.add(new Substance(this,"I\u2082","Iodine",386.85,457.4,-1,"Halogen",253.808,4.933,new ColorRGBA(0.5f,0.5f,0.5f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"I\u2082","Iodine",386.85,457.4,-1,"Halogen",253.808,4.933,4.933,0.004933,new ColorRGBA(0.5f,0.5f,0.5f,1),presentIonList,presentCountList,false));
         
         //HF 4
         presentIonList=new ArrayList<>();
@@ -820,7 +820,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(1);
-        substances.add(new Substance(this,"HF","Hydrogen fluoride",273,373,-1,"Acidic",20.01,0.99,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"HF","Hydrogen fluoride",273,373,-1,"Acidic",20.01,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //HCl 5
         presentIonList=new ArrayList<>();
@@ -829,7 +829,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(1);
-        substances.add(new Substance(this,"HCl","Hydrogen chloride",273,373,-1,"Acidic",36.46,0.00149,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"HCl","Hydrogen chloride",273,373,-1,"Acidic",36.46,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //HBr 6
         presentIonList=new ArrayList<>();
@@ -838,7 +838,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(1);
-        substances.add(new Substance(this,"HBr","Hydrogen bromide",273,373,-1,"Acidic",80.91,0.003645,new ColorRGBA(1,1,0.6f,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"HBr","Hydrogen bromide",273,373,-1,"Acidic",80.91,0.99,0.99,0.000804,new ColorRGBA(1,1,0.6f,0.1f),presentIonList,presentCountList,false));
         
         //HI 7
         presentIonList=new ArrayList<>();
@@ -847,7 +847,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(1);
-        substances.add(new Substance(this,"HI","Hydrogen iodide",273,373,-1,"Acidic",127.904,2.85,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"HI","Hydrogen iodide",273,373,-1,"Acidic",127.904,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //HNO3 8
         presentIonList=new ArrayList<>();
@@ -856,7 +856,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(5));
         presentCountList.add(1);
-        substances.add(new Substance(this,"HNO\u2083","Hydrogen nitrate",273,373,-1,"Acidic",63.01,1.513,new ColorRGBA(1,1,0.6f,0.25f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"HNO\u2083","Hydrogen nitrate",273,373,-1,"Acidic",63.01,0.99,0.99,0.000804,new ColorRGBA(1,1,0.6f,0.25f),presentIonList,presentCountList,false));
         
         //H2SO4 9
         presentIonList=new ArrayList<>();
@@ -865,7 +865,7 @@ public class Main extends VRApplication {
         presentCountList.add(2);
         presentIonList.add(ions.get(6));
         presentCountList.add(1);
-        substances.add(new Substance(this,"H\u2082SO\u2084","Hydrogen sulfate",273,373,-1,"Acidic",98.079,1.84,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"H\u2082SO\u2084","Hydrogen sulfate",273,373,-1,"Acidic",98.079,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //H3PO4 10
         presentIonList=new ArrayList<>();
@@ -874,7 +874,7 @@ public class Main extends VRApplication {
         presentCountList.add(3);
         presentIonList.add(ions.get(7));
         presentCountList.add(1);
-        substances.add(new Substance(this,"H\u2083PO\u2084","Hydrogen phosphate",273,373,-1,"Acidic",97.99,1.885,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"H\u2083PO\u2084","Hydrogen phosphate",273,373,-1,"Acidic",97.99,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //C2H4O2 11
         presentIonList=new ArrayList<>();
@@ -883,7 +883,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(8));
         presentCountList.add(1);
-        substances.add(new Substance(this,"C\u2082H\u2084O\u2082","Acetic acid",273,373,-1,"Acidic",60.05,1.049,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"C\u2082H\u2084O\u2082","Acetic acid",273,373,-1,"Acidic",60.05,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //H2CO3 12
         presentIonList=new ArrayList<>();
@@ -892,7 +892,7 @@ public class Main extends VRApplication {
         presentCountList.add(2);
         presentIonList.add(ions.get(6));
         presentCountList.add(1);
-        substances.add(new Substance(this,"H\u2082CO\u2083","Carbonic acid",273,373,-1,"Acidic",62.03,1.668,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"H\u2082CO\u2083","Carbonic acid",273,373,-1,"Acidic",62.03,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //LiOH 13
         presentIonList=new ArrayList<>();
@@ -901,7 +901,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(1);
-        substances.add(new Substance(this,"LiOH","Lithium hydroxyde",273,373,-1,"Basic",23.95,1.46,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"LiOH","Lithium hydroxyde",273,373,-1,"Basic",23.95,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //NaOH 14
         presentIonList=new ArrayList<>();
@@ -910,7 +910,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(1);
-        substances.add(new Substance(this,"NaOH","Sodium hydroxyde",273,373,-1,"Basic",39.997,2.13,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"NaOH","Sodium hydroxyde",273,373,-1,"Basic",39.997,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //KOH 15
         presentIonList=new ArrayList<>();
@@ -919,7 +919,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(1);
-        substances.add(new Substance(this,"KOH","Potassium hydroxyde",273,373,-1,"Basic",56.11,2.12,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"KOH","Potassium hydroxyde",273,373,-1,"Basic",56.11,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //Mg(OH)2 16
         presentIonList=new ArrayList<>();
@@ -928,7 +928,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(2);
-        substances.add(new Substance(this,"Mg(OH)\u2082","Magnesium hydroxyde",273,373,-1,"Basic",58.32,2.345,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Mg(OH)\u2082","Magnesium hydroxyde",273,373,-1,"Basic",58.32,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //Ca(OH)2 17
         presentIonList=new ArrayList<>();
@@ -937,7 +937,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(2);
-        substances.add(new Substance(this,"Ca(OH)\u2082","Calcium hydroxyde",273,373,-1,"Basic",74.093,2.211,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Ca(OH)\u2082","Calcium hydroxyde",273,373,-1,"Basic",74.093,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //Al(OH)3 18
         presentIonList=new ArrayList<>();
@@ -946,7 +946,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(3);
-        substances.add(new Substance(this,"Al(OH)\u2083","Aluminium hydroxyde",273,373,-1,"Basic",78,2.42,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Al(OH)\u2083","Aluminium hydroxyde",273,373,-1,"Basic",78,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //NH3 19
         presentIonList=new ArrayList<>();
@@ -955,7 +955,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(22));
         presentCountList.add(2);
-        substances.add(new Substance(this,"NH\u2083","Ammonia",273,373,-1,"Basic",17.031,0.88,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"NH\u2083","Ammonia",273,373,-1,"Basic",17.031,0.99,0.99,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //LiF 20
         presentIonList=new ArrayList<>();
@@ -964,7 +964,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(1);
-        substances.add(new Substance(this,"LiF","Lithium fluoride",1118,1949,-1,"Salt",25.934,2.635,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"LiF","Lithium fluoride",1118,1949,-1,"Salt",25.934,2.635,2.635,0.002635,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //LiCl 21
         presentIonList=new ArrayList<>();
@@ -973,7 +973,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(1);
-        substances.add(new Substance(this,"LiCl","Lithium chloride",880,1655,-1,"Salt",42.39,2.068,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"LiCl","Lithium chloride",880,1655,-1,"Salt",42.39,2.068,2.068,0.002068,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //LiBr 22
         presentIonList=new ArrayList<>();
@@ -982,7 +982,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(1);
-        substances.add(new Substance(this,"LiBr","Lithium bromide",825,1538,-1,"Salt",86.845,3.464,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"LiBr","Lithium bromide",825,1538,-1,"Salt",86.845,3.464,3.464,0.003464,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //LiI 23
         presentIonList=new ArrayList<>();
@@ -991,7 +991,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(1);
-        substances.add(new Substance(this,"LiI","Lithium iodide",742,1444,-1,"Salt",133.85,4.76,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"LiI","Lithium iodide",742,1444,-1,"Salt",133.85,4.76,4.76,0.00476,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //NaF 24
         presentIonList=new ArrayList<>();
@@ -1000,7 +1000,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(1);
-        substances.add(new Substance(this,"NaF","Sodium fluoride",1266,1977,-1,"Salt",41.988,2.558,new ColorRGBA(0.9f,1,0.9f,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"NaF","Sodium fluoride",1266,1977,-1,"Salt",41.988,2.558,2.558,0.002558,new ColorRGBA(0.9f,1,0.9f,1),presentIonList,presentCountList,true));
         
         //NaCl 25
         presentIonList=new ArrayList<>();
@@ -1009,7 +1009,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(1);
-        substances.add(new Substance(this,"NaCl","Sodium chloride",1074,1686,-1,"Salt",58.44,2.165,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"NaCl","Sodium chloride",1074,1686,-1,"Salt",58.44,2.165,2.165,0.002165,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //NaBr 26
         presentIonList=new ArrayList<>();
@@ -1018,7 +1018,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(1);
-        substances.add(new Substance(this,"NaBr","Sodium bromide",1020,1660,-1,"Salt",102.89,3.21,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"NaBr","Sodium bromide",1020,1660,-1,"Salt",102.89,3.21,3.21,0.00321,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //NaI 27
         presentIonList=new ArrayList<>();
@@ -1027,7 +1027,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(1);
-        substances.add(new Substance(this,"NaI","Sodium iodide",934,1577,-1,"Salt",149.89,3.67,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"NaI","Sodium iodide",934,1577,-1,"Salt",149.89,3.67,3.67,0.00367,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //KF 28
         presentIonList=new ArrayList<>();
@@ -1036,7 +1036,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(1);
-        substances.add(new Substance(this,"KF","Potassium fluoride",1131,1775,-1,"Salt",58.097,2.48,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"KF","Potassium fluoride",1131,1775,-1,"Salt",58.097,2.48,2.48,0.00248,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //KCl 29
         presentIonList=new ArrayList<>();
@@ -1045,7 +1045,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(1);
-        substances.add(new Substance(this,"KCl","Potassium chloride",1040,1690,-1,"Salt",74.551,1.984,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"KCl","Potassium chloride",1040,1690,-1,"Salt",74.551,1.984,1.984,0.001984,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //KBr 30
         presentIonList=new ArrayList<>();
@@ -1054,7 +1054,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(1);
-        substances.add(new Substance(this,"KBr","Potassium bromide",1007,1708,-1,"Salt",119.002,2.74,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"KBr","Potassium bromide",1007,1708,-1,"Salt",119.002,2.74,2.74,0.00274,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //KI 31
         presentIonList=new ArrayList<>();
@@ -1063,7 +1063,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(1);
-        substances.add(new Substance(this,"KI","Potassium iodide",954.2,1603,-1,"Salt",166.003,3.12,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"KI","Potassium iodide",954.2,1603,-1,"Salt",166.003,3.12,3.12,0.00312,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //MgF2 32
         presentIonList=new ArrayList<>();
@@ -1072,7 +1072,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(2);
-        substances.add(new Substance(this,"MgF\u2082","Magnesium fluoride",1536,2530,-1,"Salt",62.302,3.148,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"MgF\u2082","Magnesium fluoride",1536,2530,-1,"Salt",62.302,3.148,3.148,0.003148,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
         
         //MgCl2 33
         presentIonList=new ArrayList<>();
@@ -1081,7 +1081,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(2);
-        substances.add(new Substance(this,"MgCl\u2082","Magnesium chloride",987,1685,-1,"Salt",95.211,2.32,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"MgCl\u2082","Magnesium chloride",987,1685,-1,"Salt",95.211,2.32,2.32,0.00232,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //MgBr2 34
         presentIonList=new ArrayList<>();
@@ -1090,7 +1090,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(2);
-        substances.add(new Substance(this,"MgBr\u2082","Magnesium bromide",984,1520,-1,"Salt",184.113,3.74,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"MgBr\u2082","Magnesium bromide",984,1520,-1,"Salt",184.113,3.74,3.74,0.00374,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //MgI2 35
         presentIonList=new ArrayList<>();
@@ -1099,7 +1099,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(2);
-        substances.add(new Substance(this,"MgI\u2082","Magnesium iodide",910,1287,-1,"Salt",278.114,4.43,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"MgI\u2082","Magnesium iodide",910,1287,-1,"Salt",278.114,4.43,4.43,0.00443,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //CaF2 36
         presentIonList=new ArrayList<>();
@@ -1108,7 +1108,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(2);
-        substances.add(new Substance(this,"CaF\u2082","Calcium fluoride",1691,2806,-1,"Salt",78.07,3.18,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"CaF\u2082","Calcium fluoride",1691,2806,-1,"Salt",78.07,3.18,3.18,0.00318,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
         
         //CaCl2 37
         presentIonList=new ArrayList<>();
@@ -1117,7 +1117,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(2);
-        substances.add(new Substance(this,"CaCl\u2082","Calcium chloride",1045,2208,-1,"Salt",110.98,2.15,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"CaCl\u2082","Calcium chloride",1045,2208,-1,"Salt",110.98,2.15,2.15,0.00215,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //CaBr2 38
         presentIonList=new ArrayList<>();
@@ -1126,7 +1126,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(2);
-        substances.add(new Substance(this,"CaBr\u2082","Calcium bromide",1000,2208,-1,"Salt",199.89,3.359,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"CaBr\u2082","Calcium bromide",1000,2208,-1,"Salt",199.89,3.359,3.359,0.00359,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //CaI2 39
         presentIonList=new ArrayList<>();
@@ -1135,7 +1135,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(2);
-        substances.add(new Substance(this,"CaI\u2082","Calcium iodide",1058,1370,-1,"Salt",293.887,3.956,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"CaI\u2082","Calcium iodide",1058,1370,-1,"Salt",293.887,3.956,3.956,0.003956,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //AlF3 40
         presentIonList=new ArrayList<>();
@@ -1144,7 +1144,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(0));
         presentCountList.add(3);
-        substances.add(new Substance(this,"AlF\u2083","Aluminium fluoride",1564,2806,-1,"Salt",83.977,3.1,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"AlF\u2083","Aluminium fluoride",1564,2806,-1,"Salt",83.977,3.1,3.1,0.0031,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
         
         //AlCl3 41
         presentIonList=new ArrayList<>();
@@ -1153,7 +1153,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(1));
         presentCountList.add(3);
-        substances.add(new Substance(this,"AlCl\u2083","Aluminium chloride",-1,-1,453,"Salt",133.341,2.48,new ColorRGBA(1,1,0,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"AlCl\u2083","Aluminium chloride",-1,-1,453,"Salt",133.341,2.48,2.48,0.00248,new ColorRGBA(1,1,0,1),presentIonList,presentCountList,true));
         
         //AlBr3 42
         presentIonList=new ArrayList<>();
@@ -1162,7 +1162,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(2));
         presentCountList.add(3);
-        substances.add(new Substance(this,"AlBr\u2083","Aluminium bromide",370.9,538,-1,"Salt",266.69,3.205,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
+        substances.add(new Substance(this,"AlBr\u2083","Aluminium bromide",370.9,538,-1,"Salt",266.69,3.205,3.205,0.003205,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,true));
         
         //AlI3 43
         presentIonList=new ArrayList<>();
@@ -1171,7 +1171,7 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(3));
         presentCountList.add(3);
-        substances.add(new Substance(this,"AlI\u2082","Aluminium iodide",462.5,633,-1,"Salt",407.695,3.98,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"AlI\u2082","Aluminium iodide",462.5,633,-1,"Salt",407.695,3.98,3.98,0.00398,new ColorRGBA(1,1,1,1),presentIonList,presentCountList,false));
         
         //H2O 44
         presentIonList=new ArrayList<>();
@@ -1180,54 +1180,54 @@ public class Main extends VRApplication {
         presentCountList.add(1);
         presentIonList.add(ions.get(10));
         presentCountList.add(1);
-        substances.add(new Substance(this,"H\u2092O","Water",273,373,-1,"None",18.015,1,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"H\u2092O","Water",273,373,-1,"None",18.015,1,1,0.000804,new ColorRGBA(1,1,1,0.1f),presentIonList,presentCountList,false));
         
         //CO2 45
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
-        substances.add(new Substance(this,"CO\u2092","Carbon dioxide",-1,-1,194.7,"None",44.01,0.001977,new ColorRGBA(0.9f,0.9f,0.9f,0.2f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"CO\u2092","Carbon dioxide",-1,-1,194.7,"None",44.01,1.562,1.562,0.001977,new ColorRGBA(0.9f,0.9f,0.9f,0.2f),presentIonList,presentCountList,false));
         
         //Li 46
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(11));
         presentCountList.add(1);
-        substances.add(new Substance(this,"Li","Lithium",453.65,1603,-1,"Metal",6.94,0.534,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Li","Lithium",453.65,1603,-1,"Metal",6.94,0.534,0.534,0.000534,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
         
         //Na 47
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(12));
         presentCountList.add(1);
-        substances.add(new Substance(this,"Na","Sodium",370.944,1156.090,-1,"Metal",22.989,0.968,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Na","Sodium",370.944,1156.090,-1,"Metal",22.989,0.968,0.968,0.000968,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
         
         //K 48
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(13));
         presentCountList.add(1);
-        substances.add(new Substance(this,"K","Potassium",336.7,1032,-1,"Metal",39.098,0.862,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"K","Potassium",336.7,1032,-1,"Metal",39.098,0.862,0.862,0.000862,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
         
         //Mg 49
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(14));
         presentCountList.add(1);
-        substances.add(new Substance(this,"Mg","Magnesium",923,1363,-1,"Metal",24.305,1.738,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Mg","Magnesium",923,1363,-1,"Metal",24.305,1.738,1.738,0.001738,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
         
         //Al 50
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(16));
         presentCountList.add(1);
-        substances.add(new Substance(this,"Al","Aluminium",933.47,2743,-1,"Metal",26.981,2.70,new ColorRGBA(0.7f,0.7f,0.8f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Al","Aluminium",933.47,2743,-1,"Metal",26.981,2.70,2.70,0.0027,new ColorRGBA(0.7f,0.7f,0.8f,1),presentIonList,presentCountList,false));
         
         //Ca 51
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(15));
         presentCountList.add(1);
-        substances.add(new Substance(this,"Ca","Calcium",1115,1757,-1,"Metal",40.078,1.55,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Ca","Calcium",1115,1757,-1,"Metal",40.078,1.55,1.55,0.00155,new ColorRGBA(0.7f,0.7f,0.7f,1),presentIonList,presentCountList,false));
         
         //Fe 52
         presentIonList=new ArrayList<>();
@@ -1237,7 +1237,7 @@ public class Main extends VRApplication {
         //This second ion would be added in normally because Fe can have multiple charges, but this is not needed until another mode is implemented
         //presentIonList.add(ions.get(19));
         //presentCountList.add(1);
-        substances.add(new Substance(this,"Fe","Iron",1811,3134,-1,"Metal",55.845,7.874,new ColorRGBA(0.1f,0.1f,0.1f,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Fe","Iron",1811,3134,-1,"Metal",55.845,7.874,7.874,0.007874,new ColorRGBA(0.1f,0.1f,0.1f,1),presentIonList,presentCountList,false));
         
         //Cu 53
         presentIonList=new ArrayList<>();
@@ -1247,19 +1247,19 @@ public class Main extends VRApplication {
         //This second ion would be added in normally because Fe can have multiple charges, but this is not needed until another mode is implemented
         //presentIonList.add(ions.get(21));
         //presentCountList.add(1);
-        substances.add(new Substance(this,"Cu","Copper",1357.77,2835,-1,"Metal",63.546,8.96,new ColorRGBA(0.8f,0.32f,0,1),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"Cu","Copper",1357.77,2835,-1,"Metal",63.546,8.96,8.96,0.00896,new ColorRGBA(0.8f,0.32f,0,1),presentIonList,presentCountList,false));
         
         //H2 54
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
         presentIonList.add(ions.get(4));
         presentCountList.add(1);
-        substances.add(new Substance(this,"H\u2082","Hydrogen gas",13.99,20.271,-1,"None",4.002,0.0008988,new ColorRGBA(0.9f,0.9f,0.9f,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"H\u2082","Hydrogen gas",13.99,20.271,-1,"None",4.002,0.0708,0.0708,0.0008988,new ColorRGBA(0.9f,0.9f,0.9f,0.1f),presentIonList,presentCountList,false));
         
         //O2 55
         presentIonList=new ArrayList<>();
         presentCountList=new ArrayList<>();
-        substances.add(new Substance(this,"O\u2082","Oxygen gas",54.361,90.188,-1,"None",31.998,0.001429,new ColorRGBA(0.9f,0.9f,0.9f,0.1f),presentIonList,presentCountList,false));
+        substances.add(new Substance(this,"O\u2082","Oxygen gas",54.361,90.188,-1,"None",31.998,1.141,1.141,0.001429,new ColorRGBA(0.9f,0.9f,0.9f,0.1f),presentIonList,presentCountList,false));
         
         //Solutbility chart
         

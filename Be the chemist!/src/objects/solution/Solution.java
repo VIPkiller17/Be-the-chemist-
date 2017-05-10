@@ -20,7 +20,6 @@ public class Solution {
     
     private Container parentContainer;
     
-    private double temperature;//updated every loop depending on tempeartures of substancecs
     private ColorRGBA liquidColor=new ColorRGBA(0,0,0,0),solidColor=new ColorRGBA(0,0,0,0),gasColor=new ColorRGBA(0,0,0,0);
     private ColorRGBA presentLiquidColor=new ColorRGBA(0,0,0,0),presentSolidColor=new ColorRGBA(0,0,0,0),presentGasColor=new ColorRGBA(0,0,0,0);
     private boolean liquidColorInit,solidColorInit,gasColorInit;
@@ -30,6 +29,7 @@ public class Solution {
     private double PH;//modified every loop depending on ions
     private double presentVolume;
     private int presentVolumeCount;
+    private double presentTemperature;
     private ArrayList<Substance> substances;
     private ArrayList<Double> volumes;
     private ArrayList<Double> temperatures;
@@ -64,7 +64,7 @@ public class Solution {
             
             if(substance.getStateInteger(temperature)==2){
                 
-                volumes.add(volume*0.001/substance.getDensity());
+                volumes.add(volume*0.001/substance.getDensity(substance.getStateInteger(temperature)));
                 
             }else{
                 
@@ -129,9 +129,9 @@ public class Solution {
             
             for(int i=0;i<substances.size();i++){
                 
-                if(substances.get(i).getStateInteger(temperature)==2){
+                if(substances.get(i).getStateInteger(getTemperature())==2){
                 
-                    this.volumes.add(volumes.get(i)*0.001/substances.get(i).getDensity());
+                    this.volumes.add(volumes.get(i)*0.001/substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i))));
                 
                 }
                 
@@ -330,7 +330,7 @@ public class Solution {
         
         for(Substance s: substances){
             
-            switch(s.getStateInteger(temperature)){
+            switch(s.getStateInteger(getTemperature())){
                 
                 case 0:
                     containsGas=true;
@@ -405,7 +405,7 @@ public class Solution {
 
                 //System.out.println("Checking substance "+s.getName()+"'s state at temp: "+temperature);
 
-                switch(s.getStateInteger(temperature)){
+                switch(s.getStateInteger(getTemperature())){
 
                     case 0:
                         containsGas=true;
@@ -440,13 +440,27 @@ public class Solution {
     
     public double getTemperature(){
         
-        return temperature;
+        presentTemperature=0;
+        
+        for(int i=0;i<temperatures.size();i++){
+            
+            presentTemperature+=temperatures.get(i);
+            
+        }
+        
+        return presentTemperature/temperatures.size();
         
     }
     
     public void setTemperature(double temperature){
         
-        this.temperature=temperature;
+        presentTemperature=getTemperature();
+        
+        for(int i=0;i<temperatures.size();i++){
+            
+            setTemperature(i,getTemperature(i)+(temperature-presentTemperature));
+
+        }
         
     }
     
@@ -753,15 +767,11 @@ public class Solution {
         solidColorInit=false;
         gasColorInit=false;
         
-        temperature=0;
-        
         for(int i=0;i<substances.size();i++){
             
             //System.out.println("Size of substances: "+substances.size()+", is it empty?: "+substances.isEmpty()+", index: "+i+", substance at 0: "+substances.get(0));
             
             //System.out.println(substances.get(i).getName()+"'s temp: "+temperatures.get(i)+", volume: "+volumes.get(i)+"\n    state at 298: "+substances.get(i).getStateInteger(298));
-            
-            temperature+=temperatures.get(i);
             
             switch(substances.get(i).getStateInteger(getTemperature(i))){
             
@@ -805,8 +815,6 @@ public class Solution {
         gasColor.set(presentGasColor);
         
         //System.out.println("Temperature: "+temperature+", temperatures: "+temperatures);
-        
-        temperature=temperature/temperatures.size();
         
     }
     
@@ -881,7 +889,6 @@ public class Solution {
             
         }
         
-        temperature=0;
         PH=0;
         
     }
@@ -896,11 +903,11 @@ public class Solution {
         
         //System.out.println("containsLowDensityGas() called.");
         
-        for(Substance s: substances){
+        for(int i=0;i<substances.size();i++){
             
             //System.out.println("    Checking substance: "+s.getName()+"'s density: "+s.getDensity());
             
-            if(s.getDensity()<0.00128){
+            if(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))<0.00128){
                 
                 //System.out.println("        Substance deensity less than 0.00128, returning true...");
                 
@@ -923,7 +930,7 @@ public class Solution {
         
         for(int i=0;i<substances.size();i++){
             
-            if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+            if(substances.get(i).getStateInteger(getTemperature(i))!=0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                 presentVolume+=volumes.get(i);
                 presentVolumeCount++;
@@ -940,7 +947,7 @@ public class Solution {
             
             for(int i=0;i<volumes.size();i++){
                 
-                if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                if(substances.get(i).getStateInteger(getTemperature(i))!=0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                     setVolume(i,getVolume(i)-presentVolume);
                 
@@ -956,7 +963,7 @@ public class Solution {
             
             for(int i=0;i<volumes.size();i++){
                 
-                if(substances.get(i).getStateInteger(temperature)!=0&&substances.get(i).getDensity()>0.00128){
+                if(substances.get(i).getStateInteger(getTemperature(i))!=0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                     setVolume(i,getVolume(i)+presentVolume);
                 
@@ -976,9 +983,9 @@ public class Solution {
         
         for(int i=0;i<volumes.size();i++){
             
-            System.out.println("        Checking if "+substances.get(i)+" has density: "+substances.get(i).getDensity()+" heigher than 0.00128: "+(substances.get(i).getDensity()>0.00128));
+            System.out.println("        Checking if "+substances.get(i)+" has density: "+substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))+" heigher than 0.00128: "+(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128));
             
-            if(substances.get(i).getDensity()>0.00128){
+            if(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                 presentVolume+=volumes.get(i);
 
@@ -996,7 +1003,7 @@ public class Solution {
         
         for(int i=0;i<substances.size();i++){
             
-            if(substances.get(i).getDensity()>0.00128){
+            if(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                 presentStateList.add(substances.get(i));
 
@@ -1019,7 +1026,7 @@ public class Solution {
             
             //System.out.println("    Checking substance: "+substances.get(i).getName()+" with phase at 298: "+substances.get(i).getStateInteger(temperature)+" and if it has less density than air: "+(substances.get(i).getDensity()<0.00128));
             
-            if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+            if(substances.get(i).getStateInteger(getTemperature(i))==0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))<0.00128){
                 
                 //System.out.println("        Substance is evaporatable, adding volume to presentvolume");
                 
@@ -1044,7 +1051,7 @@ public class Solution {
                 
                 //System.out.println("        Checking volume: "+volumes.get(i));
                 
-                if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                if(substances.get(i).getStateInteger(getTemperature(i))==0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))<0.00128){
                 
                     //System.out.println("            Volume's corresponding substance is a gas at 298 and its density is less than air's, setting its volume...");
                     
@@ -1066,7 +1073,7 @@ public class Solution {
                 
                 //System.out.println("        Checking volume "+volumes.get(i));
                 
-                if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+                if(substances.get(i).getStateInteger(getTemperature(i))==0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))<0.00128){
                 
                     //System.out.println("            Volume's corresponding substance is evaporatable, adding partial volume...");
                     
@@ -1086,7 +1093,7 @@ public class Solution {
         
         for(int i=0;i<volumes.size();i++){
             
-            if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+            if(substances.get(i).getStateInteger(getTemperature(i))==0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))<0.00128){
                 
                 presentVolume+=volumes.get(i);
 
@@ -1104,7 +1111,7 @@ public class Solution {
         
         for(int i=0;i<substances.size();i++){
             
-            if(substances.get(i).getStateInteger(temperature)==0&&substances.get(i).getDensity()<0.00128){
+            if(substances.get(i).getStateInteger(getTemperature(i))==0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))<0.00128){
                 
                 presentStateList.add(substances.get(i));
 

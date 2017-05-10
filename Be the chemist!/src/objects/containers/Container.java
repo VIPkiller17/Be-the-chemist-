@@ -145,26 +145,28 @@ public abstract class Container extends PhysicalObject implements Grabbable,Heat
         
         this.temperature=temperature;
         
+        solution.setTemperature(temperature);
+        
     }
     
     @Override
     public double getTemperature(){
         
-        return temperature;
+        return solution.getTemperature();
         
     }
     
     @Override
     public void addKelvin(double kelvin){
         
-        temperature+=kelvin;
+        solution.setTemperature(solution.getTemperature()+kelvin);
         
     }
     
     @Override
     public void removeKelvin(double kelvin){
         
-        temperature-=kelvin;
+        solution.setTemperature(solution.getTemperature()-kelvin);
         
     }
     

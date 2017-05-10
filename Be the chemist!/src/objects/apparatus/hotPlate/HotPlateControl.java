@@ -22,7 +22,6 @@ public class HotPlateControl extends AbstractControl{
     
     private HotPlate hotPlate;
     private Node rootNode;
-    private CollisionResults collisionResults;
     private PhysicalObject objectToMeasureMass;
     private double mass;
     
@@ -30,12 +29,10 @@ public class HotPlateControl extends AbstractControl{
     
     private Heatable presentHeatable;
 
-    public HotPlateControl(Main main,Node rootNode, CollisionResults collisionResults, HotPlate hotPlate) {
+    public HotPlateControl(Main main,HotPlate hotPlate) {
         
         this.main=main;
-        this.rootNode = rootNode;
         this.hotPlate= hotPlate;
-        this.collisionResults = collisionResults;
         
     }
    
@@ -60,13 +57,15 @@ public class HotPlateControl extends AbstractControl{
             
             if(hotPlate.canHeat(h.getPosition())){
                 
-                if(h.getTemperature()<hotPlate.getTemperature()+tpf){
+                System.out.println("HotPlateControl: heatable temp: "+h.getTemperature()+" and hot plate temp: "+hotPlate.getTemperature());
+                
+                if(h.getTemperature()+tpf<hotPlate.getTemperature()){
+                    
+                    System.out.println("    Adding "+tpf+" kelvins to "+h.getTemperature());
                     
                     h.addKelvin(tpf);
                     
-                }else if(h.getTemperature()>=hotPlate.getTemperature()+tpf){
-                    
-                    h.setTemperature(hotPlate.getTemperature());
+                    System.out.println("        Heatable's temp:  "+h.getTemperature());
                     
                 }
                 

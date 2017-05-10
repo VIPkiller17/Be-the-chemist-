@@ -109,7 +109,7 @@ public class BeakerControl extends AbstractControl{
         
         if(!beaker.getEvaporationParticleEmitter().isEmitting()&&beaker.getSolution().containsLowDensityGas()){
             
-            //System.out.println("Beaker contains a gas with density lower than air's and the evaporation emitter is not already emitting, starting emission");
+            System.out.println("            Beaker contains a gas with density lower than air's and the evaporation emitter is not already emitting, starting emission");
             
             beaker.startEvaporating();
             

@@ -33,7 +33,6 @@ import objects.apparatus.Apparatus;
 
 public class HotPlate extends Apparatus implements Savable,Grabbable{
     
-    private HotPlateControl hotPlateControl;
     private PhysicalObject attachedObject;
     private Spatial spatial;
     private Node node;
@@ -58,15 +57,15 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
     private float presentAngle;
     private double temperature;
     
-    public HotPlate(Main main,Node rootNode,CollisionResults collisionResults, AssetManager assetManager, Vector3f position) {
+    public HotPlate(Main main,Vector3f position) {
        
         super(main,position);
         
         node = new Node();
         
-        spatial=assetManager.loadModel("Models/Static/HotPlate/HotPlate.j3o");
-        dialHighlight=assetManager.loadModel("Models/Static/HotPlate/HotPlate_Dial_Highlight.j3o");
-        font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
+        spatial=main.getAssetManager().loadModel("Models/Static/HotPlate/HotPlate.j3o");
+        dialHighlight=main.getAssetManager().loadModel("Models/Static/HotPlate/HotPlate_Dial_Highlight.j3o");
+        font=main.getAssetManager().loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         text = new BitmapText(font);
         
         //Text initial text to Zero
@@ -86,14 +85,14 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
         
         dialHighlight.setName("Cold sink handle highlight");
         dialHighlight.setLocalTranslation(0,-5,0);
-        dialHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        dialHighlightMat=new Material(main.getAssetManager(), "Common/MatDefs/Misc/Unshaded.j3md");
         dialHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
         dialHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
         dialHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
         dialHighlight.setMaterial(dialHighlightMat);
         node.attachChild(dialHighlight);
         
-        rootNode.attachChild(node);
+        main.getRootNode().attachChild(node);
         
         main.getItemsList().add(this);
         
@@ -105,6 +104,8 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
         
         node.setLocalTranslation(position);
         phy.setPhysicsLocation(new Vector3f(position));
+        
+        spatial.addControl(new HotPlateControl(main,this));
         
     }
     
@@ -295,7 +296,11 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
     
     public boolean canHeat(Vector3f heatablePosition){
         
+        //System.out.println("    canHeat() called distance between: "+spatial.getWorldTranslation().add(0.02f,0.05f,0)+" and "+heatablePosition+" = "+spatial.getWorldTranslation().add(0.02f,0.05f,0).distance(heatablePosition));
+        
         if(spatial.getWorldTranslation().add(0.02f,0.05f,0).distance(heatablePosition)<0.2){
+            
+            System.out.println("    The present heatable is heatable");
             
             return true;
             

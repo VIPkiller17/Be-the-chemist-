@@ -45,19 +45,23 @@ public class SolutionControl extends AbstractControl{
         //account for H2O2 decomposition
         //account for H2CO3 decomposition
         
-        presentTemperature=0;
-        
-        for(int i=0;i<solution.getTemperatures().size();i++){
+        if(solution.getTemperature()>298&&solution.getTemperature()-tpf/2>=298){
             
-            //System.out.println("Present temperature: "+solution.getTemperatures().get(i));
+            solution.setTemperature(solution.getTemperature()-tpf/2);
             
-            presentTemperature+=solution.getTemperatures().get(i);
+        }else if(solution.getTemperature()>298&&solution.getTemperature()-tpf/2<298){
             
-            //System.out.println("Present temperature now: "+presentTemperature);
+            solution.setTemperature(298);
+            
+        }else if(solution.getTemperature()<298&&solution.getTemperature()+tpf/2<=298){
+            
+            solution.setTemperature(solution.getTemperature()+tpf/2);
+            
+        }else if(solution.getTemperature()<298&&solution.getTemperature()+tpf/2>298){
+            
+            solution.setTemperature(298);
             
         }
-        
-        solution.setTemperature(presentTemperature/solution.getTemperatures().size());
         
         //System.out.println(solution.toString());
         

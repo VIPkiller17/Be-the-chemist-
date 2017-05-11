@@ -298,7 +298,7 @@ public class Beaker extends Container implements Savable{
             
         }else{
         
-            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n      Total temperature: "+getSolution().getTemperature();
+            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\nAverage temperature: "+getFormattedTemperature();
             
         }
         

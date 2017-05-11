@@ -29,6 +29,7 @@ public abstract class Container extends PhysicalObject implements Grabbable,Heat
     protected boolean highlightVisible;
     
     private String presentFormattedVolume;
+    private String presentFormattedTemperature;
     private int presentDotPosition;
     
     public Container(Main main,Vector3f position){
@@ -131,6 +132,32 @@ public abstract class Container extends PhysicalObject implements Grabbable,Heat
                 presentFormattedVolume=""+solution.getVolume();
         
             return presentFormattedVolume;
+        
+        }else{
+            
+            return "0";
+            
+        }
+        
+    }
+    
+    public String getFormattedTemperature(){
+        
+        if(solution!=null){
+            
+            presentFormattedTemperature=""+solution.getTemperature();
+            
+            presentDotPosition=presentFormattedTemperature.indexOf(".");
+            
+            if(presentFormattedTemperature.substring(presentDotPosition,presentFormattedTemperature.length()-1).length()>2)
+            
+                presentFormattedTemperature=presentFormattedTemperature.substring(0,presentDotPosition+2);
+            
+            else
+                
+                presentFormattedTemperature=""+solution.getTemperature();
+        
+            return presentFormattedTemperature;
         
         }else{
             

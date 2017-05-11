@@ -45,6 +45,7 @@ public class AnalyticalBalanceControl extends AbstractControl{
     @Override
     protected void controlUpdate(float f) {
         
+        /*
         mass = 0;
         
         rootNode.collideWith(analyticalBalance.getSurface(),collisionResults);
@@ -64,6 +65,7 @@ public class AnalyticalBalanceControl extends AbstractControl{
         int pointIndex = massNumber.indexOf(".");
         String massNumberFormatted = massNumber.substring(0, pointIndex + 4);
         analyticalBalance.getDisplayText().setText(massNumberFormatted + "");
+        */
         
     }
     

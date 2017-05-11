@@ -1432,15 +1432,7 @@ public class Main extends VRApplication {
     @Override
     public boolean equals(Object otherMain){
         
-        if(otherMain instanceof Main){
-            
-            return true;
-            
-        }else{
-            
-            return false;
-            
-        }
+        return otherMain instanceof Main; 
         
     }
     

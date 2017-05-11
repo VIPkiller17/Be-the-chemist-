@@ -34,6 +34,10 @@ import main.Main;
  */
 public class Button implements Savable{
     
+    private static final ColorRGBA GRAYED_OUT=ColorRGBA.Gray;
+    
+    private boolean grayedOut;
+    
     private static Display substanceList,materialList;
     
     private static ArrayList<Button> stateFilterButtons=new ArrayList<>();
@@ -112,9 +116,9 @@ public class Button implements Savable{
             case 0:
                 
                 text.setSize(0.05f);
-                text.setText("Toggle mode\n(Sandbox mode)");
+                text.setText("   Toggle mode\n(Sandbox mode)");
                 createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
-                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
+                text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2)+0.02f,0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,0.25f,0.05f);
                 break;
@@ -122,6 +126,7 @@ public class Button implements Savable{
                 
             case 1:
                 
+                /*
                 text.setSize(0.08f);
                 text.setText("Credits");
                 createBackground(0.2f+text.getLineWidth(),0.2f+text.getLineHeight());
@@ -129,6 +134,7 @@ public class Button implements Savable{
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,-0.2f,0.05f);
                 break;
+                */
                 
             case 2:
                 
@@ -813,935 +819,939 @@ public class Button implements Savable{
         
         //System.out.println("Button activate() called on preset: "+preset);
         
-        switch(preset){
-            
-            case 0:
-                
-                /*
-                if(text.getText().equals("Toggle mode\n(Sandbox mode)"))
-                    
-                    text.setText("Toggle mode\n(Career mode)");
-                
-                else if(text.getText().equals("Toggle mode\n(Career mode)"))
-                    
-                    text.setText("Toggle mode\n(Sandbox mode)");
-                
-                //ALSO MAKE IT SO THE MODE ACTUALLY GETS CHANGED
-                */
-                
-                break;
-                
-                
-            case 1:
-                
-                //PROBABLY JUST DISPLAY THE CREDITS IN THE GUINODE
-                
-                break;
-                
-            case 2:
-                
-                System.exit(0);
-                break;
-                
-            case 3:
-                
-                //WILL NEED TO ADD LOGIC BEHIND SUBSTANCE LIST FIRST
-                
-                if(parentDisplay.getSelectedSubstanceButton()!=null){
-                    
-                    if(hand.isHoldingObject()&&hand.getHeldObject() instanceof Container){
+        if(!grayedOut){
+        
+            switch(preset){
 
-                        if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
+                case 0:
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+                    /*
+                    if(text.getText().equals("Toggle mode\n(Sandbox mode)"))
 
-                        }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
+                        text.setText("Toggle mode\n(Career mode)");
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+                    else if(text.getText().equals("Toggle mode\n(Career mode)"))
 
-                        }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
+                        text.setText("Toggle mode\n(Sandbox mode)");
 
-                            ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+                    //ALSO MAKE IT SO THE MODE ACTUALLY GETS CHANGED
+                    */
+
+                    break;
+
+
+                case 1:
+
+                    //PROBABLY JUST DISPLAY THE CREDITS IN THE GUINODE
+
+                    break;
+
+                case 2:
+
+                    System.exit(0);
+                    break;
+
+                case 3:
+
+                    //WILL NEED TO ADD LOGIC BEHIND SUBSTANCE LIST FIRST
+
+                    if(parentDisplay.getSelectedSubstanceButton()!=null){
+
+                        if(hand.isHoldingObject()&&hand.getHeldObject() instanceof Container){
+
+                            if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==0&&((Container)hand.getHeldObject()).canContain(0)){
+
+                                ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+
+                            }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==1&&((Container)hand.getHeldObject()).canContain(1)){
+
+                                ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+
+                            }else if(parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)==2&&((Container)hand.getHeldObject()).canContain(2)){
+
+                                ((Container)hand.getHeldObject()).mergeSolution(new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298));
+
+                            }
+
+                        }else if(!hand.isHoldingObject()){
+
+                            switch (parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)) {
+                                case 0:
+                                    hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                    break;
+                                case 1:
+                                    hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                    break;
+                                case 2:
+                                    hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                    break;
+                                default:
+                                    //System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
+                                    break;
+                            }
+
+                            ((Grabbable)hand.getHeldObject()).highlightVisible(false);
 
                         }
-
-                    }else if(!hand.isHoldingObject()){
-
-                        switch (parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)) {
-                            case 0:
-                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
-                                break;
-                            case 1:
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
-                                break;
-                            case 2:
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
-                                break;
-                            default:
-                                //System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
-                                break;
-                        }
-
-                        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
 
                     }
-                    
-                }
-                
-                break;
-                
-            case 4:
-                
-                //System.out.println("Selected dislay switch button pressed, text is: "+text.getText()+", checking is equal to \u2192");
-                
-                if(text.getText().equals("\u2192")){
-                    
-                    //System.out.println("Text is equal");
-                    
-                    text.setText("\u2190");
-                    
-                    keyBoardSelectedDisplay=materialList;
-                    
-                }else{
-                    
-                    //System.out.println("Text is not equal");
-                    
-                    text.setText("\u2192");
-                    
-                    keyBoardSelectedDisplay=substanceList;
-                    
-                }
-                
-                break;
-                
-            case 5:
-                
-                if(presentBackgroundColor==NORMAL_COLOR){
-                    
-                    backgroundMat.setColor("Color", POINTED_COLOR);
-                    presentBackgroundColor=POINTED_COLOR;
-                    
-                    //System.out.println("stateFilterButtons list size: "+stateFilterButtons.size());
-                    
-                    for(Button b: stateFilterButtons){
-                        
-                        //System.out.println("Checking if present button b:"+b.getPreset()+" is a different button than this one: "+getPreset());
-                        
-                        if(!b.equals(this)){
-                            
-                            //System.out.println("It is, setting its color to normal");
-                            
-                            b.setColor(NORMAL_COLOR);
-                            
-                        }
-                        
-                    }
-                    
-                    Display.setPhaseFilter(1);
-                    
-                }else{
-                    
-                    backgroundMat.setColor("Color", NORMAL_COLOR);
-                    presentBackgroundColor=NORMAL_COLOR;
-                    
-                    Display.setPhaseFilter(0);
-                    
-                }
-                
-                substanceList.updateDisplayedSubstances();
-                
-                break;
-                
-            case 6:
-                
-                if(presentBackgroundColor==NORMAL_COLOR){
-                    
-                    backgroundMat.setColor("Color", POINTED_COLOR);
-                    presentBackgroundColor=POINTED_COLOR;
-                    
-                    for(Button b: stateFilterButtons){
-                        
-                        if(b!=this){
-                            
-                            b.setColor(NORMAL_COLOR);
-                            
-                        }
-                        
-                    }
-                    
-                    Display.setPhaseFilter(2);
-                    
-                }else{
-                    
-                    backgroundMat.setColor("Color", NORMAL_COLOR);
-                    presentBackgroundColor=NORMAL_COLOR;
-                    
-                    Display.setPhaseFilter(0);
-                    
-                }
-                
-                substanceList.updateDisplayedSubstances();
-                
-                break;
-                
-            case 7:
-                
-                if(presentBackgroundColor==NORMAL_COLOR){
-                    
-                    backgroundMat.setColor("Color", POINTED_COLOR);
-                    presentBackgroundColor=POINTED_COLOR;
-                    
-                    for(Button b: stateFilterButtons){
-                        
-                        if(b!=this){
-                            
-                            b.setColor(NORMAL_COLOR);
-                            
-                        }
-                        
-                    }
-                    
-                    Display.setPhaseFilter(3);
-                    
-                }else{
-                    
-                    backgroundMat.setColor("Color", NORMAL_COLOR);
-                    presentBackgroundColor=NORMAL_COLOR;
-                    
-                    Display.setPhaseFilter(2);
-                    
-                }
-                
-                substanceList.updateDisplayedSubstances();
-                
-                break;
-                
-            case 8:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("Q");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("q");
-                    
-                }
-                
-                break;
-                
-            case 9:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("W");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("w");
-                    
-                }
-                
-                break;
-                
-            case 10:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("E");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("e");
-                    
-                }
-                
-                break;
-                
-            case 11:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("R");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("r");
-                    
-                }
-                
-                break;
-                
-            case 12:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("T");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("t");
-                    
-                }
-                
-                break;
-                
-            case 13:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("Y");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("y");
-                    
-                }
-                
-                break;
-                
-            case 14:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("U");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("u");
-                    
-                }
-                
-                break;
-                
-            case 15:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("I");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("i");
-                    
-                }
-                
-                break;
-                
-            case 16:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("O");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("o");
-                    
-                }
-                
-                break;
-                
-            case 17:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("P");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("p");
-                    
-                }
-                
-                break;
-                
-            case 18:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("A");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("a");
-                    
-                }
-                
-                break;
-                
-            case 19:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("S");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("s");
-                    
-                }
-                
-                break;
-                
-            case 20:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("D");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("d");
-                    
-                }
-                
-                break;
-                
-            case 21:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("F");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("f");
-                    
-                }
-                
-                break;
-                
-            case 22:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("G");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("g");
-                    
-                }
-                
-                break;
-                
-            case 23:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("H");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("h");
-                    
-                }
-                
-                break;
-                
-            case 24:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("J");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("j");
-                    
-                }
-                
-                break;
-                
-            case 25:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("K");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("k");
-                    
-                }
-                
-                break;
-                
-            case 26:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("L");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("l");
-                    
-                }
-                
-                break;
-                
-            case 27:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("Z");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("z");
-                    
-                }
-                
-                break;
-                
-            case 28:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("X");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("x");
-                    
-                }
-                
-                break;
-                
-            case 29:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("C");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("c");
-                    
-                }
-                
-                break;
-                
-            case 30:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("V");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("v");
-                    
-                }
-                
-                break;
-                
-            case 31:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("B");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("b");
-                    
-                }
-                
-                break;
-                
-            case 32:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("N");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("n");
-                    
-                }
-                
-                break;
-                
-            case 33:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("M");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("m");
-                    
-                }
-                
-                break;
-                
-            case 34:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2081");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("1");
-                    
-                }
-                
-                break;
-                
-            case 35:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2082");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("2");
-                    
-                }
-                
-                break;
-                
-            case 36:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2083");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("3");
-                    
-                }
-                
-                break;
-                
-            case 37:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2084");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("4");
-                    
-                }
-                
-                break;
-                
-            case 38:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2085");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("5");
-                    
-                }
-                
-                break;
-                
-            case 39:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2086");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("6");
-                    
-                }
-                
-                break;
-                
-            case 40:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2087");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("7");
-                    
-                }
-                
-                break;
-                
-            case 41:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2088");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("8");
-                    
-                }
-                
-                break;
-                
-            case 42:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2089");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("9");
-                    
-                }
-                
-                break;
-                
-            case 43:
-                
-                if(capsActivated){
-                
-                    keyBoardSelectedDisplay.addLetter("\u2080");
-                
-                }else{
-                    
-                    keyBoardSelectedDisplay.addLetter("0");
-                    
-                }
-                
-                break;
-                
-            case 44:
-                
-                if(keyBoardSelectedDisplay.getTextField().getText().length()>0)
-                    
-                    keyBoardSelectedDisplay.removeLastLetter();
-                
-                break;
-                
-            case 45:
-                
-                if(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()>0){
-                    
-                    parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()-1);
-                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
-                    
-                }
-                
-                break;
-                
-            case 46:
-                
-                keyBoardSelectedDisplay.addLetter(" ");
-                
-                break;
-                
-            case 47:
-                
-                keyBoardSelectedDisplay.addLetter("-");
-                
-                break;
-                
-            case 48:
-                
-                keyBoardSelectedDisplay.addLetter("(");
-                
-                break;
-                
-            case 49:
-                
-                keyBoardSelectedDisplay.addLetter(")");
-                
-                break;
-                
-            case 50:
-                
-                if(presentBackgroundColor==NORMAL_COLOR){
-                    
-                    backgroundMat.setColor("Color", POINTED_COLOR);
-                    presentBackgroundColor=POINTED_COLOR;
-                    
-                }else{
-                    
-                    backgroundMat.setColor("Color", NORMAL_COLOR);
-                    presentBackgroundColor=NORMAL_COLOR;
-                    
-                }
-                
-                capsActivated = !capsActivated;
-                
-                break;
-                
-            case 51:
-                
-                keyBoardSelectedDisplay.addLetter(",");
-                
-                break;
-                
-            case 52:
-                
-                keyBoardSelectedDisplay.addLetter(".");
-                
-                break;
-                
-            case 53:
-                
-                //System.out.println("Get selected item material button pressed");
-                
-                if(parentDisplay.getSelectedMaterialButton()!=null){
-                    
-                    if(!hand.isHoldingObject()){
 
-                        switch (parentDisplay.getSelectedMaterialButton().getName()) {
-                            case "Beaker":
-                                hand.setHeldObject(new Beaker(main,hand.getWorldTranslation()));
-                                break;
-                            case "Gas sac":
-                                hand.setHeldObject(new GasSac(main,hand.getWorldTranslation()));
-                                break;
-                            default:
-                                //System.out.println("ERROR: Invalid material button name");
-                                break;
+                    break;
+
+                case 4:
+
+                    //System.out.println("Selected dislay switch button pressed, text is: "+text.getText()+", checking is equal to \u2192");
+
+                    if(text.getText().equals("\u2192")){
+
+                        //System.out.println("Text is equal");
+
+                        text.setText("\u2190");
+
+                        keyBoardSelectedDisplay=materialList;
+
+                    }else{
+
+                        //System.out.println("Text is not equal");
+
+                        text.setText("\u2192");
+
+                        keyBoardSelectedDisplay=substanceList;
+
+                    }
+
+                    break;
+
+                case 5:
+
+                    if(presentBackgroundColor==NORMAL_COLOR){
+
+                        backgroundMat.setColor("Color", POINTED_COLOR);
+                        presentBackgroundColor=POINTED_COLOR;
+
+                        //System.out.println("stateFilterButtons list size: "+stateFilterButtons.size());
+
+                        for(Button b: stateFilterButtons){
+
+                            //System.out.println("Checking if present button b:"+b.getPreset()+" is a different button than this one: "+getPreset());
+
+                            if(!b.equals(this)){
+
+                                //System.out.println("It is, setting its color to normal");
+
+                                b.setColor(NORMAL_COLOR);
+
+                            }
+
                         }
 
-                        ((Grabbable)hand.getHeldObject()).highlightVisible(false);
+                        Display.setPhaseFilter(1);
 
-                    }       
-                    
-                }
-                
-                break;
-                
-            case 54:
-                
-                if(parentDisplay.getFilteredSubstanceButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedSubstanceButton()<parentDisplay.getFilteredSubstanceButtonList().size()-1){
-                    
-                    //System.out.println("filtered substance button list size: "+parentDisplay.getFilteredSubstanceButtonList().size()+" is higher than 5 and index os last displayed substance button: "+parentDisplay.getIndexOfLastDisplayedSubstanceButton()+" is lower than the last valid index in filteredSusbtanceButtonList: "+(parentDisplay.getFilteredSubstanceButtonList().size()-1));
-                    
-                    parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()+1);
-                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
-                    
-                }
-                
-                break;
-                
-            case 55:
-                
-                if(parentDisplay.getIndexOfFirstDisplayedMaterialButton()>0){
-                    
-                    parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()-1);
-                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
-                    
-                }
-                
-                break;
-                
-            case 56:
-                
-                if(parentDisplay.getFilteredMaterialButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedMaterialButton()<parentDisplay.getMaterialButtonList().size()-1){
-                    
-                    parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()+1);
-                    parentDisplay.updateDisplayedSubstancesWithoutFiltering();
-                    
-                }
-                
-                break;
-                
-            case 57:
-                
-                if(text.getText().contains("None")){
-                    
-                    text.setText("Type (Acid)");
-                    
-                    Display.setTypeFilter(1);
-                    
-                }else if(text.getText().contains("Acid")){
-                    
-                    text.setText("Type (Base)");
-                    
-                    Display.setTypeFilter(2);
-                    
-                }else if(text.getText().contains("Base")){
-                    
-                    text.setText("Type (Halogen)");
-                    
-                    Display.setTypeFilter(3);
-                    
-                }else if(text.getText().contains("Halogen")){
-                    
-                    text.setText("Type (Salt)");
-                    
-                    Display.setTypeFilter(4);
-                    
-                }else if(text.getText().contains("Salt")){
-                    
-                    text.setText("Type (Metal)");
-                    
-                    Display.setTypeFilter(5);
-                    
-                }else if(text.getText().contains("Metal")){
-                    
-                    text.setText("Type (Other)");
-                    
-                    Display.setTypeFilter(6);
-                    
-                }else if(text.getText().contains("Other")){
-                    
-                    text.setText("Type (None)");
-                    
-                    Display.setTypeFilter(0);
-                    
-                }
-                
-                substanceList.updateDisplayedSubstances();
-                
-                break;
-                
-            case 58:
-                
-                if(text.getText().contains("None")){
-                    
-                    text.setText("Class (Container)");
-                    
-                    Display.setClassFilter(1);
-                    
-                }else if(text.getText().contains("Container")){
-                    
-                    text.setText("Class (Tool)");
-                    
-                    Display.setClassFilter(2);
-                    
-                }else if(text.getText().contains("Tool")){
-                    
-                    text.setText("Class (None)");
-                    
-                    Display.setClassFilter(0);
-                    
-                }
-                
-                materialList.updateDisplayedMaterials();
-                
-                break;
-            
+                    }else{
+
+                        backgroundMat.setColor("Color", NORMAL_COLOR);
+                        presentBackgroundColor=NORMAL_COLOR;
+
+                        Display.setPhaseFilter(0);
+
+                    }
+
+                    substanceList.updateDisplayedSubstances();
+
+                    break;
+
+                case 6:
+
+                    if(presentBackgroundColor==NORMAL_COLOR){
+
+                        backgroundMat.setColor("Color", POINTED_COLOR);
+                        presentBackgroundColor=POINTED_COLOR;
+
+                        for(Button b: stateFilterButtons){
+
+                            if(b!=this){
+
+                                b.setColor(NORMAL_COLOR);
+
+                            }
+
+                        }
+
+                        Display.setPhaseFilter(2);
+
+                    }else{
+
+                        backgroundMat.setColor("Color", NORMAL_COLOR);
+                        presentBackgroundColor=NORMAL_COLOR;
+
+                        Display.setPhaseFilter(0);
+
+                    }
+
+                    substanceList.updateDisplayedSubstances();
+
+                    break;
+
+                case 7:
+
+                    if(presentBackgroundColor==NORMAL_COLOR){
+
+                        backgroundMat.setColor("Color", POINTED_COLOR);
+                        presentBackgroundColor=POINTED_COLOR;
+
+                        for(Button b: stateFilterButtons){
+
+                            if(b!=this){
+
+                                b.setColor(NORMAL_COLOR);
+
+                            }
+
+                        }
+
+                        Display.setPhaseFilter(3);
+
+                    }else{
+
+                        backgroundMat.setColor("Color", NORMAL_COLOR);
+                        presentBackgroundColor=NORMAL_COLOR;
+
+                        Display.setPhaseFilter(2);
+
+                    }
+
+                    substanceList.updateDisplayedSubstances();
+
+                    break;
+
+                case 8:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("Q");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("q");
+
+                    }
+
+                    break;
+
+                case 9:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("W");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("w");
+
+                    }
+
+                    break;
+
+                case 10:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("E");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("e");
+
+                    }
+
+                    break;
+
+                case 11:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("R");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("r");
+
+                    }
+
+                    break;
+
+                case 12:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("T");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("t");
+
+                    }
+
+                    break;
+
+                case 13:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("Y");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("y");
+
+                    }
+
+                    break;
+
+                case 14:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("U");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("u");
+
+                    }
+
+                    break;
+
+                case 15:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("I");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("i");
+
+                    }
+
+                    break;
+
+                case 16:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("O");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("o");
+
+                    }
+
+                    break;
+
+                case 17:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("P");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("p");
+
+                    }
+
+                    break;
+
+                case 18:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("A");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("a");
+
+                    }
+
+                    break;
+
+                case 19:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("S");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("s");
+
+                    }
+
+                    break;
+
+                case 20:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("D");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("d");
+
+                    }
+
+                    break;
+
+                case 21:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("F");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("f");
+
+                    }
+
+                    break;
+
+                case 22:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("G");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("g");
+
+                    }
+
+                    break;
+
+                case 23:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("H");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("h");
+
+                    }
+
+                    break;
+
+                case 24:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("J");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("j");
+
+                    }
+
+                    break;
+
+                case 25:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("K");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("k");
+
+                    }
+
+                    break;
+
+                case 26:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("L");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("l");
+
+                    }
+
+                    break;
+
+                case 27:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("Z");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("z");
+
+                    }
+
+                    break;
+
+                case 28:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("X");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("x");
+
+                    }
+
+                    break;
+
+                case 29:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("C");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("c");
+
+                    }
+
+                    break;
+
+                case 30:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("V");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("v");
+
+                    }
+
+                    break;
+
+                case 31:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("B");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("b");
+
+                    }
+
+                    break;
+
+                case 32:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("N");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("n");
+
+                    }
+
+                    break;
+
+                case 33:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("M");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("m");
+
+                    }
+
+                    break;
+
+                case 34:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2081");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("1");
+
+                    }
+
+                    break;
+
+                case 35:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2082");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("2");
+
+                    }
+
+                    break;
+
+                case 36:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2083");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("3");
+
+                    }
+
+                    break;
+
+                case 37:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2084");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("4");
+
+                    }
+
+                    break;
+
+                case 38:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2085");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("5");
+
+                    }
+
+                    break;
+
+                case 39:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2086");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("6");
+
+                    }
+
+                    break;
+
+                case 40:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2087");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("7");
+
+                    }
+
+                    break;
+
+                case 41:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2088");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("8");
+
+                    }
+
+                    break;
+
+                case 42:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2089");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("9");
+
+                    }
+
+                    break;
+
+                case 43:
+
+                    if(capsActivated){
+
+                        keyBoardSelectedDisplay.addLetter("\u2080");
+
+                    }else{
+
+                        keyBoardSelectedDisplay.addLetter("0");
+
+                    }
+
+                    break;
+
+                case 44:
+
+                    if(keyBoardSelectedDisplay.getTextField().getText().length()>0)
+
+                        keyBoardSelectedDisplay.removeLastLetter();
+
+                    break;
+
+                case 45:
+
+                    if(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()>0){
+
+                        parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()-1);
+                        parentDisplay.updateDisplayedSubstancesWithoutFiltering();
+
+                    }
+
+                    break;
+
+                case 46:
+
+                    keyBoardSelectedDisplay.addLetter(" ");
+
+                    break;
+
+                case 47:
+
+                    keyBoardSelectedDisplay.addLetter("-");
+
+                    break;
+
+                case 48:
+
+                    keyBoardSelectedDisplay.addLetter("(");
+
+                    break;
+
+                case 49:
+
+                    keyBoardSelectedDisplay.addLetter(")");
+
+                    break;
+
+                case 50:
+
+                    if(presentBackgroundColor==NORMAL_COLOR){
+
+                        backgroundMat.setColor("Color", POINTED_COLOR);
+                        presentBackgroundColor=POINTED_COLOR;
+
+                    }else{
+
+                        backgroundMat.setColor("Color", NORMAL_COLOR);
+                        presentBackgroundColor=NORMAL_COLOR;
+
+                    }
+
+                    capsActivated = !capsActivated;
+
+                    break;
+
+                case 51:
+
+                    keyBoardSelectedDisplay.addLetter(",");
+
+                    break;
+
+                case 52:
+
+                    keyBoardSelectedDisplay.addLetter(".");
+
+                    break;
+
+                case 53:
+
+                    //System.out.println("Get selected item material button pressed");
+
+                    if(parentDisplay.getSelectedMaterialButton()!=null){
+
+                        if(!hand.isHoldingObject()){
+
+                            switch (parentDisplay.getSelectedMaterialButton().getName()) {
+                                case "Beaker":
+                                    hand.setHeldObject(new Beaker(main,hand.getWorldTranslation()));
+                                    break;
+                                case "Gas sac":
+                                    hand.setHeldObject(new GasSac(main,hand.getWorldTranslation()));
+                                    break;
+                                default:
+                                    //System.out.println("ERROR: Invalid material button name");
+                                    break;
+                            }
+
+                            ((Grabbable)hand.getHeldObject()).highlightVisible(false);
+
+                        }       
+
+                    }
+
+                    break;
+
+                case 54:
+
+                    if(parentDisplay.getFilteredSubstanceButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedSubstanceButton()<parentDisplay.getFilteredSubstanceButtonList().size()-1){
+
+                        //System.out.println("filtered substance button list size: "+parentDisplay.getFilteredSubstanceButtonList().size()+" is higher than 5 and index os last displayed substance button: "+parentDisplay.getIndexOfLastDisplayedSubstanceButton()+" is lower than the last valid index in filteredSusbtanceButtonList: "+(parentDisplay.getFilteredSubstanceButtonList().size()-1));
+
+                        parentDisplay.setIndexOfFirstDisplayedSubstanceButton(parentDisplay.getIndexOfFirstDisplayedSubstanceButton()+1);
+                        parentDisplay.updateDisplayedSubstancesWithoutFiltering();
+
+                    }
+
+                    break;
+
+                case 55:
+
+                    if(parentDisplay.getIndexOfFirstDisplayedMaterialButton()>0){
+
+                        parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()-1);
+                        parentDisplay.updateDisplayedSubstancesWithoutFiltering();
+
+                    }
+
+                    break;
+
+                case 56:
+
+                    if(parentDisplay.getFilteredMaterialButtonList().size()>5&&parentDisplay.getIndexOfLastDisplayedMaterialButton()<parentDisplay.getMaterialButtonList().size()-1){
+
+                        parentDisplay.setIndexOfFirstDisplayedMaterialButton(parentDisplay.getIndexOfFirstDisplayedMaterialButton()+1);
+                        parentDisplay.updateDisplayedSubstancesWithoutFiltering();
+
+                    }
+
+                    break;
+
+                case 57:
+
+                    if(text.getText().contains("None")){
+
+                        text.setText("Type (Acid)");
+
+                        Display.setTypeFilter(1);
+
+                    }else if(text.getText().contains("Acid")){
+
+                        text.setText("Type (Base)");
+
+                        Display.setTypeFilter(2);
+
+                    }else if(text.getText().contains("Base")){
+
+                        text.setText("Type (Halogen)");
+
+                        Display.setTypeFilter(3);
+
+                    }else if(text.getText().contains("Halogen")){
+
+                        text.setText("Type (Salt)");
+
+                        Display.setTypeFilter(4);
+
+                    }else if(text.getText().contains("Salt")){
+
+                        text.setText("Type (Metal)");
+
+                        Display.setTypeFilter(5);
+
+                    }else if(text.getText().contains("Metal")){
+
+                        text.setText("Type (Other)");
+
+                        Display.setTypeFilter(6);
+
+                    }else if(text.getText().contains("Other")){
+
+                        text.setText("Type (None)");
+
+                        Display.setTypeFilter(0);
+
+                    }
+
+                    substanceList.updateDisplayedSubstances();
+
+                    break;
+
+                case 58:
+
+                    if(text.getText().contains("None")){
+
+                        text.setText("Class (Container)");
+
+                        Display.setClassFilter(1);
+
+                    }else if(text.getText().contains("Container")){
+
+                        text.setText("Class (Tool)");
+
+                        Display.setClassFilter(2);
+
+                    }else if(text.getText().contains("Tool")){
+
+                        text.setText("Class (None)");
+
+                        Display.setClassFilter(0);
+
+                    }
+
+                    materialList.updateDisplayedMaterials();
+
+                    break;
+
+            }
+
+            if(background!=null&&text!=null){
+
+                node.attachChild(background);
+                node.attachChild(text);
+
+            }
+
+            parentDisplay.getNode().attachChild(node);
+        
         }
-        
-        if(background!=null&&text!=null){
-        
-            node.attachChild(background);
-            node.attachChild(text);
-            
-        }
-        
-        parentDisplay.getNode().attachChild(node);
         
     }
     
@@ -1757,6 +1767,20 @@ public class Button implements Savable{
     public int getPreset(){
         
         return preset;
+        
+    }
+    
+    public void setGrayedOut(boolean grayedOut){
+        
+        this.grayedOut=grayedOut;
+        
+        backgroundMat.setColor("Color", GRAYED_OUT);
+        
+    }
+    
+    public boolean isGrayedOut(){
+        
+        return grayedOut;
         
     }
 

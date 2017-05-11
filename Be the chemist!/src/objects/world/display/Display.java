@@ -86,8 +86,8 @@ public class Display implements Pointable,Savable{
         
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         
-        texts=new ArrayList<BitmapText>();
-        buttons=new ArrayList<Button>();
+        texts=new ArrayList<>();
+        buttons=new ArrayList<>();
         
         node=new Node();
         
@@ -114,9 +114,22 @@ public class Display implements Pointable,Savable{
                 createBackground(1,2);
                 texts.get(texts.size()-1).setSize(0.08f);
                 texts.get(texts.size()-1).setText("Main menu");
-                texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.9f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
+                texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.8f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
+                texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
+                texts.add(new BitmapText(font));
+                node.attachChild(texts.get(texts.size()-1));
+                texts.get(texts.size()-1).setSize(0.27f);
+                texts.get(texts.size()-1).setText("Be the chemist!");
+                texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),1.28f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
+                texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
+                texts.add(new BitmapText(font));
+                node.attachChild(texts.get(texts.size()-1));
+                texts.get(texts.size()-1).setSize(0.08f);
+                texts.get(texts.size()-1).setText("       Made by:\n    Tommy Soucy\n Etienne Duchesne");
+                texts.get(texts.size()-1).setLocalTranslation(-(texts.get(texts.size()-1).getLineWidth()/2),0.05f+(texts.get(texts.size()-1).getLineHeight()/2),0.01f);
                 texts.get(texts.size()-1).setQueueBucket(RenderQueue.Bucket.Translucent);
                 buttons.add(new Button(main,this,0));
+                buttons.get(buttons.size()-1).setGrayedOut(true);
                 buttons.add(new Button(main,this,1));
                 buttons.add(new Button(main,this,2));
                 node.setLocalTranslation(new Vector3f(-4.9f,1.2f,-4f));

@@ -1005,7 +1005,13 @@ public class HandControl extends AbstractControl{
                     pointingSubstanceButton=false;
                     pointingMaterialButton=false;
 
-                    makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    if(!((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject")).isGrayedOut())
+                    
+                        makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    
+                    else
+                        
+                        makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
 
                     presentPointedButton=((Button)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     presentPointedElementButton=null;
@@ -1050,7 +1056,13 @@ public class HandControl extends AbstractControl{
                     pointingSubstanceButton=false;
                     pointingMaterialButton=false;
 
-                    makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    if(!((ElementButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject")).isGrayedOut())
+                    
+                        makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),GREEN_LASER);
+                    
+                    else
+                        
+                        makeLaserAppear(collisionResults.getCollision(presentCorrectCollisionIndex).getContactPoint(),RED_LASER);
 
                     presentPointedElementButton=((ElementButton)collisionResults.getCollision(presentCorrectCollisionIndex).getGeometry().getUserData("correspondingObject"));
                     presentPointedButton=null;

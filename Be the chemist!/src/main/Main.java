@@ -54,9 +54,9 @@ import objects.world.display.PeriodicTableDisplay;
 public class Main extends VRApplication {
     
     //Other/Logic
-    private static VRAPI VRHardware=new OpenVR();
+    private static final VRAPI VRHardware=new OpenVR();
     
-    private CollisionResults collisionResults=new CollisionResults();
+    private final CollisionResults collisionResults=new CollisionResults();
     
     private BulletAppState bulletAppState;
     
@@ -70,7 +70,7 @@ public class Main extends VRApplication {
     private ArrayList<Integer> presentCountList;
     private ArrayList<Ion> presentIonList;
     
-    private static ArrayList<Element> reactivitySeries=new ArrayList<>();
+    private static final ArrayList<Element> reactivitySeries=new ArrayList<>();
     
     //Player
     Spatial observer;
@@ -81,10 +81,8 @@ public class Main extends VRApplication {
     private boolean rightHandCreated,leftHandCreated;
     
     //TPF counters
-    private float controllerCountDispTPF;
     private float CommonTPF;
     private float controllerConnectionTPF;
-    private float testBeakerSpawnTPF;
     
     //World
     private Room room;
@@ -107,41 +105,30 @@ public class Main extends VRApplication {
     private Display materialList;
     private PeriodicTableDisplay periodicTableDisplay;
     
-    //Objects
-    private ArrayList<Describable> describables=new ArrayList<Describable>();
-    
     //all objects that can receive particles
     private ArrayList<PhysicalObject> particleReceivers;
     
     //all objects taht can be heated
     private ArrayList<Heatable> heatables;
     
-    private ArrayList<Element> elements=new ArrayList<Element>();
-    private ArrayList<Ion> ions=new ArrayList<Ion>();
-    private ArrayList<Substance> substances=new ArrayList<Substance>();
+    private final ArrayList<Element> elements=new ArrayList<>();
+    private final ArrayList<Ion> ions=new ArrayList<>();
+    private final ArrayList<Substance> substances=new ArrayList<>();
     
     private ArrayList<Beaker> beakers;
     private ArrayList<GasSac> gasSac;
    
     private Beaker beaker;
-    private Erlenmeyer erlenmeyer;
-    private Funnel funnel;
-    private MeasuringCylinder measuringCylinder;
-    private Pipette pipette;
-    //private VolumetricFlask volumetricFlask;
-    
-    //testing
-    private ArrayList<Beaker> testBeakers;
-    //private SimpleEmitter simpleEmitter;
 
     public static void main(String[] args) {
         
         Main app = new Main();
         
-        //Set the frustrum distances
+        //Set the frustum distances
         app.preconfigureFrustrumNearFar(0.01f,20f);
         
         //set mirror window size
+        //this sets it to main display's dimensions
         app.preconfigureMirrorWindowSize(GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getWidth(),GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDisplayMode().getHeight());
         //app.preconfigureMirrorWindowSize(1280, 720);
         
@@ -156,6 +143,7 @@ public class Main extends VRApplication {
         
         //starts the game
         app.start();
+        
     }
     
     @Override
@@ -175,18 +163,16 @@ public class Main extends VRApplication {
         bulletAppState = new BulletAppState();
         getStateManager().attach(bulletAppState);
         bulletAppState.getPhysicsSpace().setAccuracy(1f/60f);
-        //bulletAppState.getPhysicsSpace().setAccuracy(0.02f);
         
         //LOAD SPATIALS START
         
         //OBSERVER INIT (PLAYER,HMD,THE HEADSET) START
         observer = new Node("observer");
-        observer.setLocalTranslation(new Vector3f(0.0f, 0.0f, 0.0f));
         VRApplication.setObserver(observer);
         //OBSERVER INIT END
         
         //init player Object
-        playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,describables,observer);
+        playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,observer);
         
         //WORLD INIT START
         room=new Room(this);
@@ -195,9 +181,6 @@ public class Main extends VRApplication {
         analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .94f, 0.5f));
         analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
         hotPlate = new HotPlate(this,new Vector3f(4.25f,0.94f, 0.8f));
-        //hotPlate.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
-        bunsenBurner1 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(-1.1f, 0.93f, 0.2f));
-        bunsenBurner2 = new BunsenBurner(this, rootNode, collisionResults, getAssetManager(), new Vector3f(0.2f, 0.93f, -0.8f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
         sink0=new Sink(this,getAssetManager(),rootNode,0);
@@ -258,17 +241,11 @@ public class Main extends VRApplication {
         beakers.add(new Beaker(this,new Vector3f(-3.0910027f, 0.1550500008f + 0.065f, 5.330965f)));
         beakers.add(new Beaker(this,new Vector3f(-3.7073069f, 0.10500008f + 0.065f, 5.3346424f)));
         
-        //To solve: gasSac rotation issue + GasSac vibration issue
-        
-        gasSac = new ArrayList<GasSac>();
-        gasSac.add(new GasSac(this,new Vector3f(-4f, 0.05f, -4f)));
-        gasSac.get(0).setSolution(new Solution(this,beaker,substances.get(45),1,298));
-        gasSac.get(0).getSolution().addSubstance(substances.get(54),1,298);
-        
+        /*
         beaker=new Beaker(this,new Vector3f(-4,0.05f,-5));
-        //beaker.setSolution(new Solution(this,beaker,substances.get(43),100,298));//solid so grams
         beaker.setSolution(new Solution(this,beaker,substances.get(47),100,298));//solid so grams
         beaker.getSolution().addSubstance(substances.get(44),1,298);//liquid so liters
+        */
         //OBJECTS INIT END
         
         //LOAD OBJECTS END
@@ -280,9 +257,6 @@ public class Main extends VRApplication {
         //INITIAL ACTIONS ON THE LOADED WORLD
         
         playerLogic.teleportArea(new Vector3f(-4,0,-5));
-        
-        //TESTING SECTION
-        testBeakers=new ArrayList<>();
         
         //bulletAppState.setDebugEnabled(true);
         
@@ -300,90 +274,61 @@ public class Main extends VRApplication {
         getInputManager().addMapping("downShift", new KeyTrigger(KeyInput.KEY_LSHIFT));
         getInputManager().addMapping("quit", new KeyTrigger(KeyInput.KEY_ESCAPE));
         
-        //test cube controls
-        getInputManager().addMapping("cubeNegativeZ", new KeyTrigger(KeyInput.KEY_NUMPAD8));
-        getInputManager().addMapping("cubePositiveZ", new KeyTrigger(KeyInput.KEY_NUMPAD2));
-        getInputManager().addMapping("cubePositiveX", new KeyTrigger(KeyInput.KEY_NUMPAD6));
-        getInputManager().addMapping("cubeNegativeX", new KeyTrigger(KeyInput.KEY_NUMPAD4));
-        getInputManager().addMapping("cubePositiveY", new KeyTrigger(KeyInput.KEY_NUMPAD9));
-        getInputManager().addMapping("cubeNegativeY", new KeyTrigger(KeyInput.KEY_NUMPAD7));
-        
         //inputs' action listener
-        ActionListener acl = new ActionListener() {
+        ActionListener acl = (String name, boolean keyPressed, float tpf) -> {
             
-            public void onAction(String name, boolean keyPressed, float tpf) {
+            switch (name) {
                 
-                if(name.equals("quit")){
-                    
+                case "quit":
                     System.out.println("initInput: quit key pressed, quiting...");
                     
                     System.exit(0);
                     
                     //observer.move(VRApplication.getFinalObserverRotation().getRotationColumn(0).mult(1f));
                     
-                }else if(name.equals("cubeNegativeZ")){
+                default:
+                    break;   
                     
-                    //testCube.move(0,0,-0.1f);
-                    
-                }else if(name.equals("cubePositiveZ")){
-                    
-                    //testCube.move(0,0,0.1f);
-                    
-                }else if(name.equals("cubeNegativeX")){
-                    
-                    //testCube.move(-0.1f,0,0);
-                    
-                }else if(name.equals("cubePositiveX")){
-                    
-                    //testCube.move(0.1f,0,0);
-                    
-                }else if(name.equals("cubeNegativeY")){
-                    
-                    //testCube.move(0,-0.1f,0);
-                    
-                }else if(name.equals("cubePositiveY")){
-                    
-                    //testCube.move(0,0.1f,0);
-                    
-                }
-                
             }
             
         };
         
         //inputs' analog listener
-        AnalogListener anl = new AnalogListener() {
+        AnalogListener anl = (String name, float value, float tpf) -> {
             
-            public void onAnalog(String name, float value, float tpf) {
+            float movingRatio = 0.5f;
+            
+            switch (name) {
                 
-                float movingRatio = 0.5f;
-                
-                if(name.equals("forward")){
-                    
+                case "forward":
                     playerLogic.move(name,movingRatio);
+                    break;
                     
-                }else if(name.equals("backward")){
-                    
+                case "backward":
                     playerLogic.move(name,movingRatio);
+                    break;
                     
-                }else if(name.equals("right")){
-                    
+                case "right":
                     playerLogic.move(name,movingRatio);
+                    break;
                     
-                }else if(name.equals("left")){
-                    
+                case "left":
                     playerLogic.move(name,movingRatio);
+                    break;
                     
-                }else if(name.equals("up")){
-                    
+                case "up":
                     playerLogic.move(name,movingRatio);
+                    break;
                     
-                }else if(name.equals("downControl")||name.equals("downShift")){
+                case "downControl":
                     
+                case "downShift":
                     playerLogic.move(name,movingRatio);
+                    break;
                     
-                }
-                
+                default:
+                    break;
+                    
             }
             
         };
@@ -398,18 +343,10 @@ public class Main extends VRApplication {
         getInputManager().addListener(anl, "downControl");
         getInputManager().addListener(anl, "downShift");
         
-        
-        getInputManager().addListener(acl, "cubePositiveZ");
-        getInputManager().addListener(acl, "cubeNegativeZ");
-        getInputManager().addListener(acl, "cubePositiveX");
-        getInputManager().addListener(acl, "cubeNegativeX");
-        getInputManager().addListener(acl, "cubePositiveY");
-        getInputManager().addListener(acl, "cubeNegativeY");
-        
-        
     }
     
     public void initLights(){
+        
         //DL's simulate the ambient light coming from all 6 directions
         
         DirectionalLight dl0 = new DirectionalLight();
@@ -437,11 +374,13 @@ public class Main extends VRApplication {
         dl5.setColor(ColorRGBA.White.mult(0.3f));
         rootNode.addLight(dl5);
         
+        //the "sun" which casts the shadows
         DirectionalLight sun = new DirectionalLight();
         sun.setDirection((new Vector3f(-0.5f, -0.5f, -0.5f)).normalizeLocal());
         sun.setColor(ColorRGBA.White.mult(0.1f));
         rootNode.addLight(sun); 
       
+        //the sun's shadow renderer
         VRDirectionalLightShadowRenderer dlsr = new VRDirectionalLightShadowRenderer(getAssetManager(), 8192, 4);
         dlsr.setLight(sun);
         dlsr.setEdgeFilteringMode(EdgeFilteringMode.PCFPOISSON);
@@ -1436,13 +1375,14 @@ public class Main extends VRApplication {
         */
         
         //Common TPF counter
+        /*
         CommonTPF+=tpf;
         if(CommonTPF>=3){
             
             CommonTPF=0;
             
         }
-        
+        */
         //TPF COUNTERS END
         
     }
@@ -1479,6 +1419,28 @@ public class Main extends VRApplication {
     public ArrayList<Heatable> getHeatables(){
         
         return heatables;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Main";
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherMain){
+        
+        if(otherMain instanceof Main){
+            
+            return true;
+            
+        }else{
+            
+            return false;
+            
+        }
         
     }
     

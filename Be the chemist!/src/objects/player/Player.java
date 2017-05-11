@@ -28,7 +28,7 @@ public class Player {
     
     private Main main;
     
-    public Player(Main main,AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,ArrayList<Describable> describables,Spatial observer){
+    public Player(Main main,AssetManager assetManager,Node rootNode,VRAPI VRHardware,CollisionResults collisionResults,Spatial observer){
         
         this.main=main;
         

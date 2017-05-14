@@ -172,5 +172,13 @@ public class BunsenBurner extends Apparatus implements Grabbable{
         return spatial;
         
     }
+
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
+        
+    }
     
 }

@@ -29,8 +29,10 @@ import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
 import objects.apparatus.fumeHood.FumeHoodDoor;
 import objects.apparatus.hotPlate.HotPlate;
 import objects.containers.beaker.Beaker;
+import objects.containers.erlenmeyer.Erlenmeyer;
 import objects.containers.gasSac.GasSac;
 import objects.containers.gasSac.GasSacValve;
+import objects.containers.testTube.TestTube;
 import objects.world.Floor;
 import objects.world.SinkHandle;
 import objects.world.display.Button;
@@ -287,7 +289,7 @@ public class HandControl extends AbstractControl{
         //System.out.println("Angle of last frame rotation in rads: "+FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())+", in degs: "+FastMath.RAD_TO_DEG*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX()));
         //System.out.println("Angle of present frame rotation in rads: "+FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())+", in degs: "+FastMath.RAD_TO_DEG*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX()));
         
-        //System.out.println("Angle difference of hand rotation since last frame in deg: "+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+        System.out.println("Angle difference of hand rotation since last frame in deg: "+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
         
         //System.out.println("Hand rotation (Quaternion): "+VRHardware.getVRinput().getOrientation(handSide)+", (Matrix):\nCol 0: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0)+"\nCol 1: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1)+"\nCol 2: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0));
         
@@ -413,6 +415,14 @@ public class HandControl extends AbstractControl{
                 //System.out.println("Modified velocity to apply to thrown object: "+VRHardware.getVRinput().getVelocity(handSide).multLocal(new Vector3f(-1,1,-1)));
                         
                 ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(new Vector3f(-1,1,-1)));
+                
+            }else if(hand.getHeldObject() instanceof Erlenmeyer){
+                
+                ((Erlenmeyer)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(new Vector3f(-1,1,-1)));
+                
+            }else if(hand.getHeldObject() instanceof TestTube){
+                
+                ((TestTube)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(new Vector3f(-1,1,-1)));
                 
             }else if(hand.getHeldObject() instanceof GasSac){
                 
@@ -565,6 +575,14 @@ public class HandControl extends AbstractControl{
                     if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
                         
                         ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
+                        
+                    }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Erlenmeyer){
+                        
+                        ((Erlenmeyer)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
+                        
+                    }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof TestTube){
+                        
+                        ((TestTube)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
                         
                     }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof GasSac){
                         
@@ -762,6 +780,14 @@ public class HandControl extends AbstractControl{
 
                         ((Beaker)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
 
+                    }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Erlenmeyer){
+
+                        ((Erlenmeyer)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
+
+                    }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof TestTube){
+
+                        ((TestTube)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
+
                     }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof GasSac){
 
                         ((GasSac)hand.getHeldObject()).setVelocity(VRHardware.getVRinput().getVelocity(handSide).multLocal(-1,1,-1));
@@ -815,7 +841,30 @@ public class HandControl extends AbstractControl{
 
                 if(degTouchPadXAngle>45){//Touchpad being pressed UP 
 
+                    if(!touchPadPressedUp){//Touchpad has just started being pressed up
+                        
+                        System.out.println("touchpad has just started being pressed up");
+                        
+                        if(hand.isHoldingObject()&&hand.getHeldObject() instanceof GasSac){
+
+                            ((GasSac)hand.getHeldObject()).getValve().toggle();
+
+                        }else if(hand.isHoldingObject()&&hand.getHeldObject() instanceof Erlenmeyer){
+
+                            System.out.println("    Hand is holding an item and the item is an erlenmeyer");
+                            
+                            ((Erlenmeyer)hand.getHeldObject()).toggleOpennedClosed();
+
+                        }else if(hand.isHoldingObject()&&hand.getHeldObject() instanceof TestTube){
+
+                            ((TestTube)hand.getHeldObject()).toggleOpennedClosed();
+
+                        }
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: UP");
+                    
                     touchPadPressedUp=true;
                     touchPadPressedDown=false;
                     touchPadPressedRight=false;
@@ -827,6 +876,12 @@ public class HandControl extends AbstractControl{
 
                 }else{//Touchpad being pressed RIGHT
 
+                    if(!touchPadPressedRight){//Touchpad has just started being pressed right
+                
+                        
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: RIGHT");
                     touchPadPressedUp=false;
                     touchPadPressedDown=false;
@@ -843,6 +898,28 @@ public class HandControl extends AbstractControl{
 
                 if(degTouchPadXAngle>45){//Touchpad being pressed UP
 
+                    if(!touchPadPressedUp){//touchpad has just started being pressed up
+                
+                        System.out.println("touchpad has just started being pressed up");
+                        
+                        if(hand.isHoldingObject()&&hand.getHeldObject() instanceof GasSac){
+
+                            ((GasSac)hand.getHeldObject()).getValve().toggle();
+
+                        }else if(hand.isHoldingObject()&&hand.getHeldObject() instanceof Erlenmeyer){
+
+                            System.out.println("    Hand is holding an item and the item is an erlenmeyer");
+                            
+                            ((Erlenmeyer)hand.getHeldObject()).toggleOpennedClosed();
+
+                        }else if(hand.isHoldingObject()&&hand.getHeldObject() instanceof TestTube){
+
+                            ((TestTube)hand.getHeldObject()).toggleOpennedClosed();
+
+                        }
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: UP");
                     touchPadPressedUp=true;
                     touchPadPressedDown=false;
@@ -856,6 +933,12 @@ public class HandControl extends AbstractControl{
 
                 }else{//Touchpad being pressed LEFT
 
+                    if(!touchPadPressedLeft){//Touchpad has just started being pressed left
+                
+                        
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: LEFT");
                     touchPadPressedUp=false;
                     touchPadPressedDown=false;
@@ -872,6 +955,12 @@ public class HandControl extends AbstractControl{
 
                 if(degTouchPadXAngle>45){//Touchpad being presse DOWN
 
+                    if(!touchPadPressedDown){//Touchpad has just started being pressed down
+                
+                        
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: DOWN");
                     touchPadPressedUp=false;
                     touchPadPressedDown=true;
@@ -882,6 +971,12 @@ public class HandControl extends AbstractControl{
 
                 }else{//Touchpad being pressed LEFT
 
+                    if(!touchPadPressedLeft){//Touchpad has just started being pressed left
+                
+                        
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: LEFT");
                     touchPadPressedUp=false;
                     touchPadPressedDown=false;
@@ -898,6 +993,12 @@ public class HandControl extends AbstractControl{
 
                 if(degTouchPadXAngle>45){//Touchpad being pressed DOWN
 
+                    if(!touchPadPressedDown){//Touchpad has just started being pressed down
+                
+                        
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: DOWN");
                     touchPadPressedUp=false;
                     touchPadPressedDown=true;
@@ -908,6 +1009,12 @@ public class HandControl extends AbstractControl{
 
                 }else{//Touchpad being pressed RIGHT
 
+                    if(!touchPadPressedRight){//Touchpad has just started being pressed right
+                
+                        
+
+                    }
+                    
                     //System.out.println("\t\tTouchPad: RIGHT");
                     touchPadPressedUp=false;
                     touchPadPressedDown=false;
@@ -931,11 +1038,7 @@ public class HandControl extends AbstractControl{
             //System.out.println("Touchpad released");
             if(touchPadPressedUp){
                 
-                if(hand.isHoldingObject()&&hand.getHeldObject() instanceof GasSac){
-                    
-                    ((GasSac)hand.getHeldObject()).getValve().toggle();
-                    
-                }
+                
                 
             }else if(touchPadPressedDown){
 
@@ -966,7 +1069,7 @@ public class HandControl extends AbstractControl{
             conditionalMoveTeleLaserOut();
             
             touchPadPressedUp=false;
-            touchPadPressedDown=true;
+            touchPadPressedDown=false;
             touchPadPressedRight=false;
             touchPadPressedLeft=false;
 
@@ -1245,7 +1348,31 @@ public class HandControl extends AbstractControl{
             
             //System.out.println("Setting SinkHandle rotation to +"+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
             
-            ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+            if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()>0&&rotationOnLastFrame.getRotationColumn(1).getY()>0){
+            
+                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+            
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()<0&&rotationOnLastFrame.getRotationColumn(1).getY()<0){
+                
+                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())-FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())));
+                
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()<0&&rotationOnLastFrame.getRotationColumn(1).getY()>0){
+                
+                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+FastMath.abs(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()>0&&rotationOnLastFrame.getRotationColumn(1).getY()<0){
+                
+                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+(-1*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()==0){
+                
+                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())));
+                
+            }else if(rotationOnLastFrame.getRotationColumn(1).getY()==0){
+                
+                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*((-1*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY()))));
+                
+            }
             
             rotationWhenGrabbed=VRHardware.getVRinput().getFinalObserverRotation(handSide);
             
@@ -1272,6 +1399,38 @@ public class HandControl extends AbstractControl{
             
             //System.out.println("All forces have been cleared on beaker being held");
             
+        }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Erlenmeyer){
+            
+            if(hand.getSide()==0){
+                
+                ((Erlenmeyer)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(0.05f,0,0.02f))));
+                ((Erlenmeyer)hand.getHeldObject()).setRotation(hand.getRotation());
+                
+            }else{
+                
+                ((Erlenmeyer)hand.getHeldObject()).setRotation(hand.getRotation());
+                ((Erlenmeyer)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(-0.05f,0,0.02f))));
+                
+            }
+            
+            ((Erlenmeyer)hand.getHeldObject()).clearVelocity();
+            
+        }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof TestTube){
+            
+            if(hand.getSide()==0){
+                
+                ((TestTube)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(0.05f,0,0.04f))));
+                ((TestTube)hand.getHeldObject()).setRotation(hand.getRotation());
+                
+            }else{
+                
+                ((TestTube)hand.getHeldObject()).setRotation(hand.getRotation());
+                ((TestTube)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(-0.05f,0,0.04f))));
+                
+            }
+            
+            ((TestTube)hand.getHeldObject()).clearVelocity();
+            
         }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof GasSac){
             
             //System.out.println("Object is a GasSac, setting its position to hand position: "+hand.getWorldTranslation()+" and rotation to hand rotation: "+hand.getRotation());
@@ -1288,7 +1447,6 @@ public class HandControl extends AbstractControl{
                 
             }
             
-            //((Beaker)hand.getHeldObject()).clearForces(); Doesnt remove the velocity of the object
             ((GasSac)hand.getHeldObject()).clearVelocity();
             
             //System.out.println("All forces have been cleared on GasSac being held");
@@ -1305,7 +1463,31 @@ public class HandControl extends AbstractControl{
             
             //System.out.println("Setting SinkHandle rotation to +"+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
             
-            ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+            if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()>0&&rotationOnLastFrame.getRotationColumn(1).getY()>0){
+            
+                ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+            
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()<0&&rotationOnLastFrame.getRotationColumn(1).getY()<0){
+                
+                ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())-FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())));
+                
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()<0&&rotationOnLastFrame.getRotationColumn(1).getY()>0){
+                
+                ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+FastMath.abs(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()>0&&rotationOnLastFrame.getRotationColumn(1).getY()<0){
+                
+                ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+(-1*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                
+            }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()==0){
+                
+                ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())));
+                
+            }else if(rotationOnLastFrame.getRotationColumn(1).getY()==0){
+                
+                ((HotPlate)hand.getHeldObject()).rotateDial(FastMath.RAD_TO_DEG*((-1*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY()))));
+                
+            }
             
             rotationWhenGrabbed=VRHardware.getVRinput().getFinalObserverRotation(handSide);
             

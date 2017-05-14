@@ -213,9 +213,17 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
         
     }
     
+    @Override
     public Spatial getSpatial(){
         
         return handle;
+        
+    }
+    
+    @Override
+    public void destroy() {
+        
+        main.getItemsList().remove(this);
         
     }
     

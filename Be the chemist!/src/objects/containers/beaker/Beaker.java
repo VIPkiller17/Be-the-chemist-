@@ -50,6 +50,7 @@ public class Beaker extends Container implements Savable{
     private ParticleEmitter pourParticleEmitter,evaporationParticleEmitter,reactionParticleEmitter;
     
     private boolean isEmitting;
+    private boolean destroyed;
     
     private Vector3f particleEmitterPosition;
     private Spatial openningSurface;
@@ -62,9 +63,13 @@ public class Beaker extends Container implements Savable{
     
     private Node node;
     
+    private Main main;
+    
     public Beaker(Main main,Vector3f position){
         
         super(main,position);
+        
+        this.main=main;
         
         setSolution(new Solution(main,this,null,0,0));
         
@@ -76,13 +81,9 @@ public class Beaker extends Container implements Savable{
         
         super(main,position,solution);
         
-        //System.out.println("TEST: creating beaker with main: "+main);
+        this.main=main;
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
-        
-        //liquidModelMat.setColor("Color",solution.getLiquidColor()); 
-        
-        //solidModelMat.setColor("Color",solution.getSolidColor());
         
     }
     
@@ -149,7 +150,6 @@ public class Beaker extends Container implements Savable{
         solidModel.setLocalTranslation(0,-50,0);
         
         spatial.setName("Beaker #"+index++);
-        spatial.setLocalTranslation(0,0.061f,0);
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
@@ -165,10 +165,10 @@ public class Beaker extends Container implements Savable{
         
         main.getItemsList().add(this);
         main.getHeatables().add(this);
+        main.getBeakers().add(this);
         
         pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's pourParticleEmitter");
         evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Beaker's evaporationParticleEmitter");
-        //reactionParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0.05f,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0.05,0.01,new Vector3f(0,1,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Beaker's reactionParticleEmitter");
         
         evaporationParticleEmitter.setVolume(0.001);
         
@@ -266,24 +266,6 @@ public class Beaker extends Container implements Savable{
     public ParticleEmitter getEvaporationParticleEmitter(){
         
         return evaporationParticleEmitter;
-        
-    }
-    
-    public void explode(){
-        
-        
-        
-    }
-    
-    public void meltDown(){
-        
-        
-        
-    }
-    
-    public void breakContainer(){
-        
-        
         
     }
     
@@ -474,6 +456,21 @@ public class Beaker extends Container implements Savable{
     public Spatial getSpatial(){
         
         return spatial;
+        
+    }
+    
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getRootNode().detachChild(spatial);
+        
+        main.getItemsList().remove(this);
+        main.getHeatables().remove(this);
+        main.getBeakers().remove(this);
+        main.getParticleReceivers().remove(this);
+        
+        destroyed=true;
         
     }
     

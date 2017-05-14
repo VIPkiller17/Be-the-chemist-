@@ -200,5 +200,12 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         return valveClosed;
         
     }
+
+    @Override
+    public void destroy() {
+        
+        main.getItemsList().remove(this);
+        
+    }
     
 }

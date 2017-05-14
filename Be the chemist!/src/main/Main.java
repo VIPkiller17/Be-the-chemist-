@@ -16,7 +16,6 @@ import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
 import com.jme3.scene.Spatial;
 import com.jme3.shadow.EdgeFilteringMode;
-import interfaces.Describable;
 import interfaces.Heatable;
 import java.awt.GraphicsEnvironment;
 import java.util.ArrayList;
@@ -35,14 +34,11 @@ import objects.apparatus.hotPlate.HotPlate;
 import objects.apparatus.trashBin.TrashBin;
 import objects.containers.beaker.Beaker;
 import objects.containers.erlenmeyer.Erlenmeyer;
-import objects.containers.funnel.Funnel;
 import objects.containers.gasSac.GasSac;
-import objects.containers.measuringCylinder.MeasuringCylinder;
-import objects.containers.pipette.Pipette;
+import objects.containers.testTube.TestTube;
 import objects.element.Element;
 import objects.ion.Ion;
 import objects.player.Player;
-import objects.solution.Solution;
 import objects.substance.Substance;
 import objects.world.Floor;
 import objects.world.Room;
@@ -116,7 +112,9 @@ public class Main extends VRApplication {
     private final ArrayList<Substance> substances=new ArrayList<>();
     
     private ArrayList<Beaker> beakers;
-    private ArrayList<GasSac> gasSac;
+    private ArrayList<GasSac> gasSacs;
+    private ArrayList<Erlenmeyer> erlenmeyers;
+    private ArrayList<TestTube> testTubes;
    
     private Beaker beaker;
 
@@ -153,7 +151,10 @@ public class Main extends VRApplication {
         items=new ArrayList<>();
         heatables=new ArrayList<>();
         particleReceivers=new ArrayList<>();
-        beakers = new ArrayList<>();
+        beakers=new ArrayList<>();
+        gasSacs=new ArrayList<>();
+        erlenmeyers=new ArrayList<>();
+        testTubes=new ArrayList<>();
         initChemistryStructure();
         
         //Lights
@@ -166,10 +167,9 @@ public class Main extends VRApplication {
         
         //LOAD SPATIALS START
         
-        //OBSERVER INIT (PLAYER,HMD,THE HEADSET) START
+        //OBSERVER INIT (PLAYER,HMD,THE HEADSET)
         observer = new Node("observer");
         VRApplication.setObserver(observer);
-        //OBSERVER INIT END
         
         //init player Object
         playerLogic=new Player(this,getAssetManager(),rootNode,VRHardware,collisionResults,observer);
@@ -185,6 +185,7 @@ public class Main extends VRApplication {
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
         sink0=new Sink(this,getAssetManager(),rootNode,0);
         sink1=new Sink(this,getAssetManager(),rootNode,1);
+        trashBin=new TrashBin(this);
 
         mainMenu=new Display(this,0);
         substanceList=new Display(this,1);
@@ -248,11 +249,8 @@ public class Main extends VRApplication {
         */
         //OBJECTS INIT END
         
-        //LOAD OBJECTS END
-        
-        //INIT THE INPUTS START
+        //INIT THE INPUTS
         initInputs();
-        //INIT THE INPUTS END
         
         //INITIAL ACTIONS ON THE LOADED WORLD
         
@@ -1433,6 +1431,30 @@ public class Main extends VRApplication {
     public boolean equals(Object otherMain){
         
         return otherMain instanceof Main; 
+        
+    }
+    
+    public ArrayList<Beaker> getBeakers(){
+        
+        return beakers;
+        
+    }
+    
+    public ArrayList<GasSac> getGasSacs(){
+        
+        return gasSacs;
+        
+    }
+    
+    public ArrayList<Erlenmeyer> getErlenmeyers(){
+        
+        return erlenmeyers;
+        
+    }
+    
+    public ArrayList<TestTube> getTestTubes(){
+        
+        return testTubes;
         
     }
     

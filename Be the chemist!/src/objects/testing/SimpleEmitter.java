@@ -28,9 +28,13 @@ public class SimpleEmitter extends PhysicalObject{
     
     private Node node;
     
+    private Main main;
+    
     public SimpleEmitter(Main main,Vector3f position){
         
         super(main,position);
+        
+        this.main=main;
         
         node=new Node();
         
@@ -84,6 +88,13 @@ public class SimpleEmitter extends PhysicalObject{
     public Spatial getSpatial() {
         
         return boxGeo;
+        
+    }
+    
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
         
     }
     

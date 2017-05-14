@@ -607,6 +607,10 @@ public class Display implements Pointable,Savable{
         filteredMaterialButtonList.add(materialButtonList.get(materialButtonList.size()-1));
         materialButtonList.add(new MaterialButton(main,this,"Gas sac",new Vector3f(-0.35f,0.3f,0.05f)));
         filteredMaterialButtonList.add(materialButtonList.get(materialButtonList.size()-1));
+        materialButtonList.add(new MaterialButton(main,this,"Erlenmeyer",new Vector3f(-0.35f,0.1f,0.05f)));
+        filteredMaterialButtonList.add(materialButtonList.get(materialButtonList.size()-1));
+        materialButtonList.add(new MaterialButton(main,this,"Test tube",new Vector3f(-0.35f,-0.1f,0.05f)));
+        filteredMaterialButtonList.add(materialButtonList.get(materialButtonList.size()-1));
 
         //materialButtonList.add(new MaterialButton(main,this,name,new Vector3f(-0.35f,-700,0.05f)));
         

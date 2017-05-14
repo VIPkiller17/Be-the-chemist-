@@ -156,6 +156,7 @@ public class GasSac extends Container implements Savable{
         rootNode.attachChild(spatial);
         
         main.getItemsList().add(this);
+        main.getGasSacs().add(this);
         
         particleEmitterPosition=new Vector3f(-0.03f,0.17f,0);
         
@@ -430,5 +431,17 @@ public class GasSac extends Container implements Savable{
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getRootNode().detachChild(spatial);
+        main.getItemsList().remove(this);
+        
+        main.getGasSacs().remove(this);
+        
+        destroyed=true;
+        
+    }
     
 }

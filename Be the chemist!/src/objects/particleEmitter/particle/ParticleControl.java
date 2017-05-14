@@ -12,6 +12,9 @@ import com.jme3.scene.control.AbstractControl;
 import objects.PhysicalObject;
 import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
 import objects.containers.Container;
+import objects.containers.beaker.Beaker;
+import objects.containers.erlenmeyer.Erlenmeyer;
+import objects.containers.testTube.TestTube;
 import objects.substance.Substance;
 
 /**
@@ -102,9 +105,39 @@ public class ParticleControl extends AbstractControl{
                     
                     if(particle.getParticleEmitter().getParentObject()!=particle.getMain().getParticleReceivers().get(i)){
                     
-                        if(particle.getMain().getParticleReceivers().get(i) instanceof Container){
+                        if(particle.getMain().getParticleReceivers().get(i) instanceof Beaker){
 
-                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((Container)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation())<0.03f){
+                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((Beaker)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation())<0.03f){
+
+                                for(Substance s: particle.getSubstances()){
+
+                                    //System.out.println(((Container)particle.getMain().getParticleReceivers().get(i)).getSolution());
+                                    
+                                    ((Container)particle.getMain().getParticleReceivers().get(i)).getSolution().addSubstance(s,particle.getVolume(),particle.getTemperature());
+                                }
+
+                                particle.destroy();
+
+                            }
+
+                        }else if(particle.getMain().getParticleReceivers().get(i) instanceof Erlenmeyer){
+
+                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((Erlenmeyer)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation().add(0,0.03f,0))<0.01f){
+
+                                for(Substance s: particle.getSubstances()){
+
+                                    //System.out.println(((Container)particle.getMain().getParticleReceivers().get(i)).getSolution());
+                                    
+                                    ((Container)particle.getMain().getParticleReceivers().get(i)).getSolution().addSubstance(s,particle.getVolume(),particle.getTemperature());
+                                }
+
+                                particle.destroy();
+
+                            }
+
+                        }else if(particle.getMain().getParticleReceivers().get(i) instanceof TestTube){
+
+                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((TestTube)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation().add(0,0.03f,0))<0.01f){
 
                                 for(Substance s: particle.getSubstances()){
 

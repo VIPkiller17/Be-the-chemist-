@@ -123,4 +123,11 @@ public class FumeHood extends Apparatus{
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        
+    }
+    
 }

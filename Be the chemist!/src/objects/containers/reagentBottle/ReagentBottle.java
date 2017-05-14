@@ -54,7 +54,10 @@ public class ReagentBottle extends Container implements Savable {
     
     private Node node;
     
+    private Main main;
+    
     public ReagentBottle(Main main,Vector3f position){
+        
         super(main,position);
         
         init(main,position,main.getRootNode(),main.getAssetManager(),main.getBulletAppState());
@@ -76,6 +79,8 @@ public class ReagentBottle extends Container implements Savable {
     public void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
         node=new Node();
+        
+        this.main=main;
         
         closeable=true;
         maxQuantity=1.5;
@@ -307,6 +312,14 @@ public class ReagentBottle extends Container implements Savable {
     public Vector3f getPosition() {
         
         return getSpatial().getWorldTranslation();
+        
+    }
+    
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
         
     }
     

@@ -147,4 +147,12 @@ public class ReagentBottleTop extends PhysicalObject implements Grabbable {
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
+        
+    }
+    
 }

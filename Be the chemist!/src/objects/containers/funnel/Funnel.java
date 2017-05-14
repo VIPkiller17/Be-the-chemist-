@@ -53,6 +53,8 @@ public class Funnel extends Container implements Savable{
     
     private Node node;
     
+    private Main main;
+    
     public Funnel(Main main,Vector3f position){
         
         super(main,position);
@@ -74,6 +76,8 @@ public class Funnel extends Container implements Savable{
     public void init(Main main,Vector3f position,Node rootNode,AssetManager assetManager,BulletAppState bulletAppState){
         
         node=new Node();
+        
+        this.main=main;
         
         closeable=false;
         maxQuantity=0.5;
@@ -294,6 +298,14 @@ public class Funnel extends Container implements Savable{
     public Vector3f getPosition() {
         
         return getSpatial().getWorldTranslation();
+        
+    }
+
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
         
     }
     

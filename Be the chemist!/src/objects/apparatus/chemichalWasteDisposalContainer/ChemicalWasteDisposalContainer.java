@@ -104,4 +104,10 @@ public class ChemicalWasteDisposalContainer extends Apparatus implements Savable
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);        
+    }
+    
 }

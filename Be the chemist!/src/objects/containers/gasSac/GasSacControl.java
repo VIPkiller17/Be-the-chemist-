@@ -31,53 +31,63 @@ public class GasSacControl extends AbstractControl{
         
         //gasSac.setTemperature(beaker.getSolution().getTemperature());
         
-        gasSac.updateNodeState();
-        
-        if(spatial.getLocalRotation().getRotationColumn(1).getY()<0){
+        if(gasSac.getPosition().getX()<4.72f&&gasSac.getPosition().getX()>4.28f&&gasSac.getPosition().getY()<0.61f&&gasSac.getPosition().getY()>0&&gasSac.getPosition().getZ()<3.67f&&gasSac.getPosition().getZ()>4.33f){
             
-            gasSac.getPourParticleEmitter().setVolume((((FastMath.RAD_TO_DEG*FastMath.asin(Math.abs(spatial.getLocalRotation().getRotationColumn(1).getY())))+90)/1000)*gasSac.getPourParticleEmitter().getDelay());
-
-        }else{
+            gasSac.destroy();
             
-            gasSac.getPourParticleEmitter().setVolume((FastMath.RAD_TO_DEG*Math.acos(spatial.getLocalRotation().getRotationColumn(1).getY())/1000)*gasSac.getPourParticleEmitter().getDelay());
-        
         }
         
-        if(gasSac.isOpenned()){
-            
-            //System.out.println("Gas sac is openned, evap emitting: "+gasSac.getEvaporationParticleEmitter().isEmitting()+", solution contains low density gas: "+gasSac.getSolution().containsLowDensityGas());
-            //System.out.println("pourParticleEMitter emitting: "+gasSac.getPourParticleEmitter().isEmitting()+", its volume: "+gasSac.getPourParticleEmitter().getVolume()+", its angle: "+spatial.getLocalRotation().getRotationColumn(1).getY()+", and is that lower than 0.707: "+(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f));
-            
-            if(!gasSac.getEvaporationParticleEmitter().isEmitting()&&gasSac.getSolution().containsLowDensityGas()){
-                
-                gasSac.startEvaporation();
-                
-            }
-            
-            if(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f&&!gasSac.getPourParticleEmitter().isEmitting()){
-                
-                gasSac.startPouring();
-            
-            }else if(spatial.getLocalRotation().getRotationColumn(1).getY()>0.707f&&gasSac.getPourParticleEmitter().isEmitting()){
+        if(!gasSac.isDestroyed()){
+        
+            gasSac.updateNodeState();
 
+            if(spatial.getLocalRotation().getRotationColumn(1).getY()<0){
+
+                gasSac.getPourParticleEmitter().setVolume((((FastMath.RAD_TO_DEG*FastMath.asin(Math.abs(spatial.getLocalRotation().getRotationColumn(1).getY())))+90)/1000)*gasSac.getPourParticleEmitter().getDelay());
+
+            }else{
+
+                gasSac.getPourParticleEmitter().setVolume((FastMath.RAD_TO_DEG*Math.acos(spatial.getLocalRotation().getRotationColumn(1).getY())/1000)*gasSac.getPourParticleEmitter().getDelay());
+
+            }
+
+            if(gasSac.isOpenned()){
+
+                //System.out.println("Gas sac is openned, evap emitting: "+gasSac.getEvaporationParticleEmitter().isEmitting()+", solution contains low density gas: "+gasSac.getSolution().containsLowDensityGas());
+                //System.out.println("pourParticleEMitter emitting: "+gasSac.getPourParticleEmitter().isEmitting()+", its volume: "+gasSac.getPourParticleEmitter().getVolume()+", its angle: "+spatial.getLocalRotation().getRotationColumn(1).getY()+", and is that lower than 0.707: "+(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f));
+
+                if(!gasSac.getEvaporationParticleEmitter().isEmitting()&&gasSac.getSolution().containsLowDensityGas()){
+
+                    gasSac.startEvaporation();
+
+                }
+
+                if(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f&&!gasSac.getPourParticleEmitter().isEmitting()){
+
+                    gasSac.startPouring();
+
+                }else if(spatial.getLocalRotation().getRotationColumn(1).getY()>0.707f&&gasSac.getPourParticleEmitter().isEmitting()){
+
+                    gasSac.stopPouring();
+
+                }
+
+            }else{
+
+                gasSac.stopEvaporation();
                 gasSac.stopPouring();
 
             }
-            
-        }else{
-            
-            gasSac.stopEvaporation();
-            gasSac.stopPouring();
-            
-        }
+
+            //ACT BASED ON THE STATE OF THE CONTAINER
+
+            //if the temperature of the container is too high
+            if(gasSac.getTemperature()>gasSac.getMaxTemperature()){
+
+                gasSac.meltDown();
+
+            }
         
-        //ACT BASED ON THE STATE OF THE CONTAINER
-        
-        //if the temperature of the container is too high
-        if(gasSac.getTemperature()>gasSac.getMaxTemperature()){
-            
-            gasSac.meltDown();
-            
         }
         
     }

@@ -167,4 +167,11 @@ public class Sink extends PhysicalObject{
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        
+    }
+    
 }

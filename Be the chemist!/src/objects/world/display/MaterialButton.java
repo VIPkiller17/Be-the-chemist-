@@ -180,8 +180,9 @@ public class MaterialButton implements Savable{
         switch(name){
             
             case "Beaker":
-                return 1;
             case "Gas sac":
+            case "Erlenmeyer":
+            case "Test tube":
                 return 1;
             default:
                 return 0;

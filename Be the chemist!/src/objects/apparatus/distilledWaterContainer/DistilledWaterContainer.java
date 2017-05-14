@@ -241,4 +241,12 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
+        
+    }
+    
 }

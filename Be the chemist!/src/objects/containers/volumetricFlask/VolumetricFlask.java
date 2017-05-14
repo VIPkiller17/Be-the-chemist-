@@ -310,4 +310,12 @@ public class VolumetricFlask extends Container implements Savable{
         
     }
     
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
+        
+    }
+    
 }

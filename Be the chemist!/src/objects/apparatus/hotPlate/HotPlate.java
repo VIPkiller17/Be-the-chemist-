@@ -57,11 +57,15 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
     private float presentAngle;
     private double temperature;
     
+    private Main main;
+    
     public HotPlate(Main main,Vector3f position) {
        
         super(main,position);
         
         node = new Node();
+        
+        this.main=main;
         
         spatial=main.getAssetManager().loadModel("Models/Static/HotPlate/HotPlate.j3o");
         dialHighlight=main.getAssetManager().loadModel("Models/Static/HotPlate/HotPlate_Dial_Highlight.j3o");
@@ -307,6 +311,14 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
         }
         
         return false;
+        
+    }
+    
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
+        main.getItemsList().remove(this);
         
     }
     

@@ -46,11 +46,15 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     
     private Node node;
     
+    private Main main;
+    
     public FumeHoodDoor(Main main,FumeHood fumeHood,AssetManager assetManager,Node rootNode){
         
         super(main,new Vector3f(6.72f,1.02f,10.18f));
         
         node=new Node();
+        
+        this.main=main;
         
         this.fumeHood=fumeHood;
         
@@ -165,6 +169,13 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     public Spatial getSpatial() {
         
         return spatial;
+        
+    }
+    
+    @Override
+    public void destroy() {
+        
+        main.getItemsList().remove(this);
         
     }
     

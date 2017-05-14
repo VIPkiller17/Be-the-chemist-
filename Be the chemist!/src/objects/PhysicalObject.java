@@ -30,6 +30,8 @@ public abstract class PhysicalObject implements Savable, Describable{
     
     private double mass;
     
+    protected boolean destroyed;
+    
     public PhysicalObject(Main main,Vector3f position){
         
         this.position=position;
@@ -129,5 +131,13 @@ public abstract class PhysicalObject implements Savable, Describable{
     public abstract String getDescription();
     
     public abstract String getName();
+    
+    public abstract void destroy();
+    
+    public boolean isDestroyed(){
+        
+        return destroyed;
+        
+    }
     
 }

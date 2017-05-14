@@ -53,9 +53,13 @@ public class AnalyticalBalance extends Apparatus implements Savable{
     private CollisionShape analyticalBalanceCollisionShape;
     private RigidBodyControl analyticalBalance_phy;
     
+    private Main main;
+    
     public AnalyticalBalance(Main main,Node rootNode,CollisionResults collisionResults, AssetManager assetManager, Vector3f position) {
        
         super(main,position);
+        
+        this.main=main;
         
         node = new Node();
         
@@ -245,6 +249,13 @@ public class AnalyticalBalance extends Apparatus implements Savable{
     public String getName() {
         
         return "Analytical balance";
+        
+    }
+
+    @Override
+    public void destroy() {
+        
+        main.getRootNode().detachChild(node);
         
     }
     

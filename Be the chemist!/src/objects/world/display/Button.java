@@ -11,7 +11,6 @@ import com.jme3.export.Savable;
 import com.jme3.font.BitmapFont;
 import com.jme3.font.BitmapText;
 import com.jme3.material.Material;
-import com.jme3.material.RenderState;
 import com.jme3.math.ColorRGBA;
 import com.jme3.renderer.queue.RenderQueue;
 import com.jme3.scene.Geometry;
@@ -27,6 +26,8 @@ import objects.containers.gasSac.GasSac;
 import objects.player.Hand;
 import objects.solution.Solution;
 import main.Main;
+import objects.containers.erlenmeyer.Erlenmeyer;
+import objects.containers.testTube.TestTube;
 
 /**
  *
@@ -1616,8 +1617,14 @@ public class Button implements Savable{
                                 case "Gas sac":
                                     hand.setHeldObject(new GasSac(main,hand.getWorldTranslation()));
                                     break;
+                                case "Erlenmeyer":
+                                    hand.setHeldObject(new Erlenmeyer(main,hand.getWorldTranslation()));
+                                    break;
+                                case "Test tube":
+                                    hand.setHeldObject(new TestTube(main,hand.getWorldTranslation()));
+                                    break;
                                 default:
-                                    //System.out.println("ERROR: Invalid material button name");
+                                    System.out.println("ERROR: Invalid material button name");
                                     break;
                             }
 

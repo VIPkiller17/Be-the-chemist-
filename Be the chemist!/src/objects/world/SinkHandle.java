@@ -227,4 +227,10 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
         
     }
     
+    public Sink getParentSink(){
+        
+        return parentSink;
+        
+    }
+    
 }

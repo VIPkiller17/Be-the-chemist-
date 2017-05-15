@@ -51,6 +51,9 @@ public class HandControl extends AbstractControl{
     private static int presentCorrectCollisionIndex;
     private static Spatial observer;
     
+    private float[] presentAngles;
+    private float[] pastAngles;
+    
     private boolean foundPresentCorrectCollision;
     private Hand hand;
     private int handSide;
@@ -289,9 +292,11 @@ public class HandControl extends AbstractControl{
         //System.out.println("Angle of last frame rotation in rads: "+FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())+", in degs: "+FastMath.RAD_TO_DEG*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX()));
         //System.out.println("Angle of present frame rotation in rads: "+FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())+", in degs: "+FastMath.RAD_TO_DEG*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX()));
         
-        System.out.println("Angle difference of hand rotation since last frame in deg: "+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+        //System.out.println("Angle difference of hand rotation since last frame in deg: "+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
         
-        //System.out.println("Hand rotation (Quaternion): "+VRHardware.getVRinput().getOrientation(handSide)+", (Matrix):\nCol 0: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0)+"\nCol 1: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1)+"\nCol 2: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0));
+        System.out.println("Hand rotation (Quaternion): "+VRHardware.getVRinput().getOrientation(handSide)+", (Matrix):\nCol 0: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0)+"\nCol 1: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1)+"\nCol 2: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0));
+        
+        //System.out.println("Present angles: "+FastMath.RAD_TO_DEG*VRHardware.getVRinput().getOrientation(handSide).toAngles(presentAngles)[0]+", "+FastMath.RAD_TO_DEG*VRHardware.getVRinput().getOrientation(handSide).toAngles(presentAngles)[1]+", "+FastMath.RAD_TO_DEG*VRHardware.getVRinput().getOrientation(handSide).toAngles(presentAngles)[2]);
         
         //System.out.println("Updating ray position...");
         
@@ -1273,6 +1278,12 @@ public class HandControl extends AbstractControl{
 
         }
         
+        if(!laserActivatedByDescription&&!laserActivatedByDisplay&&!VRHardware.getVRinput().isButtonDown(handSide, OpenVRInput.VRINPUT_TYPE.ViveTouchpadAxis)){
+
+            conditionalMoveTeleLaserOut();
+
+        }
+        
     }
     
     private void makeLaserAppear(Vector3f endPoint,ColorRGBA color){
@@ -1350,28 +1361,64 @@ public class HandControl extends AbstractControl{
             
             if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()>0&&rotationOnLastFrame.getRotationColumn(1).getY()>0){
             
-                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+                if(((SinkHandle)hand.getHeldObject()).getParentSink().getIndex()==0)
+                
+                    ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
             
+                else
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(-1*FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+                
             }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()<0&&rotationOnLastFrame.getRotationColumn(1).getY()<0){
                 
-                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())-FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())));
+                if(((SinkHandle)hand.getHeldObject()).getParentSink().getIndex()==0)
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())-FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())));
+
+                else
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(-1*FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())-FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())));
                 
             }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()<0&&rotationOnLastFrame.getRotationColumn(1).getY()>0){
                 
-                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+FastMath.abs(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                if(((SinkHandle)hand.getHeldObject()).getParentSink().getIndex()==0)
                 
+                    ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+FastMath.abs(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                
+                else
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(-1*FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+FastMath.abs(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+
             }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()>0&&rotationOnLastFrame.getRotationColumn(1).getY()<0){
                 
-                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+(-1*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                if(((SinkHandle)hand.getHeldObject()).getParentSink().getIndex()==0)
                 
+                    ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+(-1*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                
+                else
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(-1*FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())+(-1*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()))));
+                    
             }else if(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getY()==0){
                 
-                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())));
+                if(((SinkHandle)hand.getHeldObject()).getParentSink().getIndex()==0)
+                
+                    ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())));
+                
+                else
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(-1*FastMath.RAD_TO_DEG*(FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY())));
                 
             }else if(rotationOnLastFrame.getRotationColumn(1).getY()==0){
                 
-                ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*((-1*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY()))));
+                if(((SinkHandle)hand.getHeldObject()).getParentSink().getIndex()==0)
                 
+                    ((SinkHandle)hand.getHeldObject()).rotate(FastMath.RAD_TO_DEG*((-1*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY()))));
+                
+                else
+                    
+                    ((SinkHandle)hand.getHeldObject()).rotate(-1*FastMath.RAD_TO_DEG*((-1*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getY()))));
+                    
             }
             
             rotationWhenGrabbed=VRHardware.getVRinput().getFinalObserverRotation(handSide);

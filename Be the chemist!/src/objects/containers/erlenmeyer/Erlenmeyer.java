@@ -272,7 +272,7 @@ public class Erlenmeyer extends Container implements Savable{
             
         }else{
         
-            return "Erlenmeyer:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\nAverage temperature: "+getFormattedTemperature();
+            return "Erlenmeyer:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n  Average temperature: "+getFormattedTemperature();
             
         }
         

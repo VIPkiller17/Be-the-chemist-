@@ -83,7 +83,6 @@ public class Main extends VRApplication {
     //World
     private Room room;
     private Floor floor;
-    private AnalyticalBalance analyticalBalance;
     private HotPlate hotPlate;
     private BunsenBurner bunsenBurner1;
     private BunsenBurner bunsenBurner2;
@@ -163,7 +162,7 @@ public class Main extends VRApplication {
         //Physics
         bulletAppState = new BulletAppState();
         getStateManager().attach(bulletAppState);
-        bulletAppState.getPhysicsSpace().setAccuracy(1f/60f);
+        bulletAppState.getPhysicsSpace().setAccuracy(1f/300f);
         
         //LOAD SPATIALS START
         
@@ -178,8 +177,6 @@ public class Main extends VRApplication {
         room=new Room(this);
         floor=new Floor(this);
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
-        analyticalBalance = new AnalyticalBalance(this, rootNode, collisionResults, getAssetManager(), new Vector3f(4.25f, .94f, 0.5f));
-        analyticalBalance.setRotation(new Quaternion().fromAngleAxis((FastMath.PI * 90), Vector3f.UNIT_Y));  //Rotation
         hotPlate = new HotPlate(this,new Vector3f(4.25f,0.94f, 0.8f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
@@ -242,10 +239,11 @@ public class Main extends VRApplication {
         beakers.add(new Beaker(this,new Vector3f(-3.0910027f, 0.1550500008f + 0.065f, 5.330965f)));
         beakers.add(new Beaker(this,new Vector3f(-3.7073069f, 0.10500008f + 0.065f, 5.3346424f)));
         
+        //This is the test beaker, spawns at the player's position with the specified substances inside
         /*
         beaker=new Beaker(this,new Vector3f(-4,0.05f,-5));
-        beaker.setSolution(new Solution(this,beaker,substances.get(47),100,298));//solid so grams
-        beaker.getSolution().addSubstance(substances.get(44),1,298);//liquid so liters
+        beaker.setSolution(new Solution(this,beaker,substances.get(47),100,298));//solid so grams (100)
+        beaker.getSolution().addSubstance(substances.get(44),1,298);//liquid so liters (1)
         */
         //OBJECTS INIT END
         

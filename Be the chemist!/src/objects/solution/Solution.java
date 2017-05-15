@@ -749,11 +749,11 @@ public class Solution {
             
             if(i<substances.size()-1)
             
-                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n  with temperature: "+presentFormattedTemp+" K;\n";
+                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n    with temperature: "+presentFormattedTemp+" K;\n";
             
             else if(i==substances.size()-1)
                 
-                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n  with temperature: "+presentFormattedTemp+" K.\n";
+                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n    with temperature: "+presentFormattedTemp+" K.\n";
             
         }
         

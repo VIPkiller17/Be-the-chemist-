@@ -134,8 +134,8 @@ public class Button implements Savable{
                 text.setLocalTranslation(-text.getLineWidth()/2,(quad.getHeight()/2)+(text.getLineHeight()/2),0.01f);
                 text.setQueueBucket(RenderQueue.Bucket.Translucent);
                 node.setLocalTranslation(0,-0.2f,0.05f);
-                break;
                 */
+                break;
                 
             case 2:
                 
@@ -782,19 +782,27 @@ public class Button implements Savable{
         
         this.pointed=pointed;
         
-        if(!toggle)
+        //System.out.println("Button with preset: "+preset+" is pointed: "+pointed);
         
-            if(pointed){
+        if(!grayedOut){
+        
+            if(!toggle){
 
-                backgroundMat.setColor("Color", POINTED_COLOR);
-                presentBackgroundColor=POINTED_COLOR;
+                if(pointed){
 
-            }else{
+                    backgroundMat.setColor("Color", POINTED_COLOR);
+                    presentBackgroundColor=POINTED_COLOR;
 
-                backgroundMat.setColor("Color", NORMAL_COLOR);
-                presentBackgroundColor=NORMAL_COLOR;
+                }else{
 
+                    backgroundMat.setColor("Color", NORMAL_COLOR);
+                    presentBackgroundColor=NORMAL_COLOR;
+
+                }
+                
             }
+            
+        }
         
     }
     

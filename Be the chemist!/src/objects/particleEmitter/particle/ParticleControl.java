@@ -137,11 +137,9 @@ public class ParticleControl extends AbstractControl{
 
                         }else if(particle.getMain().getParticleReceivers().get(i) instanceof TestTube){
 
-                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((TestTube)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation().add(0,0.03f,0))<0.01f){
+                            if(particle.getSpatial()!=null&&particle.getSpatial().getWorldTranslation().distance(((TestTube)particle.getMain().getParticleReceivers().get(i)).getSpatial().getLocalTranslation().add(0,0.06f,0))<0.02f){
 
                                 for(Substance s: particle.getSubstances()){
-
-                                    //System.out.println(((Container)particle.getMain().getParticleReceivers().get(i)).getSolution());
                                     
                                     ((Container)particle.getMain().getParticleReceivers().get(i)).getSolution().addSubstance(s,particle.getVolume(),particle.getTemperature());
                                 }

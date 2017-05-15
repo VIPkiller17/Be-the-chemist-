@@ -144,10 +144,12 @@ public class TestTube extends Container implements Savable{
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
-        collisionShape=new CylinderCollisionShape(new Vector3f(0.02f,0.06f,0),1);
+        collisionShape=new CylinderCollisionShape(new Vector3f(0.04f,0.1f,0),1);
         
-        testTube_phy=new RigidBodyControl(collisionShape,1);
-        testTube_phy.setFriction(1f);
+        testTube_phy=new RigidBodyControl(collisionShape,0.2f);
+        testTube_phy.setFriction(0.5f);
+        //testTube_phy.setDamping(10f, 10f);
+        testTube_phy.setSleepingThresholds(5f,5f);
         spatial.addControl(testTube_phy);
         main.getBulletAppState().getPhysicsSpace().add(testTube_phy);
         
@@ -264,11 +266,11 @@ public class TestTube extends Container implements Savable{
         
         if(getSolution().getVolume()<0.001){
             
-            return "Erlenmeyer:\n   Empty.";
+            return "Test tube:\n   Empty.";
             
         }else{
         
-            return "Erlenmeyer:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\nAverage temperature: "+getFormattedTemperature();
+            return "Test tube:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n  Average temperature: "+getFormattedTemperature();
             
         }
         

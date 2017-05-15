@@ -155,8 +155,10 @@ public class Beaker extends Container implements Savable{
         spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
         collisionShape=new CylinderCollisionShape(new Vector3f(0.05f,0.06f,0),1);
         
-        beaker_phy=new RigidBodyControl(collisionShape,1);
+        beaker_phy=new RigidBodyControl(collisionShape,1f);
         beaker_phy.setFriction(1f);
+        beaker_phy.setDamping(0.75f, 0.75f);
+        beaker_phy.setSleepingThresholds(60f,60f);
         spatial.addControl(beaker_phy);
         bulletAppState.getPhysicsSpace().add(beaker_phy);
         
@@ -280,7 +282,7 @@ public class Beaker extends Container implements Savable{
             
         }else{
         
-            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\nAverage temperature: "+getFormattedTemperature();
+            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n  Average temperature: "+getFormattedTemperature();
             
         }
         

@@ -29,11 +29,11 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
     private ParticleEmitter particleEmitter;
     
     private boolean highlightVisible;
-    private boolean openned;
+    private boolean opened;
     
-    private Spatial container,valveClosed,valveOpenned,valveClosedHighlight,valveOpennedHighlight,liquid;
+    private Spatial container,valveClosed,valveOpened,valveClosedHighlight,valveOpenedHighlight,liquid;
     
-    private Material valveClosedHighlightMat,valveOpennedHighlightMat;
+    private Material valveClosedHighlightMat,valveOpenedHighlightMat;
     
     private Node node;
     
@@ -73,12 +73,12 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         node.attachChild(valveClosed);
         valveClosed.setLocalTranslation(-0.35f,-0.35f,0.015f);
         
-        valveOpenned=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/DistilledWaterContainer_Valve_Openned.j3o");
-        valveOpenned.setName("Distilled water container openned valve");
-        valveOpenned.setUserData("correctCollision", true);
-        valveOpenned.setUserData("correspondingObject", this);
-        node.attachChild(valveOpenned);
-        valveOpenned.setLocalTranslation(new Vector3f(0,-5,0));
+        valveOpened=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/DistilledWaterContainer_Valve_Openned.j3o");
+        valveOpened.setName("Distilled water container openned valve");
+        valveOpened.setUserData("correctCollision", true);
+        valveOpened.setUserData("correspondingObject", this);
+        node.attachChild(valveOpened);
+        valveOpened.setLocalTranslation(new Vector3f(0,-5,0));
         
         valveClosedHighlight=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/Highlight/DistilledWaterContainer_Valve_Closed_Highlight.j3o");
         valveClosedHighlight.setName("Distilled water container");
@@ -90,15 +90,15 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         valveClosedHighlight.setMaterial(valveClosedHighlightMat);
         node.attachChild(valveClosedHighlight);
         
-        valveOpennedHighlight=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/Highlight/DistilledWaterContainer_Valve_Openned_Highlight.j3o");
-        valveOpennedHighlight.setName("Distilled water container");
-        valveOpennedHighlight.setLocalTranslation(0,-5,0);
-        valveOpennedHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
-        valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
-        valveOpennedHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
-        valveOpennedHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
-        valveOpennedHighlight.setMaterial(valveOpennedHighlightMat);
-        node.attachChild(valveOpennedHighlight);
+        valveOpenedHighlight=assetManager.loadModel("Models/Static/DistilledWaterContainer/Valve/Highlight/DistilledWaterContainer_Valve_Openned_Highlight.j3o");
+        valveOpenedHighlight.setName("Distilled water container");
+        valveOpenedHighlight.setLocalTranslation(0,-5,0);
+        valveOpenedHighlightMat=new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
+        valveOpenedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
+        valveOpenedHighlightMat.getAdditionalRenderState().setBlendMode(RenderState.BlendMode.Alpha);
+        valveOpenedHighlight.setQueueBucket(RenderQueue.Bucket.Translucent);
+        valveOpenedHighlight.setMaterial(valveOpenedHighlightMat);
+        node.attachChild(valveOpenedHighlight);
         
         main.getItemsList().add(this);
         
@@ -115,11 +115,11 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
     }
     
-    public void setOpenned(boolean openned){
+    public void setOpened(boolean opened){
         
-        this.openned=openned;
+        this.opened=opened;
         
-        if(openned)
+        if(opened)
         
             particleEmitter.begin();
         
@@ -131,23 +131,23 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
     
     public void toggle(){
         
-        if(openned){
+        if(opened){
             
             valveClosed.setLocalTranslation(-0.35f,-0.35f,0.015f);
             
-            valveOpenned.setLocalTranslation(0,-5,0);
+            valveOpened.setLocalTranslation(0,-5,0);
             
-            openned=false;
+            opened=false;
             
             particleEmitter.stop();
             
         }else{
             
-            valveOpenned.setLocalTranslation(-0.37f,-0.35f,0f);
+            valveOpened.setLocalTranslation(-0.37f,-0.35f,0f);
             
             valveClosed.setLocalTranslation(0,-5,0);
             
-            openned=true;
+            opened=true;
             
             particleEmitter.begin();
             
@@ -176,12 +176,12 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         
         if(highlightVisible)
             
-            if(openned){
+            if(opened){
         
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
                 
-                valveOpennedHighlight.setLocalTranslation(-0.37f,-0.35f,0f);
+                valveOpenedHighlight.setLocalTranslation(-0.37f,-0.35f,0f);
                 valveClosedHighlight.setLocalTranslation(0,-5,0);
             
             }else{
@@ -189,7 +189,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
                 
-                valveOpennedHighlight.setLocalTranslation(0,-5,0);
+                valveOpenedHighlight.setLocalTranslation(0,-5,0);
                 valveClosedHighlight.setLocalTranslation(-0.35f,-0.35f,0.015f);
                 
             }
@@ -199,7 +199,7 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
             //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
             //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
             
-            valveOpennedHighlight.setLocalTranslation(0,-5,0);
+            valveOpenedHighlight.setLocalTranslation(0,-5,0);
             valveClosedHighlight.setLocalTranslation(0,-5,0);
                 
         }
@@ -247,6 +247,26 @@ public class DistilledWaterContainer extends Apparatus implements Savable,Grabba
         main.getRootNode().detachChild(node);
         main.getItemsList().remove(this);
         
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "The dstilled water container";
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherDistilledWaterContainer){
+        
+        if(otherDistilledWaterContainer instanceof DistilledWaterContainer)
+            
+            return ((DistilledWaterContainer) otherDistilledWaterContainer).getSpatial().getLocalTranslation().equals(container.getLocalTranslation());
+        
+        else
+            
+            return false;
+            
     }
     
 }

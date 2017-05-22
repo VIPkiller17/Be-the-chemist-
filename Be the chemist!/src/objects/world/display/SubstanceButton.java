@@ -53,7 +53,6 @@ public class SubstanceButton implements Savable{
     private Quad quad;
     private Geometry background;
     private Material backgroundMat;
-    private ColorRGBA backgroundColor;
     
     private boolean grayedOut;
     
@@ -190,6 +189,13 @@ public class SubstanceButton implements Savable{
             return false;
             
         }
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "A substance button";
         
     }
     

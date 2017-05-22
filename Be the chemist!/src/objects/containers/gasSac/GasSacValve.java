@@ -27,7 +27,7 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
     private Main main;
     private GasSac gasSac;
     
-    private Spatial valveClosed,valveOpenned,valveClosedHighlight,valveOpennedHighlight;
+    private Spatial valveClosed,valveOpened,valveClosedHighlight,valveOpennedHighlight;
     
     private Material valveClosedHighlightMat,valveOpennedHighlightMat;
     
@@ -52,12 +52,12 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         valveClosed.setUserData("correspondingObject", this);
         node.attachChild(valveClosed);
         
-        valveOpenned=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Openned.j3o");
-        valveOpenned.setName("Gas sac openned valve");
-        valveOpenned.setUserData("correctCollision", true);
-        valveOpenned.setUserData("correspondingObject", this);
-        node.attachChild(valveOpenned);
-        valveOpenned.setLocalTranslation(new Vector3f(0,-50,0));
+        valveOpened=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Openned.j3o");
+        valveOpened.setName("Gas sac openned valve");
+        valveOpened.setUserData("correctCollision", true);
+        valveOpened.setUserData("correspondingObject", this);
+        node.attachChild(valveOpened);
+        valveOpened.setLocalTranslation(new Vector3f(0,-50,0));
         
         valveClosedHighlight=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Closed_Highlight.j3o");
         valveClosedHighlight.setName("Gas sac closed valve highlight");
@@ -95,21 +95,21 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
     
     public void toggle(){
         
-        if(gasSac.isOpenned()){
+        if(gasSac.isOpened()){
             
-            valveOpenned.setLocalTranslation(0,-50,0);
+            valveOpened.setLocalTranslation(0,-50,0);
             
             valveClosed.setLocalTranslation(0,0,0);
             
-            gasSac.setOpenned(false);
+            gasSac.setOpened(false);
             
         }else{
             
             valveClosed.setLocalTranslation(0,-50,0);
             
-            valveOpenned.setLocalTranslation(0,0,0);
+            valveOpened.setLocalTranslation(0,0,0);
             
-            gasSac.setOpenned(true);
+            gasSac.setOpened(true);
             
         }
         
@@ -122,7 +122,7 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         
         if(highlightVisible)
             
-            if(gasSac.isOpenned()){
+            if(gasSac.isOpened()){
         
                 //valveOpennedHighlightMat.setColor("Color",Main.HIGHLIGHT_VISIBLE);
                 //valveClosedHighlightMat.setColor("Color",Main.HIGHLIGHT_INVISIBLE);
@@ -206,6 +206,25 @@ public class GasSacValve extends PhysicalObject implements Grabbable{
         
         main.getItemsList().remove(this);
         
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Gas sac";
+    }
+    
+    @Override
+    public boolean equals(Object otherGasSacValve){
+        
+        if(otherGasSacValve instanceof GasSacValve)
+            
+            return ((GasSacValve) otherGasSacValve).getGrabbablePosition().equals(getGrabbablePosition());
+        
+        else
+            
+            return false;
+            
     }
     
 }

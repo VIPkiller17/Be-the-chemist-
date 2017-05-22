@@ -9,8 +9,6 @@ import com.jme3.input.controls.KeyTrigger;
 import com.jme3.light.DirectionalLight;
 import com.jme3.light.PointLight;
 import com.jme3.math.ColorRGBA;
-import com.jme3.math.FastMath;
-import com.jme3.math.Quaternion;
 import com.jme3.math.Vector3f;
 import com.jme3.renderer.RenderManager;
 import com.jme3.scene.Node;
@@ -25,7 +23,6 @@ import jmevr.input.OpenVR;
 import jmevr.input.VRAPI;
 import jmevr.shadow.VRDirectionalLightShadowRenderer;
 import objects.PhysicalObject;
-import objects.apparatus.analyticalBalance.AnalyticalBalance;
 import objects.apparatus.bunsenBurner.BunsenBurner;
 import objects.apparatus.chemichalWasteDisposalContainer.ChemicalWasteDisposalContainer;
 import objects.apparatus.distilledWaterContainer.DistilledWaterContainer;
@@ -77,15 +74,12 @@ public class Main extends VRApplication {
     private boolean rightHandCreated,leftHandCreated;
     
     //TPF counters
-    private float CommonTPF;
     private float controllerConnectionTPF;
     
     //World
     private Room room;
     private Floor floor;
     private HotPlate hotPlate;
-    private BunsenBurner bunsenBurner1;
-    private BunsenBurner bunsenBurner2;
     private DistilledWaterContainer distilledWaterContainer;
     private FumeHood fumeHood;
     private TrashBin trashBin;
@@ -93,7 +87,6 @@ public class Main extends VRApplication {
     private Sink sink0,sink1;
     
     private Display mainMenu;
-    private Display settingsMenu;
     private Display substanceList;
     private Display filters;
     private Display keyBoard;
@@ -177,7 +170,7 @@ public class Main extends VRApplication {
         room=new Room(this);
         floor=new Floor(this);
         fumeHood=new FumeHood(this,getAssetManager(),rootNode);
-        hotPlate = new HotPlate(this,new Vector3f(4.25f,0.94f, 0.8f));
+        hotPlate = new HotPlate(this,new Vector3f(4.25f,0.925f, 0.8f));
         chemicalWasteDisposalContainer=new ChemicalWasteDisposalContainer(this,getAssetManager(),rootNode);
         distilledWaterContainer=new DistilledWaterContainer(this,getAssetManager(),rootNode);
         sink0=new Sink(this,getAssetManager(),rootNode,0);
@@ -194,7 +187,7 @@ public class Main extends VRApplication {
         
         //OBJECTS INIT START
         
-        //Upper Right Beakers
+        //Upper right Beakers
         beakers.add(new Beaker(this,new Vector3f(-1.0708143f, 0.455f + 0.065f, -1.9390206f)));
         beakers.add(new Beaker(this,new Vector3f(-1.1044384f, 0.45500004f + 0.065f, -1.2780275f)));
         beakers.add(new Beaker(this,new Vector3f(-1.105022f, 0.45500007f + 0.065f, 0.7411303f)));
@@ -420,8 +413,6 @@ public class Main extends VRApplication {
     public void removeItem(PhysicalObject item){
         
         items.remove(item);
-        
-        items.removeAll(Collections.singleton(null)); 
         
     }
     

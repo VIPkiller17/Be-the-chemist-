@@ -73,12 +73,6 @@ public abstract class PhysicalObject implements Savable, Describable{
     
     public abstract Node getNode();
     
-    public void addPhysicsControl(RigidBodyControl control){
-        
-        node.addControl(control);
-        
-    }
-    
     public void setInsideFumeHood(boolean insideFumeHood){
         
         this.insideFumeHood=insideFumeHood;

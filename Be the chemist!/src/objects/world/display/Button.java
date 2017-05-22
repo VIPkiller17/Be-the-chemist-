@@ -49,8 +49,6 @@ public class Button implements Savable{
     
     private Display parentDisplay;
     
-    private PhysicalObject item;
-    
     private BitmapText text;
     
     private BitmapFont font;
@@ -77,6 +75,7 @@ public class Button implements Savable{
     
     private int preset;
     
+    /*
     //Main menu
     public static final int TOGGLE_MODE=0,CREDITS=1,EXIT_GAME=2;
         //Settings TODO
@@ -92,7 +91,7 @@ public class Button implements Savable{
     public static final int KEY_X=28,KEY_C=29,KEY_V=30,KEY_B=31,KEY_N=32,KEY_M=33,KEY_1=34,KEY_2=35,KEY_3=36,KEY_4=37;
     public static final int KEY_5=38,KEY_6=39,KEY_7=40,KEY_8=41,KEY_9=42,KEY_0=43,KEY_BACKSPACE=44,KEY_SPACE=46,KEY_DASH=47;
     public static final int KEY_OPEN_PARENTHESES=48,KEY_CLOSE_PARENTHESES=49,KEY_CAPS=50,KEY_COMMA=51,KEY_PERIOD=52;
-    
+    */
     
     public Button(Main main,Display parentDisplay,int preset){
         
@@ -884,6 +883,8 @@ public class Button implements Savable{
 
                         }else if(!hand.isHoldingObject()){
 
+                            System.out.println("Get selected substance button pressed, and hand is empty, spawning "+parentDisplay.getSelectedSubstanceButton().getSubstance());
+                            
                             switch (parentDisplay.getSelectedSubstanceButton().getSubstance().getStateInteger(298)) {
                                 case 0:
                                     hand.setHeldObject(new GasSac(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
@@ -892,10 +893,11 @@ public class Button implements Savable{
                                     hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
                                     break;
                                 case 2:
-                                    hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),1,298)));
+                                    System.out.println("    Substance is solid");
+                                    hand.setHeldObject(new Beaker(main,hand.getWorldTranslation(),new Solution(main,((Container)hand.getHeldObject()),parentDisplay.getSelectedSubstanceButton().getSubstance(),100,298)));
                                     break;
                                 default:
-                                    //System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
+                                    System.out.println("ERROR: Invalid getGetStateInteger() return value in activate() of get substance item button with name: "+parentDisplay.getSelectedSubstanceButton().getSubstance().getName());
                                     break;
                             }
 
@@ -1805,6 +1807,26 @@ public class Button implements Savable{
 
     @Override
     public void read(JmeImporter ji) throws IOException {
+    }
+    
+    @Override
+    public boolean equals(Object otherButton){
+        
+        if(otherButton instanceof Button)
+            
+            return ((Button) otherButton).getPreset()==preset;
+        
+        else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Button with preset: "+preset;
+        
     }
     
 }

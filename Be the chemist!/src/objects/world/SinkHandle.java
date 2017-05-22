@@ -144,13 +144,15 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
         
         handle.setLocalRotation(new Quaternion().fromAngleAxis(-0.05f*presentAngle, Vector3f.UNIT_Y));
 
-        if(index==0)
+        if(index==0){
         
             parentSink.setColdFlow(presentAngle/1000);
         
-        else
+        }else{
             
             parentSink.setHotFlow(presentAngle/1000);
+            
+        }
         
     }
     
@@ -230,6 +232,32 @@ public class SinkHandle extends PhysicalObject implements Grabbable{
     public Sink getParentSink(){
         
         return parentSink;
+        
+    }
+    
+    public int getIndex(){
+        
+        return index;
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherSinkHandle){
+        
+        if(otherSinkHandle instanceof SinkHandle)
+            
+            return ((SinkHandle) otherSinkHandle).getIndex()==index&&((SinkHandle) otherSinkHandle).getParentSink().getIndex()==parentSink.getIndex();
+        
+        else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Sink handle of index: "+index+" of sink of index: "+parentSink.getIndex();
         
     }
     

@@ -16,8 +16,6 @@ import com.jme3.scene.control.AbstractControl;
  * @author VIPkiller17
  */
 public class ErlenmeyerControl extends AbstractControl{
-    
-    private float testTPF;
 
     private Erlenmeyer erlenmeyer;
     
@@ -31,7 +29,7 @@ public class ErlenmeyerControl extends AbstractControl{
     protected void controlUpdate(float tpf) {
         
         //SET THE STATE OF THE CONTAINER
-        if(erlenmeyer.getPosition().getX()<4.72f&&erlenmeyer.getPosition().getX()>4.28f&&erlenmeyer.getPosition().getY()<0.61f&&erlenmeyer.getPosition().getY()>0&&erlenmeyer.getPosition().getZ()<3.67f&&erlenmeyer.getPosition().getZ()>4.33f){
+        if(erlenmeyer.getPosition().getX()<4.72f&&erlenmeyer.getPosition().getX()>4.28f&&erlenmeyer.getPosition().getY()<0.61f&&erlenmeyer.getPosition().getY()>0&&erlenmeyer.getPosition().getZ()<-3.67f&&erlenmeyer.getPosition().getZ()>-4.33f){
             
             erlenmeyer.destroy();
             

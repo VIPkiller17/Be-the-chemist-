@@ -50,10 +50,9 @@ public class GasSac extends Container implements Savable{
     private Material highlightModelMat;
     private Spatial gasModel;
     private Material gasModelMat;
-    private Spatial valveClosed,valveOpenned;
     private ParticleEmitter evaporationParticleEmitter,pourParticleEmitter;
     
-    private boolean openned;
+    private boolean opened;
     
     private Vector3f particleEmitterPosition;
     private Spatial openningSurface;
@@ -102,8 +101,6 @@ public class GasSac extends Container implements Savable{
         highlightModel=assetManager.loadModel("Models/Objects/Containers/GasSac/Highlight/GasSac_Highlight.j3o");
         gasModel=assetManager.loadModel("Models/Objects/Containers/GasSac/Gas/GasSac_Gas.j3o");
         openningSurface=assetManager.loadModel("Models/Objects/Containers/OpenningSurface/OpenningSurface.j3o");
-        valveClosed=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Closed.j3o");
-        valveOpenned=main.getAssetManager().loadModel("Models/Objects/Containers/GasSac/Valve/GasSac_Valve_Openned.j3o");
         
         this.gasSacControl=new GasSacControl(this);
         spatial.addControl(gasSacControl);
@@ -245,27 +242,11 @@ public class GasSac extends Container implements Savable{
         
     }
     
-    public void explode(){
-        
-        
-        
-    }
-    
-    public void meltDown(){
-        
-        
-        
-    }
-    
-    public void breakContainer(){
-        
-        
-        
-    }
-    
-
+    @Override
     public Spatial getSpatial() {
+        
         return spatial;
+        
     }
     
     @Override
@@ -277,7 +258,7 @@ public class GasSac extends Container implements Savable{
             
         }else{
         
-            return "Gas sac:\n   Contains:\n   "+this.getSolution()+"\n  Total volume: "+getFormattedVolume();
+            return "Gas sac:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+" L;\n  Average temperature: "+getFormattedTemperature()+" K.";
             
         }
         
@@ -341,24 +322,6 @@ public class GasSac extends Container implements Savable{
         
     }
     
-    public Spatial getBeaker(){
-        
-        return spatial;
-        
-    }
-    
-    public void setEnabled(boolean enabled){
-            
-        spatial.getControl(RigidBodyControl.class).setEnabled(enabled);
-        
-    }
-    
-    public void clearForces(){
-        
-        spatial.getControl(RigidBodyControl.class).clearForces();
-        
-    }
-    
     public void clearVelocity(){
         
         spatial.getControl(RigidBodyControl.class).setLinearVelocity(Vector3f.ZERO);
@@ -411,17 +374,17 @@ public class GasSac extends Container implements Savable{
         
     }
     
-    public boolean isOpenned(){
+    public boolean isOpened(){
         
-        return openned;
+        return opened;
         
     }
     
-    public void setOpenned(boolean openned){
+    public void setOpened(boolean openned){
         
         //System.out.println("GasSac openned set to: "+openned);
         
-        this.openned=openned;
+        this.opened=openned;
         
     }
     
@@ -441,6 +404,21 @@ public class GasSac extends Container implements Savable{
         main.getGasSacs().remove(this);
         
         destroyed=true;
+        
+    }
+    
+    public void setGasVisible(boolean gasVisible,ColorRGBA color){
+        
+        if(gasVisible){
+            
+            gasModelMat.setColor("Color",color);
+            gasModel.setLocalTranslation(Vector3f.ZERO);
+            
+        }else{
+            
+            gasModel.setLocalTranslation(0,-50,0);
+            
+        }
         
     }
     

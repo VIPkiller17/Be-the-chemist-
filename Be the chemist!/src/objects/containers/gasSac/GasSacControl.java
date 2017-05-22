@@ -4,6 +4,7 @@
  */
 package objects.containers.gasSac;
 
+import com.jme3.math.ColorRGBA;
 import com.jme3.math.FastMath;
 import com.jme3.renderer.RenderManager;
 import com.jme3.renderer.ViewPort;
@@ -31,7 +32,7 @@ public class GasSacControl extends AbstractControl{
         
         //gasSac.setTemperature(beaker.getSolution().getTemperature());
         
-        if(gasSac.getPosition().getX()<4.72f&&gasSac.getPosition().getX()>4.28f&&gasSac.getPosition().getY()<0.61f&&gasSac.getPosition().getY()>0&&gasSac.getPosition().getZ()<3.67f&&gasSac.getPosition().getZ()>4.33f){
+        if(gasSac.getPosition().getX()<4.72f&&gasSac.getPosition().getX()>4.28f&&gasSac.getPosition().getY()<0.61f&&gasSac.getPosition().getY()>0&&gasSac.getPosition().getZ()<-3.67f&&gasSac.getPosition().getZ()>-4.33f){
             
             gasSac.destroy();
             
@@ -40,6 +41,18 @@ public class GasSacControl extends AbstractControl{
         if(!gasSac.isDestroyed()){
         
             gasSac.updateNodeState();
+            
+            if(gasSac.getSolution()!=null&&gasSac.getSolution().containsStates()[0]){
+
+                //System.out.println("beaker contains a liquid, updating color to "+beaker.getSolution().getLiquidColor());
+
+                gasSac.setGasVisible(true,gasSac.getSolution().getGasColor());
+
+            }else{
+
+                gasSac.setGasVisible(false,ColorRGBA.White);
+
+            }
 
             if(spatial.getLocalRotation().getRotationColumn(1).getY()<0){
 
@@ -51,7 +64,7 @@ public class GasSacControl extends AbstractControl{
 
             }
 
-            if(gasSac.isOpenned()){
+            if(gasSac.isOpened()){
 
                 //System.out.println("Gas sac is openned, evap emitting: "+gasSac.getEvaporationParticleEmitter().isEmitting()+", solution contains low density gas: "+gasSac.getSolution().containsLowDensityGas());
                 //System.out.println("pourParticleEMitter emitting: "+gasSac.getPourParticleEmitter().isEmitting()+", its volume: "+gasSac.getPourParticleEmitter().getVolume()+", its angle: "+spatial.getLocalRotation().getRotationColumn(1).getY()+", and is that lower than 0.707: "+(spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f));
@@ -79,15 +92,6 @@ public class GasSacControl extends AbstractControl{
 
             }
 
-            //ACT BASED ON THE STATE OF THE CONTAINER
-
-            //if the temperature of the container is too high
-            if(gasSac.getTemperature()>gasSac.getMaxTemperature()){
-
-                gasSac.meltDown();
-
-            }
-        
         }
         
     }

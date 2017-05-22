@@ -50,9 +50,6 @@ public class MaterialButton implements Savable{
     private Quad quad;
     private Geometry background;
     private Material backgroundMat;
-    private ColorRGBA backgroundColor;
-    
-    private boolean grayedOut;
     
     private Node node;
     
@@ -211,6 +208,13 @@ public class MaterialButton implements Savable{
             return false;
             
         }
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "A substance button";
         
     }
     

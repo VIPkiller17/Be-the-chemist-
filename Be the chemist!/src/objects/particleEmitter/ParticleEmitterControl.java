@@ -24,10 +24,6 @@ public class ParticleEmitterControl extends AbstractControl{
     
     private float timer;
     
-    private int gasEmissionCounter,liquidEmissionCounter,solidEmissionCounter;
-    
-    private Particle lastParticle;
-    
     public ParticleEmitterControl(ParticleEmitter particleEmitter){
         
         this.particleEmitter=particleEmitter;
@@ -77,8 +73,6 @@ public class ParticleEmitterControl extends AbstractControl{
     public void removeParticle(Particle particle){
         
         activeParticles.remove(particle);
-        
-        activeParticles.removeAll(Collections.singleton(null)); 
         
     }
     

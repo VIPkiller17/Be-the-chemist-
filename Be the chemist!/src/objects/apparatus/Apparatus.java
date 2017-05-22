@@ -17,8 +17,5 @@ public abstract class Apparatus extends PhysicalObject{
     public Apparatus(Main main,Vector3f position) {
         super(main,position);
     }
- 
-    @Override
-    public abstract void setPos(Vector3f position);
     
 }

@@ -21,13 +21,8 @@ import objects.PhysicalObject;
 public class HotPlateControl extends AbstractControl{
     
     private HotPlate hotPlate;
-    private Node rootNode;
-    private PhysicalObject objectToMeasureMass;
-    private double mass;
     
     private Main main;
-    
-    private Heatable presentHeatable;
 
     public HotPlateControl(Main main,HotPlate hotPlate) {
         
@@ -39,7 +34,7 @@ public class HotPlateControl extends AbstractControl{
     @Override
     public String toString() {
         
-        return "HotPlate: " + hotPlate;
+        return "HotPlateControl";
         
     }
     
@@ -57,15 +52,15 @@ public class HotPlateControl extends AbstractControl{
             
             if(hotPlate.canHeat(h.getPosition())){
                 
-                System.out.println("HotPlateControl: heatable temp: "+h.getTemperature()+" and hot plate temp: "+hotPlate.getTemperature());
+                //System.out.println("HotPlateControl: heatable temp: "+h.getTemperature()+" and hot plate temp: "+hotPlate.getTemperature());
                 
                 if(h.getTemperature()+tpf<hotPlate.getTemperature()){
                     
-                    System.out.println("    Adding "+tpf+" kelvins to "+h.getTemperature());
+                    //System.out.println("    Adding "+tpf+" kelvins to "+h.getTemperature());
                     
                     h.addKelvin(tpf);
                     
-                    System.out.println("        Heatable's temp:  "+h.getTemperature());
+                    //System.out.println("        Heatable's temp:  "+h.getTemperature());
                     
                 }
                 

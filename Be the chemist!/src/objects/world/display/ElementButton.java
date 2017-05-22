@@ -257,6 +257,12 @@ public class ElementButton implements Savable{
         return grayedOut;
         
     }
+    
+    public String getName(){
+        
+        return name;
+        
+    }
 
     @Override
     public void write(JmeExporter je) throws IOException {
@@ -264,6 +270,26 @@ public class ElementButton implements Savable{
 
     @Override
     public void read(JmeImporter ji) throws IOException {
+    }
+    
+    @Override
+    public boolean equals(Object otherElementButton){
+        
+        if(otherElementButton instanceof ElementButton)
+            
+            return ((ElementButton) otherElementButton).getName().equals(name);
+        
+        else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "An element button";
+        
     }
     
 }

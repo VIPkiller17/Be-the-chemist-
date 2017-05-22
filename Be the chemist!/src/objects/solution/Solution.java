@@ -26,7 +26,6 @@ public class Solution {
     
     private ArrayList<Ion> ions;//updated every loop depending on substances and their volumes
     private ArrayList<Double> ionCounts;//updated every loop depending on substances and their volumes
-    private double PH;//modified every loop depending on ions
     private double presentVolume;
     private int presentVolumeCount;
     private double presentTemperature;
@@ -53,6 +52,8 @@ public class Solution {
     
     public Solution(Main main,Container container,Substance substance,double volume,double temperature){
         
+        //System.out.println("        new solution created with "+substance);
+        
         this.parentContainer=container;
         
         substances=new ArrayList<>();
@@ -60,6 +61,7 @@ public class Solution {
         temperatures=new ArrayList<>();
         
         if(substance!=null){
+            
             substances.add(substance);
             
             if(substance.getStateInteger(temperature)==2){
@@ -250,10 +252,7 @@ public class Solution {
 
                     volumes.set(j,volumes.get(j)+volume);
                     
-                    //temperature set is commented out because this simply replaces the temperature with the one from the added substance
-                    //this will need to be modified for it to find the average also depending on the volume of each substances
-                    //for now an easier alternative is just to leave the temperature as it is in the receiving solution
-                    //temperatures.set(j,temperature);
+                    temperatures.set(j,((temperatures.get(j)*(volumes.get(j)*1000))+(temperature*(volume*1000)))/((volumes.get(j)*1000)+((volume*1000))));
                     
                     substanceFound=true;
                     
@@ -322,61 +321,6 @@ public class Solution {
         
     }
     
-    public int getRandomContainedState(int minState,int maxState){
-        
-        boolean containsGas=false;
-        boolean containsLiquid=false;
-        boolean containsSolid=false;
-        
-        for(Substance s: substances){
-            
-            switch(s.getStateInteger(getTemperature())){
-                
-                case 0:
-                    containsGas=true;
-                    break;
-                case 1:
-                    containsLiquid=true;
-                    break;
-                case 2:
-                    containsSolid=true;
-                    break;
-                default:
-                    //System.out.println("ERROR: @ getting random contained state, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
-                
-            }
-            
-        }
-        
-        int result;
-        
-        while(true){
-            
-            result=((int)(Math.random()*(maxState+1)))+minState;
-            
-            switch(result){
-                
-                case 0:
-                    if(containsGas)
-                        return 0;
-                    break;
-                case 1:
-                    if(containsLiquid)
-                        return 1;
-                    break;
-                case 2:
-                    if(containsSolid)
-                        return 2;
-                    break;
-                default:
-                    //System.out.println("ERROR: @ getting random contained state, result generated invalid.");
-                
-            }
-            
-        }
-        
-    }
-    
     public boolean containsInsolubleSolid(){
     
         for(Substance s: substances){
@@ -420,7 +364,7 @@ public class Solution {
                         //System.out.println(s.getName()+"'s state is solid");
                         break;
                     default:
-                        //System.out.println("ERROR: @ getting contained states, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
+                        System.out.println("ERROR: @ getting contained states, a substance in substance list: "+substances.toString()+" has an invalid integer state.");
 
                 }
 
@@ -546,18 +490,6 @@ public class Solution {
     public void setIon(int index,Ion ion){
         
         ions.set(index,ion);
-        
-    }
-    
-    public double getPH(){
-        
-        return PH;
-        
-    }
-    
-    public void setPH(double PH){
-        
-        this.PH=PH;
         
     }
     
@@ -749,11 +681,11 @@ public class Solution {
             
             if(i<substances.size()-1)
             
-                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n    with temperature: "+presentFormattedTemp+" K;\n";
+                t+="   "+substances.get(i).getName()+": "+presentFormattedVolume+" L\n    with temperature: "+presentFormattedTemp+" K;\n";
             
             else if(i==substances.size()-1)
                 
-                t+="   "+substances.get(i).getName()+": "+getVolume(i)+" L\n    with temperature: "+presentFormattedTemp+" K.\n";
+                t+="   "+substances.get(i).getName()+": "+presentFormattedVolume+" L\n    with temperature: "+presentFormattedTemp+" K.\n";
             
         }
         
@@ -889,8 +821,6 @@ public class Solution {
             
         }
         
-        PH=0;
-        
     }
     
     public SolutionControl getControl(){
@@ -930,7 +860,7 @@ public class Solution {
         
         for(int i=0;i<substances.size();i++){
             
-            if(substances.get(i).getStateInteger(getTemperature(i))!=0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
+            if(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                 presentVolume+=volumes.get(i);
                 presentVolumeCount++;
@@ -947,7 +877,7 @@ public class Solution {
             
             for(int i=0;i<volumes.size();i++){
                 
-                if(substances.get(i).getStateInteger(getTemperature(i))!=0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
+                if(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                     setVolume(i,getVolume(i)-presentVolume);
                 
@@ -963,7 +893,7 @@ public class Solution {
             
             for(int i=0;i<volumes.size();i++){
                 
-                if(substances.get(i).getStateInteger(getTemperature(i))!=0&&substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
+                if(substances.get(i).getDensity(substances.get(i).getStateInteger(getTemperature(i)))>0.00128){
                 
                     setVolume(i,getVolume(i)+presentVolume);
                 

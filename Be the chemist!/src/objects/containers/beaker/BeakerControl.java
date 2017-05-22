@@ -16,8 +16,6 @@ import com.jme3.scene.control.AbstractControl;
  * @author VIPkiller17
  */
 public class BeakerControl extends AbstractControl{
-    
-    private float testTPF;
 
     private Beaker beaker;
     
@@ -39,7 +37,7 @@ public class BeakerControl extends AbstractControl{
         //System.out.println("Beaker's position: "+beaker.getPosition()+"\nBeaker's velocity: "+beaker.getBeaker().getControl(RigidBodyControl.class).getLinearVelocity());
         
         //SET THE STATE OF THE CONTAINER
-        if(beaker.getPosition().getX()<4.72f&&beaker.getPosition().getX()>4.28f&&beaker.getPosition().getY()<0.61f&&beaker.getPosition().getY()>0&&beaker.getPosition().getZ()<3.67f&&beaker.getPosition().getZ()>4.33f){
+        if(beaker.getPosition().getX()<4.72f&&beaker.getPosition().getX()>4.28f&&beaker.getPosition().getY()<0.61f&&beaker.getPosition().getY()>0&&beaker.getPosition().getZ()<-3.67f&&beaker.getPosition().getZ()>-4.33f){
             
             beaker.destroy();
             

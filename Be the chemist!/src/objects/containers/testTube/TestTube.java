@@ -4,9 +4,7 @@
  */
 package objects.containers.testTube;
 
-import com.jme3.asset.AssetManager;
-import com.jme3.bullet.BulletAppState;
-import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
+import com.jme3.bullet.collision.shapes.CapsuleCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
@@ -43,7 +41,6 @@ public class TestTube extends Container implements Savable{
     private Spatial highlightModel;
     private Material highlightModelMat;
     private Spatial stopperModel;
-    private Material stopperModelMat;
     private Spatial liquidModel;
     private Material liquidModelMat;
     private Spatial solidModel;
@@ -52,11 +49,8 @@ public class TestTube extends Container implements Savable{
     private ParticleEmitter pourParticleEmitter,evaporationParticleEmitter,reactionParticleEmitter;
     
     private boolean isEmitting;
-    private boolean destroyed;
     
-    private Vector3f particleEmitterPosition;
-    
-    private CylinderCollisionShape collisionShape;
+    private CapsuleCollisionShape collisionShape;
     
     private Vector3f presentPosition;
     private Quaternion presentRotation;
@@ -144,12 +138,12 @@ public class TestTube extends Container implements Savable{
         spatial.setUserData("correctCollision", true);
         spatial.setUserData("correspondingObject", this);
         spatial.setQueueBucket(RenderQueue.Bucket.Transparent);
-        collisionShape=new CylinderCollisionShape(new Vector3f(0.04f,0.1f,0),1);
+        collisionShape=new CapsuleCollisionShape(0.02f,0.25f,1);
         
-        testTube_phy=new RigidBodyControl(collisionShape,0.2f);
-        testTube_phy.setFriction(0.5f);
-        //testTube_phy.setDamping(10f, 10f);
-        testTube_phy.setSleepingThresholds(5f,5f);
+        testTube_phy=new RigidBodyControl(collisionShape,1f);
+        testTube_phy.setFriction(1f);
+        testTube_phy.setDamping(0.75f, 0.75f);
+        testTube_phy.setSleepingThresholds(30f,60f);
         spatial.addControl(testTube_phy);
         main.getBulletAppState().getPhysicsSpace().add(testTube_phy);
         
@@ -161,8 +155,8 @@ public class TestTube extends Container implements Savable{
         main.getTestTubes().add(this);
         main.getParticleReceivers().add(this);
         
-        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Erlenmeyer's pourParticleEmitter");
-        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Erlenmeyer's evaporationParticleEmitter");
+        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.12f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Erlenmeyer's pourParticleEmitter");
+        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.12f,0),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Erlenmeyer's evaporationParticleEmitter");
         
         evaporationParticleEmitter.setVolume(0.001);
         
@@ -270,7 +264,7 @@ public class TestTube extends Container implements Savable{
             
         }else{
         
-            return "Test tube:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n  Average temperature: "+getFormattedTemperature();
+            return "Test tube:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+" L;\n  Average temperature: "+getFormattedTemperature()+" K.";
             
         }
         
@@ -333,18 +327,6 @@ public class TestTube extends Container implements Savable{
     public Spatial getBeaker(){
         
         return spatial;
-        
-    }
-    
-    public void setEnabled(boolean enabled){
-            
-        spatial.getControl(RigidBodyControl.class).setEnabled(enabled);
-        
-    }
-    
-    public void clearForces(){
-        
-        spatial.getControl(RigidBodyControl.class).clearForces();
         
     }
     
@@ -422,7 +404,7 @@ public class TestTube extends Container implements Savable{
         
     }
     
-    public void toggleOpennedClosed(){
+    public void toggleOpenedClosed(){
         
         System.out.println("        toggleOpennedClosed() called ans isclosed: "+isClosed());
         

@@ -27,7 +27,6 @@ public class TrashBin extends Apparatus implements Savable{
 
     private Main main;
     private Spatial spatial;
-    private Node rootNode;
     private Node node;
     
     private CollisionShape cs;
@@ -39,7 +38,6 @@ public class TrashBin extends Apparatus implements Savable{
         super(main,Vector3f.ZERO);
         
         this.main=main;
-        this.rootNode=main.getRootNode();
         node=new Node();
         
         spatial=main.getAssetManager().loadModel("Models/Static/TrashBin/TrashBin.j3o");
@@ -49,7 +47,7 @@ public class TrashBin extends Apparatus implements Savable{
         spatial.setShadowMode(RenderQueue.ShadowMode.CastAndReceive);
         node.attachChild(spatial);
         
-        rootNode.attachChild(node);
+        main.getRootNode().attachChild(node);
         
         cs=CollisionShapeFactory.createMeshShape(spatial);
         

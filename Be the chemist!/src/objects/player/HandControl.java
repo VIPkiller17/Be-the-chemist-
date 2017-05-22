@@ -44,43 +44,42 @@ import objects.world.display.SubstanceButton;
 //by Tommy
 public class HandControl extends AbstractControl{
     
-    private static VRAPI VRHardware;
-    private static CollisionResults collisionResults;
-    private static int controllerCount;
-    private static Node rootNode;
-    private static int presentCorrectCollisionIndex;
-    private static Spatial observer;
+    private static VRAPI VRHardware;//
+    private static CollisionResults collisionResults;//
+    private static int controllerCount;//
+    private static Node rootNode;//
+    private static int presentCorrectCollisionIndex;//
+    private static Spatial observer;//
     
-    private float[] presentAngles;
-    private float[] pastAngles;
+    private float[] presentAngles;//
+    private float[] pastAngles;//
     
-    private boolean foundPresentCorrectCollision;
-    private Hand hand;
-    private int handSide;
-    private String collisionToExclude;
-    private Spatial correctCollisionSpatial;
-    private PhysicalObject possibleItemToGrab;
-    private boolean itemInRange;
+    private boolean foundPresentCorrectCollision;//
+    private Hand hand;//
+    private int handSide;//
+    private String collisionToExclude;//
+    private Spatial correctCollisionSpatial;//
+    private PhysicalObject possibleItemToGrab;//
+    private boolean itemInRange;//
     
-    private float touchPadX,touchPadY;
-    private double radTouchPadXAngle,degTouchPadXAngle;
+    private float touchPadX,touchPadY;//
+    private double radTouchPadXAngle,degTouchPadXAngle;//
     
-    private DescDisplay handDescriptionDisplay;
-    private boolean descriptionMovedOut;
+    private DescDisplay handDescriptionDisplay;//
+    private boolean descriptionMovedOut;//
     
-    private boolean laserMovedOut,laserPointingAtDescribable;
-    private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;
-    private boolean touchPadPressedDown,touchPadPressedUp,touchPadPressedRight,touchPadPressedLeft;
-    private boolean menuPressed,touchpadPressed,triggerPressed,gripPressed;
-    private boolean menuWasPressed,touchPadWasPressed,triggerWasPressed,gripWasPressed;
-    private boolean laserActivatedByTeleportation,laserActivatedByDescription,laserActivatedByDisplay,laserActivated;
+    private boolean laserMovedOut,laserPointingAtDescribable;//
+    private boolean teleLaserMovedOut,teleLaserPointingValidSurface,teleportationPrimed,touchPadDown;//
+    private boolean touchPadPressedDown,touchPadPressedUp,touchPadPressedRight,touchPadPressedLeft;//
+    private boolean menuPressed,touchpadPressed,triggerPressed,gripPressed;//
+    private boolean menuWasPressed,touchPadWasPressed,triggerWasPressed,gripWasPressed;//
+    private boolean laserActivatedByTeleportation,laserActivatedByDescription,laserActivatedByDisplay,laserActivated;//
     
-    private Geometry testLaserGeom;
-    private Material testLaserMat;
-    
+    /*
     private Box collisionPoint;
     private Geometry collisionPointGeom;
     private Material collisionPointMat;
+    */
     
     private Button presentPointedButton;
     private boolean pointingDisplay;
@@ -96,7 +95,7 @@ public class HandControl extends AbstractControl{
     private MaterialButton presentPointedMaterialButton;
     private boolean pointingMaterialButton;
     
-    private static final Vector3f OUT_OF_MAP=new Vector3f(0,-1,0);
+    private static final Vector3f OUT_OF_MAP=new Vector3f(0,-50,0);
     private static final ColorRGBA GREEN_LASER=ColorRGBA.Green,RED_LASER=ColorRGBA.Red;
     
     private Quaternion rotationWhenGrabbed;
@@ -127,12 +126,14 @@ public class HandControl extends AbstractControl{
         //this was added because the laser would not point at the correct location after a teleportation
         //this still requires testing, as it has not been added to the teleportation laser
         //but only to the description laser
+        /*
         collisionPoint = new Box(0.01f,0.01f,0.01f); 
         collisionPointGeom = new Geometry("TestCollisionPoint", collisionPoint); 
         collisionPointMat = new Material(assetManager, "Common/MatDefs/Misc/Unshaded.j3md");
         collisionPointMat.setColor("Color",ColorRGBA.Blue);
         collisionPointGeom.setMaterial(collisionPointMat); 
         rootNode.attachChild(collisionPointGeom);
+        */
         
     }
 
@@ -169,7 +170,14 @@ public class HandControl extends AbstractControl{
             
             updateLaser();
             
-            rotationOnLastFrame=VRHardware.getVRinput().getFinalObserverRotation(handSide);
+            //rotationOnLastFrame=VRHardware.getVRinput().getFinalObserverRotation(handSide);
+            
+            //The .clone() here is needed, otherwise the object we get from VRHardware.getVRinput().getOrientation(handSide) is 
+            //the always same quaternion, when is is called, it doesn't return a new one with the same values, instead returnnig the exact same object
+            //which ends up being the same this frame and the last, meaning a difference of zero in rotation since last frame
+            rotationOnLastFrame=VRHardware.getVRinput().getOrientation(handSide).clone();//took a while for me to figure out why stuff wasnt working
+            
+            //System.out.println("hand "+handSide+" rotationOnLastFrame set to: "+rotationOnLastFrame);
 
         }
     
@@ -289,12 +297,14 @@ public class HandControl extends AbstractControl{
         //Update Rotation of Geom
         hand.setRotation(VRHardware.getVRinput().getOrientation(handSide));
         
+        //System.out.println("hand "+handSide+" rotation on present frame is: "+VRHardware.getVRinput().getOrientation(handSide)+", and was: "+rotationOnLastFrame);
+        
         //System.out.println("Angle of last frame rotation in rads: "+FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())+", in degs: "+FastMath.RAD_TO_DEG*FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX()));
         //System.out.println("Angle of present frame rotation in rads: "+FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())+", in degs: "+FastMath.RAD_TO_DEG*FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX()));
         
-        //System.out.println("Angle difference of hand rotation since last frame in deg: "+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
+        //System.out.println("Angle difference of hand "+handSide+" rotation since last frame in deg: "+FastMath.RAD_TO_DEG*(FastMath.asin(VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1).getX())-FastMath.asin(rotationOnLastFrame.getRotationColumn(1).getX())));
         
-        System.out.println("Hand rotation (Quaternion): "+VRHardware.getVRinput().getOrientation(handSide)+", (Matrix):\nCol 0: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0)+"\nCol 1: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1)+"\nCol 2: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0));
+        //System.out.println("Hand rotation (Quaternion): "+VRHardware.getVRinput().getOrientation(handSide)+", (Matrix):\nCol 0: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0)+"\nCol 1: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(1)+"\nCol 2: "+VRHardware.getVRinput().getOrientation(handSide).getRotationColumn(0));
         
         //System.out.println("Present angles: "+FastMath.RAD_TO_DEG*VRHardware.getVRinput().getOrientation(handSide).toAngles(presentAngles)[0]+", "+FastMath.RAD_TO_DEG*VRHardware.getVRinput().getOrientation(handSide).toAngles(presentAngles)[1]+", "+FastMath.RAD_TO_DEG*VRHardware.getVRinput().getOrientation(handSide).toAngles(presentAngles)[2]);
         
@@ -858,11 +868,11 @@ public class HandControl extends AbstractControl{
 
                             System.out.println("    Hand is holding an item and the item is an erlenmeyer");
                             
-                            ((Erlenmeyer)hand.getHeldObject()).toggleOpennedClosed();
+                            ((Erlenmeyer)hand.getHeldObject()).toggleOpenedClosed();
 
                         }else if(hand.isHoldingObject()&&hand.getHeldObject() instanceof TestTube){
 
-                            ((TestTube)hand.getHeldObject()).toggleOpennedClosed();
+                            ((TestTube)hand.getHeldObject()).toggleOpenedClosed();
 
                         }
 
@@ -915,11 +925,11 @@ public class HandControl extends AbstractControl{
 
                             System.out.println("    Hand is holding an item and the item is an erlenmeyer");
                             
-                            ((Erlenmeyer)hand.getHeldObject()).toggleOpennedClosed();
+                            ((Erlenmeyer)hand.getHeldObject()).toggleOpenedClosed();
 
                         }else if(hand.isHoldingObject()&&hand.getHeldObject() instanceof TestTube){
 
-                            ((TestTube)hand.getHeldObject()).toggleOpennedClosed();
+                            ((TestTube)hand.getHeldObject()).toggleOpenedClosed();
 
                         }
 
@@ -1421,7 +1431,9 @@ public class HandControl extends AbstractControl{
                     
             }
             
-            rotationWhenGrabbed=VRHardware.getVRinput().getFinalObserverRotation(handSide);
+            //rotationOnLastFrame=VRHardware.getVRinput().getFinalObserverRotation(handSide);
+            
+            //rotationOnLastFrame=VRHardware.getVRinput().getOrientation(handSide);
             
         }else if(hand.getHeldObject()!=null&&hand.getHeldObject() instanceof Beaker){
             
@@ -1450,13 +1462,13 @@ public class HandControl extends AbstractControl{
             
             if(hand.getSide()==0){
                 
-                ((Erlenmeyer)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(0.05f,0,0.02f))));
+                ((Erlenmeyer)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(0.05f,0,0.04f))));
                 ((Erlenmeyer)hand.getHeldObject()).setRotation(hand.getRotation());
                 
             }else{
                 
                 ((Erlenmeyer)hand.getHeldObject()).setRotation(hand.getRotation());
-                ((Erlenmeyer)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(-0.05f,0,0.02f))));
+                ((Erlenmeyer)hand.getHeldObject()).setPos(hand.getWorldTranslation().add(hand.getRotation().mult(new Vector3f(-0.05f,0,0.04f))));
                 
             }
             
@@ -1536,7 +1548,9 @@ public class HandControl extends AbstractControl{
                 
             }
             
-            rotationWhenGrabbed=VRHardware.getVRinput().getFinalObserverRotation(handSide);
+            //rotationOnLastFrame=VRHardware.getVRinput().getFinalObserverRotation(handSide);
+            
+            //rotationOnLastFrame=VRHardware.getVRinput().getOrientation(handSide);
             
         }
         

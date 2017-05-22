@@ -60,8 +60,6 @@ public class Display implements Pointable,Savable{
     
     private Main main;
     
-    public static final int MAIN_MENU=0,SUBSTANCE_LIST=1,KEYBOARD=2,MATERIAL_LIST=3,PERIODIC_TABLE=4,SETTINGS_MENU=5;
-    
     private static boolean keyBoardIsInCaps;
     
     private static SubstanceButton selectedSubstanceButton;
@@ -74,7 +72,6 @@ public class Display implements Pointable,Savable{
     private static int typeFilter;
     private static int phaseFilter;
     private static int classFilter;
-    private static int presentPositionIndex;
     
     public Display(Main main,int preset){
         
@@ -291,34 +288,6 @@ public class Display implements Pointable,Savable{
         
     }
     
-    public boolean addSubstance(){
-        
-        if(preset==1){
-            
-            //Add a button for the substance
-            
-            return true;
-            
-        }else
-            
-            return false;
-        
-    }
-    
-    public boolean addMaterial(){
-        
-        if(preset==3){
-            
-            //Add a button for the material
-            
-            return true;
-            
-        }else
-            
-            return false;
-        
-    }
-    
     public int getPreset(){
         
         return preset;
@@ -331,30 +300,6 @@ public class Display implements Pointable,Savable{
             
             texts.get(texts.size()-1).setText(texts.get(texts.size()-1).getText()+letter);
         
-            if(preset==1){
-                
-                setSubstanceFilterChanged(true);
-                
-                updateDisplayedSubstances();
-                
-            }else if(preset==3){
-                
-                setMaterialFilterChanged(true);
-                
-                updateDisplayedMaterials();
-                
-            }
-            
-        }
-        
-    }
-    
-    public void removeLetter(){
-        
-        if(preset==1||preset==3){
-        
-            texts.get(texts.size()-1).setText(texts.get(texts.size()-1).getText()+"\b");
-            
             if(preset==1){
                 
                 setSubstanceFilterChanged(true);
@@ -403,7 +348,7 @@ public class Display implements Pointable,Savable{
             
             }else{
                 
-                substanceButtonList.add(new SubstanceButton(main,this,main.getSubstances().get(i),new Vector3f(-0.35f,-700,0.05f)));
+                substanceButtonList.add(new SubstanceButton(main,this,main.getSubstances().get(i),new Vector3f(-0.35f,-50,0.05f)));
                 
             }
             
@@ -893,5 +838,24 @@ public class Display implements Pointable,Savable{
     public void read(JmeImporter ji) throws IOException {
     }
             
+    @Override
+    public boolean equals(Object otherDisplay){
+        
+        if(otherDisplay instanceof Display)
+            
+            return ((Display) otherDisplay).getPreset()==preset;
+        
+        else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Display of preset: "+preset;
+        
+    }
     
 }

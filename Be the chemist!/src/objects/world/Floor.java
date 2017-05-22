@@ -67,4 +67,24 @@ public class Floor implements Savable{
         
     }
     
+    @Override
+    public String toString(){
+        
+        return "The floor";
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherFloor){
+        
+        if(otherFloor instanceof Floor)
+        
+            return ((Floor) otherFloor).getSpatial().getLocalTranslation().equals(spatial.getLocalTranslation());
+        
+        else
+            
+            return false;
+        
+    }
+    
 }

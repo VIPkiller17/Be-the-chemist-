@@ -40,14 +40,10 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
     private Material dialHighlightMat;
     
     private BitmapText text;
-    private BitmapText tareText;
     private BitmapFont font;
     private Spatial dialHighlight;
     
     private Vector3f presentPosition;
-    private Quaternion presentRotation;
-    
-    private CollisionResults collisionResults;
     
     private CollisionShape cs;
     private RigidBodyControl phy;
@@ -149,7 +145,7 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
     
     @Override
     public String toString() {
-        return "An analytical balance";  
+        return "A hotplate";  
     }
     
     @Override
@@ -171,7 +167,7 @@ public class HotPlate extends Apparatus implements Savable,Grabbable{
     @Override
     public String getDescription() {
         
-        return "An analytical balance";
+        return "A hotplate";
         
     }
     

@@ -179,7 +179,13 @@ public abstract class Container extends PhysicalObject implements Grabbable,Heat
     @Override
     public double getTemperature(){
         
-        return solution.getTemperature();
+        if(solution!=null)
+        
+            return solution.getTemperature();
+        
+        else
+            
+            return 0;
         
     }
     

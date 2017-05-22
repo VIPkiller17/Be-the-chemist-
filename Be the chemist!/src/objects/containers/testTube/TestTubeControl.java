@@ -16,8 +16,6 @@ import com.jme3.scene.control.AbstractControl;
  * @author VIPkiller17
  */
 public class TestTubeControl extends AbstractControl{
-    
-    private float testTPF;
 
     private TestTube testTube;
     
@@ -31,7 +29,7 @@ public class TestTubeControl extends AbstractControl{
     protected void controlUpdate(float tpf) {
         
         //SET THE STATE OF THE CONTAINER
-        if(testTube.getPosition().getX()<4.72f&&testTube.getPosition().getX()>4.28f&&testTube.getPosition().getY()<0.61f&&testTube.getPosition().getY()>0&&testTube.getPosition().getZ()<3.67f&&testTube.getPosition().getZ()>4.33f){
+        if(testTube.getPosition().getX()<4.72f&&testTube.getPosition().getX()>4.28f&&testTube.getPosition().getY()<0.61f&&testTube.getPosition().getY()>0&&testTube.getPosition().getZ()<-3.67f&&testTube.getPosition().getZ()>-4.33f){
             
             testTube.destroy();
             
@@ -73,6 +71,8 @@ public class TestTubeControl extends AbstractControl{
             
             if(!testTube.isClosed()&&spatial.getLocalRotation().getRotationColumn(1).getY()<=0.707f&&!testTube.getPourParticleEmitter().isEmitting()){
 
+                //System.out.println("Testube started pouring");
+                
                 testTube.startPouring();
 
             }else if(testTube.isClosed()||(spatial.getLocalRotation().getRotationColumn(1).getY()>0.707f&&testTube.getPourParticleEmitter().isEmitting())){

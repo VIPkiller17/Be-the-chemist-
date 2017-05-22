@@ -38,7 +38,7 @@ public class Beaker extends Container implements Savable{
     private boolean closeable;
     private double maxQuantity;
     private double maxTemperature;
-    private double maxPressureOpenned;
+    private double maxPressureOpened;
     private double maxPressureClosed;
     private Spatial highlightModel;
     private Material highlightModelMat;
@@ -49,12 +49,7 @@ public class Beaker extends Container implements Savable{
     
     private ParticleEmitter pourParticleEmitter,evaporationParticleEmitter,reactionParticleEmitter;
     
-    private boolean isEmitting;
-    private boolean destroyed;
-    
-    private Vector3f particleEmitterPosition;
-    private Spatial openningSurface;
-    private Material openningSurfaceMat;
+    private boolean emitting;
     
     private CylinderCollisionShape collisionShape;
     
@@ -96,7 +91,7 @@ public class Beaker extends Container implements Savable{
         closeable=false;
         maxQuantity=1;
         maxTemperature=1773;
-        maxPressureOpenned=6;
+        maxPressureOpened=6;
         maxPressureClosed=3;
         
         spatial=assetManager.loadModel("Models/Objects/Containers/Beaker/Beaker.j3o");
@@ -158,7 +153,7 @@ public class Beaker extends Container implements Savable{
         beaker_phy=new RigidBodyControl(collisionShape,1f);
         beaker_phy.setFriction(1f);
         beaker_phy.setDamping(0.75f, 0.75f);
-        beaker_phy.setSleepingThresholds(60f,60f);
+        beaker_phy.setSleepingThresholds(30f,60f);
         spatial.addControl(beaker_phy);
         bulletAppState.getPhysicsSpace().add(beaker_phy);
         
@@ -200,7 +195,7 @@ public class Beaker extends Container implements Savable{
     
     public double getMaxPressureOpenned(){
         
-        return maxPressureOpenned;
+        return maxPressureOpened;
         
     }
     
@@ -214,48 +209,48 @@ public class Beaker extends Container implements Savable{
         
         pourParticleEmitter.begin();
         
-        isEmitting=true;
+        emitting=true;
         
     }
     
     public void stopPouring(){
         
         pourParticleEmitter.stop();
-        isEmitting=false;
+        emitting=false;
         
     }
     
     public void startEvaporating(){
         
         evaporationParticleEmitter.begin();
-        isEmitting=true;
+        emitting=true;
         
     }
     
     public void stopEvaporating(){
         
         evaporationParticleEmitter.stop();
-        isEmitting=false;
+        emitting=false;
         
     }
     
     public void startReacting(){
         
         reactionParticleEmitter.begin();
-        isEmitting=true;
+        emitting=true;
         
     }
     
     public void stopReacting(){
         
         reactionParticleEmitter.stop();
-        isEmitting=false;
+        emitting=false;
         
     }
     
     public boolean isEmitting(){
         
-        return isEmitting;
+        return emitting;
         
     }
     
@@ -282,7 +277,7 @@ public class Beaker extends Container implements Savable{
             
         }else{
         
-            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n  Average temperature: "+getFormattedTemperature();
+            return "Beaker:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+" L;\n  Average temperature: "+getFormattedTemperature()+" K.";
             
         }
         
@@ -354,18 +349,6 @@ public class Beaker extends Container implements Savable{
         
     }
     
-    public void setEnabled(boolean enabled){
-            
-        spatial.getControl(RigidBodyControl.class).setEnabled(enabled);
-        
-    }
-    
-    public void clearForces(){
-        
-        spatial.getControl(RigidBodyControl.class).clearForces();
-        
-    }
-    
     public void clearVelocity(){
         
         spatial.getControl(RigidBodyControl.class).setLinearVelocity(Vector3f.ZERO);
@@ -387,7 +370,7 @@ public class Beaker extends Container implements Savable{
             
         }else{
             
-            liquidModel.setLocalTranslation(0,-700,0);
+            liquidModel.setLocalTranslation(0,-50,0);
             
         }
         
@@ -431,12 +414,6 @@ public class Beaker extends Container implements Savable{
                 return false;
             
         }
-        
-    }
-    
-    public void updatePhysicsLocation(){
-        
-        spatial.getControl(RigidBodyControl.class).setPhysicsLocation(node.getLocalTranslation());
         
     }
     

@@ -22,7 +22,6 @@ public class SolutionControl extends AbstractControl{
     
     private double presentVolume;
     private double percentageOfPartialVolume;
-    private double presentTemperature;
     
     private Main main;
     
@@ -30,7 +29,6 @@ public class SolutionControl extends AbstractControl{
     private int[] presentIonicInfo0=new int[3];
     private int[] presentIonicInfo1=new int[3];
     private int presentCorrectIndex;
-    private boolean foundInReactivitySeries;
     
     public SolutionControl(Main main,Solution solution){
         
@@ -599,34 +597,6 @@ public class SolutionControl extends AbstractControl{
     protected void controlRender(RenderManager rm, ViewPort vp) {
         
         
-        
-    }
-    
-    public void updateVolume(){
-        
-        presentVolume=0;
-        
-        for(int i=0;i<solution.getVolumes().size();i++){
-            
-            presentVolume+=solution.getVolumes().get(i);
-            
-        }
-        
-        if(presentVolume>solution.getVolume()){
-            
-            solution.setVolume(presentVolume);
-            
-        }else if(presentVolume<solution.getVolume()){
-            
-            percentageOfPartialVolume=presentVolume*100;
-            
-            for(int i=0;i<solution.getVolumes().size();i++){
-                
-                solution.setVolume(i,(solution.getVolume(i)/percentageOfPartialVolume)*100);
-                
-            }
-            
-        }
         
     }
     

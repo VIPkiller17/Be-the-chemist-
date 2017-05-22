@@ -1,5 +1,0 @@
-1. Finish map with player interaction
-2. fix highlight not appearring when dropping an item (MAKE IT SO WHEN AN OBJECT IS WITHIN 15CM OF HAND, ITS HIGHLIGHT APPEARS FOR EVERY ITTERATION see #10)
-5. test gas sac valve
-9. make it so that when an object is held, its position is set correctly compared to the hand
-10. (POSTPONED try to see if can make it so taht when a grabbable object is within 15cm of hand, make its highlight appear without having to go through the trouble of activating it every time we drop it) highlight not appearing when object is dropped by deactivation of statichold

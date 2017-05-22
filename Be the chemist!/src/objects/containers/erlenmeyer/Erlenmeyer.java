@@ -5,9 +5,9 @@
 package objects.containers.erlenmeyer;
 
 import com.jme3.bullet.collision.shapes.CompoundCollisionShape;
+import com.jme3.bullet.collision.shapes.ConeCollisionShape;
 import com.jme3.bullet.collision.shapes.CylinderCollisionShape;
 import com.jme3.bullet.control.RigidBodyControl;
-import com.jme3.bullet.util.CollisionShapeFactory;
 import com.jme3.export.Savable;
 import com.jme3.material.Material;
 import com.jme3.material.RenderState;
@@ -147,11 +147,13 @@ public class Erlenmeyer extends Container implements Savable{
         
         CompoundCollisionShape comp=new CompoundCollisionShape();
         
-        comp.addChildShape(new CylinderCollisionShape(new Vector3f(0.05f,0.03f,0),1),new Vector3f(0,-0.03f,0));
-        comp.addChildShape(new CylinderCollisionShape(new Vector3f(0.02f,0.03f,0),1),new Vector3f(0,0.03f,0));
+        comp.addChildShape(new ConeCollisionShape(0.08f,0.13f,1),new Vector3f(0,-0.035f,0));
+        comp.addChildShape(new CylinderCollisionShape(new Vector3f(0.02f,0.1f,0),1),new Vector3f(0,0,0));
         
         erlenmeyer_phy=new RigidBodyControl(comp,1);
         erlenmeyer_phy.setFriction(1f);
+        erlenmeyer_phy.setDamping(0.75f, 0.75f);
+        erlenmeyer_phy.setSleepingThresholds(30f,60f);
         spatial.addControl(erlenmeyer_phy);
         main.getBulletAppState().getPhysicsSpace().add(erlenmeyer_phy);
         
@@ -163,8 +165,8 @@ public class Erlenmeyer extends Container implements Savable{
         main.getErlenmeyers().add(this);
         main.getParticleReceivers().add(this);
         
-        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Erlenmeyer's pourParticleEmitter");
-        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.06f,0),Vector3f.ZERO,Quaternion.ZERO,0,0,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Erlenmeyer's evaporationParticleEmitter");
+        pourParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.1f,0),Vector3f.ZERO,new Quaternion().fromAngleAxis(FastMath.DEG_TO_RAD*1,Vector3f.UNIT_Z),0,0,new Vector3f(0.01f,0.0075f,0),new Vector3f(0,0,0),0.05,0,new Vector3f(0,-9.806f,0),Vector3f.ZERO,"Erlenmeyer's pourParticleEmitter");
+        evaporationParticleEmitter=new ParticleEmitter(main,this,new Vector3f(0,0.1f,0),Vector3f.ZERO,Quaternion.ZERO,0.01,0.01,new Vector3f(0,0.02f,0),new Vector3f(0,0,0),0.1,0.09,new Vector3f(0,0.05f,0),Vector3f.ZERO,"Erlenmeyer's evaporationParticleEmitter");
         
         evaporationParticleEmitter.setVolume(0.001);
         
@@ -272,7 +274,7 @@ public class Erlenmeyer extends Container implements Savable{
             
         }else{
         
-            return "Erlenmeyer:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+"\n  Average temperature: "+getFormattedTemperature();
+            return "Erlenmeyer:\n   Contains:\n   "+getSolution()+"\n  Total volume: "+getFormattedVolume()+" L;\n  Average temperature: "+getFormattedTemperature()+" K.";
             
         }
         
@@ -335,18 +337,6 @@ public class Erlenmeyer extends Container implements Savable{
     public Spatial getBeaker(){
         
         return spatial;
-        
-    }
-    
-    public void setEnabled(boolean enabled){
-            
-        spatial.getControl(RigidBodyControl.class).setEnabled(enabled);
-        
-    }
-    
-    public void clearForces(){
-        
-        spatial.getControl(RigidBodyControl.class).clearForces();
         
     }
     
@@ -424,7 +414,7 @@ public class Erlenmeyer extends Container implements Savable{
         
     }
     
-    public void toggleOpennedClosed(){
+    public void toggleOpenedClosed(){
         
         System.out.println("        toggleOpennedClosed() called ans isclosed: "+isClosed());
         

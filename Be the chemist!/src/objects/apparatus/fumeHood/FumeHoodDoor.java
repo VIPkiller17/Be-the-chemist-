@@ -33,7 +33,6 @@ public class FumeHoodDoor extends Apparatus implements Savable, Grabbable{
     
     private FumeHood fumeHood;
     
-    private FumeHoodDoorControl fumeHoodDoorControl;
     private double height;
     
     private Spatial spatial;

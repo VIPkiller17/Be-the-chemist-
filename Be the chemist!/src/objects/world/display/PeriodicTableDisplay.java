@@ -47,13 +47,11 @@ public class PeriodicTableDisplay implements Pointable,Savable{
     private Material backgroundMat;
     
     private Node node;
-    private Node rootNode;
     
     public PeriodicTableDisplay(Main main){
         
         this.main=main;
         this.assetManager=main.getAssetManager();
-        this.rootNode=main.getRootNode();
         
         font=assetManager.loadFont("Interface/Fonts/Xolonium/Xolonium.fnt");
         
@@ -84,7 +82,7 @@ public class PeriodicTableDisplay implements Pointable,Savable{
         
         addButtons();
         
-        rootNode.attachChild(node);
+        main.getRootNode().attachChild(node);
         
         node.setLocalTranslation(new Vector3f(-0.95f,0.21f,-5.95f));
         
@@ -277,6 +275,19 @@ public class PeriodicTableDisplay implements Pointable,Savable{
     @Override
     public void read(JmeImporter ji) throws IOException {
     }
-            
+        
+    @Override
+    public boolean equals(Object otherPeriodicTableDisplay){
+        
+        return otherPeriodicTableDisplay instanceof PeriodicTableDisplay;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "The periodic table";
+        
+    }
     
 }

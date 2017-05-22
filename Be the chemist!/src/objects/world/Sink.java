@@ -38,6 +38,8 @@ public class Sink extends PhysicalObject{
     
     private float coldFlow,hotFlow;
     
+    private double flowTemperature=298;
+    
     private Node node;
 
     public Sink(Main main,AssetManager assetManager,Node rootNode,int index){
@@ -127,7 +129,19 @@ public class Sink extends PhysicalObject{
     
     public void setColdFlow(float amount){
         
-        System.out.println("            Set cold flow called");
+        //System.out.println("            Set cold flow called and temperature set to: "+((flowTemperature*((coldFlow+hotFlow)*1000))+(283.15*(amount*1000)))/((coldFlow+hotFlow)*1000));
+        
+        if(amount+hotFlow!=0){
+        
+            //System.out.println("Present flow temp: "+flowTemperature+";\nTotal flow volume in liters: "+(coldFlow+hotFlow)+";\n   In mL: "+((coldFlow+hotFlow)*1000)+";\nSet cold water volume in liters: "+amount+";\n   In mL: "+amount*1000+";\nAdded cold water volume in liters: "+(amount-coldFlow)+";\n   In mL: "+(amount-coldFlow)*1000+";\nTotal volume after modification, in liters: "+(amount+hotFlow)+";\n   In mL: "+(amount+hotFlow)*1000);
+            
+            flowTemperature=((flowTemperature*((coldFlow+hotFlow)*1000))+(283.15*((amount-coldFlow)*1000)))/((amount+hotFlow)*1000);
+            
+        }else{
+            
+            flowTemperature=283.15;
+            
+        }
         
         coldFlow=amount;
         
@@ -149,7 +163,45 @@ public class Sink extends PhysicalObject{
         
     }
     
+    public void addToColdFlow(float amount){
+        
+        System.out.println("            Add to cold flow called");
+        
+        coldFlow+=amount;
+        
+        particleEmitter.setVolume(coldFlow+hotFlow);
+        
+        flowTemperature=((flowTemperature*(((coldFlow-amount)+hotFlow)*1000))+(283.15*(amount*1000)))/((coldFlow+hotFlow)*1000);
+        
+        if(!particleEmitter.isEmitting()&&particleEmitter.getVolume()>0){
+            
+            System.out.println("                Particle emitter is not emitting but its volume is higher than 0, starting emission");
+            
+            particleEmitter.begin();
+            
+        }else if(particleEmitter.isEmitting()&&particleEmitter.getVolume()<=0){
+            
+            System.out.println("                Particle emitter is emitting but its volume is lower or equal to 0, stopping emission");
+            
+            particleEmitter.stop();
+            
+        }
+        
+    }
+    
     public void setHotFlow(float amount){
+        
+        if(amount+hotFlow!=0){
+            
+            flowTemperature=((flowTemperature*((coldFlow+hotFlow)*1000))+(328*((amount-hotFlow)*1000)))/((coldFlow+amount)*1000);
+            
+            System.out.println(flowTemperature);
+            
+        }else{
+            
+            flowTemperature=328;
+            
+        }
         
         hotFlow=amount;
         
@@ -167,10 +219,62 @@ public class Sink extends PhysicalObject{
         
     }
     
+    public void addToHotFlow(float amount){
+        
+        System.out.println("            Add to hot flow called");
+        
+        hotFlow+=amount;
+        
+        particleEmitter.setVolume(coldFlow+hotFlow);
+        
+        flowTemperature=((flowTemperature*(((hotFlow-amount)+coldFlow)*1000))+(283.15*(amount*1000)))/((coldFlow+hotFlow)*1000);
+        
+        if(!particleEmitter.isEmitting()&&particleEmitter.getVolume()>0){
+            
+            System.out.println("                Particle emitter is not emitting but its volume is higher than 0, starting emission");
+            
+            particleEmitter.begin();
+            
+        }else if(particleEmitter.isEmitting()&&particleEmitter.getVolume()<=0){
+            
+            System.out.println("                Particle emitter is emitting but its volume is lower or equal to 0, stopping emission");
+            
+            particleEmitter.stop();
+            
+        }
+        
+    }
+    
+    public double getFlowTemperature(){
+        
+        return flowTemperature;
+        
+    }
+    
     @Override
     public void destroy() {
         
         main.getRootNode().detachChild(node);
+        
+    }
+    
+    @Override
+    public boolean equals(Object otherSink){
+        
+        if(otherSink instanceof Sink)
+            
+            return ((Sink) otherSink).getIndex()==index;
+        
+        else
+            
+            return false;
+        
+    }
+    
+    @Override
+    public String toString(){
+        
+        return "Sink of index: "+index;
         
     }
     

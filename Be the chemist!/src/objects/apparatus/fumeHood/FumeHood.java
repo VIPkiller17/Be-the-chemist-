@@ -28,9 +28,6 @@ public class FumeHood extends Apparatus{
 
     private Node node;
     private FumeHoodDoor fumeHoodDoor;
-    private FumeHoodControl fumeHoodControl;
-    private double efficiency;
-    private ArrayList<PhysicalObject> attachedObjects;
     
     private Spatial spatial;
     
@@ -71,20 +68,6 @@ public class FumeHood extends Apparatus{
         return "The fume hood.";
         
     }
-
-    @Override
-    public void setPos(Vector3f position) {
-        
-        node.setLocalTranslation(position);
-        
-    }
-    
-    @Override
-    public void attachObject(Spatial object){
-        
-        node.attachChild(object);
-        
-    }
     
     @Override
     public Node getNode() {
@@ -106,7 +89,7 @@ public class FumeHood extends Apparatus{
         
     }
     
-    public void initCorrecterCollisionShapes(){
+    private void initCorrecterCollisionShapes(){
         
         CompoundCollisionShape comp=new CompoundCollisionShape();
         
@@ -127,6 +110,13 @@ public class FumeHood extends Apparatus{
     public void destroy() {
         
         main.getRootNode().detachChild(node);
+        
+    }
+
+    @Override
+    public void setPos(Vector3f position) {
+        
+        phy.setPhysicsLocation(position);
         
     }
     
